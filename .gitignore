@@ -28,6 +28,7 @@ plugins/
 plugins/android.json
 plugins/ios.json
 www/
+target/
 $RECYCLE.BIN/
 
 .DS_Store
