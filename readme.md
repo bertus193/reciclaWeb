@@ -14,5 +14,7 @@ Para más información consultar la [wiki](https://github.com/bertus193/reciclaW
 
 Demo:
 
-- 👩‍💻 [Servidor](https://reciclaweb-server.herokuapp.com)
+
 - ♻️ [Cliente](https://reciclaweb-client.herokuapp.com)
+- 👩‍💻 [Servidor](https://reciclaweb-server.herokuapp.com)
+- 📖 [Servidor API](https://reciclaweb-server.herokuapp.com/swagger-ui.html#/)
