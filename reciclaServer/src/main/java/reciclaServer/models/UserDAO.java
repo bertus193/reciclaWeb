@@ -8,11 +8,10 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Transactional
-public interface UserDAO extends CrudRepository<User, Long>, JpaRepository<User, Long> {
+public interface UserDAO extends CrudRepository<User, Long>{
 
     List<User> findAll();
 
-    @Query(value = "SELECT * FROM USERS WHERE email = ?1", nativeQuery = true)
-    User findByEmailAddress(String emailAddress);
+    List<User> findByEmailAndName(String email, String lastname);
 
 }
