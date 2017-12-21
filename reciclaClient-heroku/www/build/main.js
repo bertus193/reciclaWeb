@@ -169,13 +169,15 @@ var HomePage = (function () {
     function HomePage(navCtrl, fb) {
         this.navCtrl = navCtrl;
         this.fb = fb;
-        this.FB_APP_ID = 138106000230935;
-        this.fb.browserInit(this.FB_APP_ID, "v2.8");
     }
     HomePage.prototype.doFbLogin = function () {
+        var _this = this;
         this.fb.login(['public_profile', 'email'])
-            .then(function (res) { return console.log('Logged into Facebook!', res); })
-            .catch(function (e) { return console.log('Error logging into Facebook', e); });
+            .then(function (res) {
+            return _this.fb.api('me?fields=id,name,email,first_name,picture.width(720).height(720).as(picture_large)', []).then(function (profile) {
+                _this.userData = { email: profile['email'], first_name: profile['first_name'], picture: profile['picture_large']['data']['url'], username: profile['name'] };
+            });
+        }).catch(function (e) { return console.log('Error logging into Facebook', e); });
     };
     HomePage = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({

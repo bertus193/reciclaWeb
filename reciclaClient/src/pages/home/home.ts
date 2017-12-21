@@ -8,18 +8,20 @@ import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
     templateUrl: 'home.html'
 })
 export class HomePage {
-    FB_APP_ID: number = 138106000230935;
 
+    userData: any;
 
     constructor(public navCtrl: NavController, public fb: Facebook) {
-        this.fb.browserInit(this.FB_APP_ID, "v2.8");
     }
 
     doFbLogin(): void {
 
         this.fb.login(['public_profile', 'email'])
-            .then((res: FacebookLoginResponse) => console.log('Logged into Facebook!', res))
-            .catch(e => console.log('Error logging into Facebook', e));
+            .then((res: FacebookLoginResponse) =>
+                this.fb.api('me?fields=id,name,email,first_name,picture.width(720).height(720).as(picture_large)', []).then(profile => {
+                    this.userData = { email: profile['email'], first_name: profile['first_name'], picture: profile['picture_large']['data']['url'], username: profile['name'] }
+
+                })).catch(e => console.log('Error logging into Facebook', e));
 
     }
 }
