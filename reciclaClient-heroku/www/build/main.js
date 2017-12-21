@@ -173,36 +173,9 @@ var HomePage = (function () {
         this.fb.browserInit(this.FB_APP_ID, "v2.8");
     }
     HomePage.prototype.doFbLogin = function () {
-        var _this = this;
-        var permissions = new Array();
-        //let nav = this.navCtrl;
-        //the permissions your facebook app needs from the user
-        permissions = ["public_profile"];
-        this.fb.login(permissions)
-            .then(function (response) {
-            var userId = response.authResponse.userID;
-            var params = new Array();
-            //Getting name and gender properties
-            _this.fb.api("/me?fields=name,gender", params)
-                .then(function (user) {
-                user.picture = "https://graph.facebook.com/" + userId + "/picture?type=large";
-                console.log(user.name);
-                //now we have the users info, let's save it in the NativeStorage
-                /*this.nativeStorage.setItem('user',
-                    {
-                        name: user.name,
-                        gender: user.gender,
-                        picture: user.picture
-                    })
-                    .then(() => {
-                        //nav.push(AboutPage);
-                    }, (error) => {
-                        console.log(error);
-                    })*/
-            });
-        }, function (error) {
-            console.log(error);
-        });
+        this.fb.login(['public_profile', 'email'])
+            .then(function (res) { return console.log('Logged into Facebook!', res); })
+            .catch(function (e) { return console.log('Error logging into Facebook', e); });
     };
     HomePage = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
