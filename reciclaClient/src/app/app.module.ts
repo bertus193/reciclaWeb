@@ -12,6 +12,8 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { Facebook } from '@ionic-native/facebook';
+import { IonicStorageModule } from "@ionic/storage";
+import { SessionProvider } from '../providers/session';
 
 @NgModule({
     declarations: [
@@ -23,7 +25,8 @@ import { Facebook } from '@ionic-native/facebook';
     ],
     imports: [
         BrowserModule,
-        IonicModule.forRoot(MyApp)
+        IonicModule.forRoot(MyApp),
+        IonicStorageModule.forRoot()
     ],
     bootstrap: [IonicApp],
     entryComponents: [
@@ -37,7 +40,8 @@ import { Facebook } from '@ionic-native/facebook';
         StatusBar,
         SplashScreen,
         Facebook,
-        { provide: ErrorHandler, useClass: IonicErrorHandler }
+        { provide: ErrorHandler, useClass: IonicErrorHandler },
+        SessionProvider
     ]
 })
 export class AppModule { }
