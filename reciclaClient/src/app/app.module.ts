@@ -14,6 +14,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { Facebook } from '@ionic-native/facebook';
 import { IonicStorageModule } from "@ionic/storage";
 import { SessionProvider } from '../providers/session';
+import { LoginPage } from '../pages/login/login';
 
 @NgModule({
     declarations: [
@@ -21,7 +22,8 @@ import { SessionProvider } from '../providers/session';
         AboutPage,
         ContactPage,
         HomePage,
-        TabsPage
+        TabsPage,
+        LoginPage
     ],
     imports: [
         BrowserModule,
@@ -34,7 +36,8 @@ import { SessionProvider } from '../providers/session';
         AboutPage,
         ContactPage,
         HomePage,
-        TabsPage
+        TabsPage,
+        LoginPage
     ],
     providers: [
         StatusBar,

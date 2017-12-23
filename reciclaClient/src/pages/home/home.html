@@ -5,19 +5,8 @@
 </ion-header>
 
 <ion-content padding>
-    <h2>ReciclaWeb</h2>
-    <p>
-        Proyecto reciclaje TFG en la universidad de Alicante.
-    </p>
-
-    <ion-col class="login-button">
-        <button ion-button block (click)="doFbLogin()">Facebook Login</button>
-    </ion-col>
     <br>
-    <div>
-        Session Token: {{sessionToken}}
-    </div>
-
+    <button ion-button block (click)="logout()">Logout</button>
 
     <ion-card *ngIf="userData">
         <ion-card-header>{{ userData.username }}</ion-card-header>
@@ -27,4 +16,5 @@
             <p>First Name: {{ userData.first_name }}</p>
         </ion-card-content>
     </ion-card>
+
 </ion-content>
