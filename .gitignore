@@ -36,3 +36,5 @@ Thumbs.db
 UserInterfaceState.xcuserstate
 
 reciclaClient/www
+
+/reciclaServer/src/main/resources/application.properties
