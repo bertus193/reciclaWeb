@@ -7,7 +7,7 @@ import reciclaServer.models.UserDAO;
 import java.util.List;
 
 
-@Service
+@Service("userService")
 public class UserService{
 
     private final UserDAO userDAO;
@@ -17,15 +17,29 @@ public class UserService{
         this.userDAO = userDAO;
     }
 
+    public void saveUser(User user) {
+        userDAO.save(user);
+    }
+
 
     public List<User> findAll(){
         List<User> users = userDAO.findAll();
         return users;
     }
 
-    public List<User> findByEmailAndName(String email, String name){
-        List<User> users = userDAO.findByEmailAndName(email, name);
-        return users;
+    public User findByEmail(String email){
+        return userDAO.findByEmail(email);
     }
 
+    public boolean isUserExist(User user){
+        return findByEmail(user.getEmail()) != null;
+    }
+
+    public User findById(long id) {
+        return userDAO.findById(id);
+    }
+
+    public void updateUser(User user) {
+        userDAO.save(user);
+    }
 }
