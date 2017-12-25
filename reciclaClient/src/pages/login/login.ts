@@ -43,8 +43,7 @@ export class LoginPage {
         this.login().then(res => {
             res.subscribe(user => {
                 if (user != null) {
-                    this.sessionProvider.setSessionToken(user.accessToken)
-                    this.sessionProvider.setUser(user)
+                    this.sessionProvider.updateSession(user)
                     this.app.getRootNavs()[0].setRoot(TabsPage)
                 }
             })

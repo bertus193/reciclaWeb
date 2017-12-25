@@ -9,26 +9,22 @@ export class SessionProvider {
 
     constructor(
         private storage: Storage) {
-
     }
 
-    public getSessionToken(): Promise<string> {
-        return this.storage.get('authToken');
+    public updateSession(user: User) {
+        this.storage.set('user', this.user)
+        this.user = user
     }
 
-    public setSessionToken(token: string) {
-        this.storage.set('authToken', token);
+    public getSession(): Promise<User> {
+        return this.storage.get('user')
+    }
+
+    public destroySession() {
+        this.storage.set('user', null)
     }
 
     public getUser(): any {
         return this.user
-    }
-
-    public setUser(user: User) {
-        this.user = user
-    }
-
-    logout() {
-        this.setSessionToken(null)
     }
 }

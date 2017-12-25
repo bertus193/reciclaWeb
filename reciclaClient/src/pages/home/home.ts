@@ -18,14 +18,14 @@ export class HomePage {
         public sessionProvider: SessionProvider,
         public app: App
     ) {
-        sessionProvider.getSessionToken().then(res => {
-            this.sessionToken = res
+        sessionProvider.getSession().then(res => {
+            this.user = res
         })
         this.user = sessionProvider.getUser()
     }
 
     logout() {
-        this.sessionProvider.logout()
+        this.sessionProvider.destroySession()
         this.app.getRootNavs()[0].setRoot(LoginPage)
     }
 

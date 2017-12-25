@@ -16,7 +16,7 @@ export class MyApp {
 
     constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, public sessionProvider: SessionProvider) {
 
-        this.sessionProvider.getSessionToken().then(res => {
+        this.sessionProvider.getSession().then(res => {
             if (res == null) {
                 this.rootPage = LoginPage
             } else {
