@@ -11,7 +11,7 @@ import { User } from '../../models/user'
 import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
 
 import 'rxjs/add/operator/map'
-import { APP_CONFIG_TOKEN } from '../../app/app-config';
+import { APP_CONFIG_TOKEN, ApplicationConfig } from '../../app/app-config';
 
 /**
  * Generated class for the LoginPage page.
@@ -28,7 +28,7 @@ import { APP_CONFIG_TOKEN } from '../../app/app-config';
 export class LoginPage {
 
     constructor(
-        @Inject(APP_CONFIG_TOKEN) private config,
+        @Inject(APP_CONFIG_TOKEN) private config: ApplicationConfig,
         private sessionProvider: SessionProvider,
         private app: App,
         private http: Http,

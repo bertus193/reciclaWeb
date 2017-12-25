@@ -215,7 +215,7 @@ var HomePage = (function () {
 // Configuration values for our app
 var APP_CONFIG = {
     appName: 'ReciclaWeb App',
-    apiEndpoint: 'http://127.0.0.1:8080',
+    apiEndpoint: 'https://reciclaweb-server.herokuapp.com',
     DEBUG_MODE: true
 };
 var APP_CONFIG_TOKEN = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["B" /* InjectionToken */]('config');
@@ -628,10 +628,12 @@ var LoginPage = (function () {
             selector: 'page-login',template:/*ion-inline-start:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/login/login.html"*/'<ion-content text-center class="vertical-align-content">\n    <ion-grid>\n        <ion-row>\n            <ion-col>\n                <h2>{{ config.appName }}</h2>\n                <p>\n                    Proyecto reciclaje TFG en la universidad de Alicante.\n                </p>\n\n                <ion-col class="login-button">\n                    <button ion-button block (click)="doFbLogin()">Facebook Login</button>\n                </ion-col>\n            </ion-col>\n        </ion-row>\n    </ion-grid>\n</ion-content>'/*ion-inline-end:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/login/login.html"*/,
         }),
         __param(0, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["z" /* Inject */])(__WEBPACK_IMPORTED_MODULE_8__app_app_config__["b" /* APP_CONFIG_TOKEN */])),
-        __metadata("design:paramtypes", [Object, typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__providers_session__["a" /* SessionProvider */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__providers_session__["a" /* SessionProvider */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3_ionic_angular_components_app_app__["a" /* App */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3_ionic_angular_components_app_app__["a" /* App */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_4__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__angular_http__["b" /* Http */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_6__ionic_native_facebook__["a" /* Facebook */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_6__ionic_native_facebook__["a" /* Facebook */]) === "function" && _d || Object])
+        __metadata("design:paramtypes", [Object, __WEBPACK_IMPORTED_MODULE_1__providers_session__["a" /* SessionProvider */],
+            __WEBPACK_IMPORTED_MODULE_3_ionic_angular_components_app_app__["a" /* App */],
+            __WEBPACK_IMPORTED_MODULE_4__angular_http__["b" /* Http */],
+            __WEBPACK_IMPORTED_MODULE_6__ionic_native_facebook__["a" /* Facebook */]])
     ], LoginPage);
     return LoginPage;
-    var _a, _b, _c, _d;
 }());
 
 //# sourceMappingURL=login.js.map
