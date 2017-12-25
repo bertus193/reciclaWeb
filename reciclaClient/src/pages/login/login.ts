@@ -1,4 +1,4 @@
-import { Component } from '@angular/core'
+import { Component, Inject } from '@angular/core'
 import { IonicPage } from 'ionic-angular'
 import { SessionProvider } from '../../providers/session'
 import { TabsPage } from '../tabs/tabs'
@@ -11,6 +11,7 @@ import { User } from '../../models/user'
 import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
 
 import 'rxjs/add/operator/map'
+import { APP_CONFIG_TOKEN } from '../../app/app-config';
 
 /**
  * Generated class for the LoginPage page.
@@ -27,6 +28,7 @@ import 'rxjs/add/operator/map'
 export class LoginPage {
 
     constructor(
+        @Inject(APP_CONFIG_TOKEN) private config,
         private sessionProvider: SessionProvider,
         private app: App,
         private http: Http,
@@ -78,7 +80,7 @@ export class LoginPage {
                 })).catch(e => {
 
                     console.log('Error logging into Facebook', e)
-                    if (e == "cordova_not_available") {
+                    if (this.config.DEBUG_MODE) {
 
                         var user: User = {
                             id: -1,
@@ -139,7 +141,7 @@ export class LoginPage {
         var user: User
         var status: number
 
-        return this.http.get("http://127.0.0.1:8080/users?email=" + email).map(res => {
+        return this.http.get(this.config.apiEndpoint + "/users?email=" + email).map(res => {
             status = res.status
 
             if (status === 200) {
@@ -160,7 +162,7 @@ export class LoginPage {
                 'Content-Type': 'application/json'
             })
         });
-        return this.http.post("http://127.0.0.1:8080/users", JSON.stringify(user), options).map(res => {
+        return this.http.post(this.config.apiEndpoint + "/users", JSON.stringify(user), options).map(res => {
             status = res.status
 
             if (status === 201) {
