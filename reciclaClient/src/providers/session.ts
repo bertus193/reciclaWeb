@@ -1,16 +1,14 @@
 import { Injectable } from '@angular/core';
-
-import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
 import { Storage } from '@ionic/storage';
 
-import { Platform } from 'ionic-angular';
+import { User } from '../models/user'
 
 @Injectable()
 export class SessionProvider {
-    private userData: any
-    private sessionToken: any
+    private user: User
 
-    constructor(public platform: Platform, public storage: Storage, public fb: Facebook) {
+    constructor(
+        private storage: Storage) {
 
     }
 
@@ -22,29 +20,12 @@ export class SessionProvider {
         this.storage.set('authToken', token);
     }
 
-    public getUserData(): any {
-        return this.userData
+    public getUser(): any {
+        return this.user
     }
 
-    doFbLogin(): Promise<string | void> {
-        return this.fb.login(['public_profile', 'email'])
-            .then((res: FacebookLoginResponse) =>
-                this.fb.api('me?fields=id,name,email,first_name,picture.width(720).height(720).as(picture_large)', []).then(profile => {
-                    this.userData = { email: profile['email'], first_name: profile['first_name'], picture: profile['picture_large']['data']['url'], username: profile['name'] }
-                    this.setSessionToken(res.authResponse.accessToken)
-                    this.getSessionToken().then(res => {
-                        this.sessionToken = res
-                    })
-                    return res.authResponse.accessToken
-                })).catch(e => {
-                    console.log('Error logging into Facebook', e)
-                    if (e == "cordova_not_available") {
-                        this.setSessionToken('DEBUG_MODE')
-                        return 'DEBUG_MODE'
-                    } else {
-                        return null
-                    }
-                });
+    public setUser(user: User) {
+        this.user = user
     }
 
     logout() {

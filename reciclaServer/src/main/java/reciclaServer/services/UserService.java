@@ -28,7 +28,7 @@ public class UserService{
     }
 
     public User findByEmail(String email){
-        return userDAO.findByEmail(email);
+        return userDAO.findFirstByEmail(email);
     }
 
     public boolean isUserExist(User user){
@@ -36,7 +36,7 @@ public class UserService{
     }
 
     public User findById(long id) {
-        return userDAO.findById(id);
+        return userDAO.findFirstById(id);
     }
 
     public void updateUser(User user) {

@@ -12,9 +12,9 @@ public interface UserDAO extends CrudRepository<User, Long>{
 
     List<User> findAll();
 
-    User findByEmail(String email);
+    User findFirstByEmail(String email);
 
     User save(User user);
 
-    User findById(long id);
+    User findFirstById(long id);
 }

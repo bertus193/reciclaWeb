@@ -8,6 +8,7 @@ import reciclaServer.models.User;
 import reciclaServer.services.UserService;
 
 @RestController
+@CrossOrigin(origins = "*")
 public class UserController {
 
 
