@@ -12,8 +12,8 @@ export class SessionProvider {
     }
 
     public updateSession(user: User) {
-        this.storage.set('user', this.user)
         this.user = user
+        this.storage.set('user', this.user)
     }
 
     public getSession(): Promise<User> {

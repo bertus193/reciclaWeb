@@ -25678,6 +25678,23 @@ ion-navbar.toolbar {
   min-height: calc(46px + env(safe-area-inset-bottom));
 }
 
+ion-icon[class*="reciclaUA-"] {
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-position: 50% 50%;
+  mask-position: 50% 50%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  background: currentColor;
+  width: 1em;
+  height: 1em;
+}
+
+ion-icon[class*="reciclaUA-recyle"] {
+  -webkit-mask-image: url("../assets/imgs/icons/recycle.svg");
+  mask-image: url("../assets/imgs/icons/recycle.svg");
+}
+
 .vertical-align-content > * {
   display: -webkit-box !important;
   display: -webkit-flex !important;

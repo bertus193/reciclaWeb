@@ -15,6 +15,7 @@ import { SessionProvider } from '../providers/session';
 import { HttpModule } from '@angular/http';
 import { APP_CONFIG, APP_CONFIG_TOKEN } from './app-config';
 
+import { Camera } from '@ionic-native/camera';
 
 @NgModule({
     declarations: [
@@ -38,7 +39,8 @@ import { APP_CONFIG, APP_CONFIG_TOKEN } from './app-config';
         Facebook,
         { provide: ErrorHandler, useClass: IonicErrorHandler },
         SessionProvider,
-        { provide: APP_CONFIG_TOKEN, useValue: APP_CONFIG }
+        { provide: APP_CONFIG_TOKEN, useValue: APP_CONFIG },
+        Camera
     ]
 })
 export class AppModule { }
