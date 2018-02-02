@@ -89,4 +89,7 @@
     <allow-navigation href="http://192.168.8.102:8100" />
     <plugin name="cordova-sqlite-storage" spec="^2.1.4" />
     <plugin name="cordova-plugin-camera" spec="^4.0.2" />
+    <plugin name="cordova-plugin-file" spec="^6.0.1" />
+    <plugin name="cordova-plugin-file-transfer" spec="^1.7.1" />
+    <allow-navigation href="http://192.168.1.138:8100" />
 </widget>
