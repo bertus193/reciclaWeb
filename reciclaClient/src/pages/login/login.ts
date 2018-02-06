@@ -1,5 +1,4 @@
 import { Component, Inject } from '@angular/core'
-import { IonicPage } from 'ionic-angular'
 import { SessionProvider } from '../../providers/session'
 import { TabsPage } from '../tabs/tabs'
 import { App } from 'ionic-angular/components/app/app'
@@ -13,14 +12,6 @@ import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
 import 'rxjs/add/operator/map'
 import { APP_CONFIG_TOKEN, ApplicationConfig } from '../../app/app-config';
 
-/**
- * Generated class for the LoginPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
-
-@IonicPage()
 @Component({
     selector: 'page-login',
     templateUrl: 'login.html',

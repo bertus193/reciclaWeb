@@ -1,10 +1,14 @@
-import { Component } from '@angular/core';
-import { NavController, LoadingController, ActionSheetController, ToastController, Platform, Loading } from 'ionic-angular';
+import { Component, ViewChild } from '@angular/core';
+import { NavController, LoadingController, ActionSheetController, ToastController, Platform, Loading, Slides } from 'ionic-angular';
 
 import { Camera } from '@ionic-native/camera';
 import { File } from '@ionic-native/file';
 import { Transfer, TransferObject } from '@ionic-native/transfer';
 import { FilePath } from '@ionic-native/file-path';
+import { TypeRecicle } from '../../models/typeRecicle';
+import { Geolocation } from '@ionic-native/geolocation';
+import { LocationAccuracy } from '@ionic-native/location-accuracy';
+
 
 declare var cordova: any;
 
@@ -19,7 +23,47 @@ export class RecyclePage {
     loading: Loading;
     errorMsg: string = "";
 
-    constructor(public navCtrl: NavController, private camera: Camera, private transfer: Transfer, private file: File, private filePath: FilePath, public actionSheetCtrl: ActionSheetController, public toastCtrl: ToastController, public platform: Platform, public loadingCtrl: LoadingController) {
+    @ViewChild(Slides) slides: Slides;
+
+    constructor(
+        public navCtrl: NavController,
+        private camera: Camera,
+        private transfer: Transfer,
+        private file: File,
+        private filePath: FilePath,
+        public actionSheetCtrl: ActionSheetController,
+        public toastCtrl: ToastController,
+        public platform: Platform,
+        public loadingCtrl: LoadingController,
+        private geolocation: Geolocation,
+        private locationAccuracy: LocationAccuracy) {
+
+    }
+
+    ionViewDidLoad() {
+        this.slides.lockSwipes(true);
+    }
+
+    public loadPositionSlide(typeRecicleItem) {
+        console.log(TypeRecicle[typeRecicleItem])
+        this.slideNext();
+    }
+
+    public getUserPosition() {
+
+        this.locationAccuracy.request(this.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY).then(
+            (resp) => {
+                this.geolocation.getCurrentPosition().then((resp) => {
+                    // resp.coords.latitude
+                    // resp.coords.longitude
+                    this.slideNext();
+                }).catch((error) => {
+                    this.presentToast('Error en la obtención de la ubicación.');
+                    console.log('Error getting location', error);
+                });
+            }).catch((error) => {
+                this.presentToast('Error en la obtención de los permisos necesarios.');
+            })
 
     }
 
@@ -48,29 +92,56 @@ export class RecyclePage {
                 var correctPath = imagePath.substr(0, imagePath.lastIndexOf('/') + 1);
                 this.copyFileToLocalDir(correctPath, currentName, this.createFileName());
             }
+            this.slideNext();
         }, (err) => {
-            this.presentToast('Error while selecting image.');
+            this.presentToast('Error en la selección de la imagen.');
         });
     }
 
     public presentActionSheet() {
+
         let actionSheet = this.actionSheetCtrl.create({
-            title: 'Select Image Source',
+            title: 'Elige un tipo de material',
             buttons: [
+                /*
                 {
-                    text: 'Load from Library',
+                    text: 'Cargar de la librería',
                     handler: () => {
                         this.takePicture(this.camera.PictureSourceType.PHOTOLIBRARY);
                     }
                 },
                 {
-                    text: 'Use Camera',
+                    text: 'Usar Cámara',
                     handler: () => {
                         this.takePicture(this.camera.PictureSourceType.CAMERA);
                     }
+                },*/
+                {
+                    text: 'Orgánico',
+                    handler: () => {
+                        this.loadPositionSlide(1);
+                    }
                 },
                 {
-                    text: 'Cancel',
+                    text: 'Plástico',
+                    handler: () => {
+                        this.loadPositionSlide(2);
+                    }
+                },
+                {
+                    text: 'Cristal',
+                    handler: () => {
+                        this.loadPositionSlide(3);
+                    }
+                },
+                {
+                    text: 'Papel',
+                    handler: () => {
+                        this.loadPositionSlide(4);
+                    }
+                },
+                {
+                    text: 'Cancelar',
                     role: 'cancel'
                 }
             ]
@@ -78,10 +149,16 @@ export class RecyclePage {
         actionSheet.present();
     }
 
+    private slideNext() {
+        this.slides.lockSwipes(false);
+        this.slides.slideNext();
+        this.slides.lockSwipes(true);
+    }
+
     private createFileName() {
         var d = new Date(),
             n = d.getTime(),
-            newFileName = n + ".jpg";
+            newFileName = n + ".png";
         return newFileName;
     }
 
@@ -91,7 +168,7 @@ export class RecyclePage {
             this.lastImage = newFileName;
         }, error => {
             this.errorMsg = error;
-            this.presentToast('Error while storing file.');
+            this.presentToast('Error en el almacenamiento de la imagen.');
         });
     }
 

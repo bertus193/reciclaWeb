@@ -92,4 +92,13 @@
     <plugin name="cordova-plugin-file" spec="^6.0.1" />
     <plugin name="cordova-plugin-file-transfer" spec="^1.7.1" />
     <allow-navigation href="http://192.168.1.138:8100" />
+    <plugin name="cordova-plugin-googlemaps" spec="^2.2.2">
+        <variable name="API_KEY_FOR_ANDROID" value="AIzaSyBn6b1Z_Yp5Ddsxg6HjF6TXYzYxC5ia-N4" />
+        <variable name="API_KEY_FOR_IOS" value="AIzaSyCOakSSesMSTZZHfRAItdrhD3iy9kxnGZk" />
+        <variable name="PLAY_SERVICES_VERSION" value="11.8.+" />
+    </plugin>
+    <plugin name="cordova-plugin-geolocation" spec="^4.0.1">
+        <variable name="GEOLOCATION_USAGE_DESCRIPTION" value="To locate you" />
+    </plugin>
+    <plugin name="cordova-plugin-request-location-accuracy" spec="^2.2.2" />
 </widget>
