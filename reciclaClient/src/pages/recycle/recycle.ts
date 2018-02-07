@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, Inject } from '@angular/core';
 import { NavController, LoadingController, ActionSheetController, ToastController, Platform, Loading, Slides } from 'ionic-angular';
 
 import { Camera } from '@ionic-native/camera';
@@ -8,6 +8,10 @@ import { FilePath } from '@ionic-native/file-path';
 import { TypeRecicle } from '../../models/typeRecicle';
 import { Geolocation } from '@ionic-native/geolocation';
 import { LocationAccuracy } from '@ionic-native/location-accuracy';
+import { ApplicationConfig, APP_CONFIG_TOKEN } from '../../app/app-config';
+
+import { MapPage } from '../map/map';
+
 
 
 declare var cordova: any;
@@ -23,9 +27,12 @@ export class RecyclePage {
     loading: Loading;
     errorMsg: string = "";
 
+    location: any;
+
     @ViewChild(Slides) slides: Slides;
 
     constructor(
+        @Inject(APP_CONFIG_TOKEN) private config: ApplicationConfig,
         public navCtrl: NavController,
         private camera: Camera,
         private transfer: Transfer,
@@ -36,12 +43,15 @@ export class RecyclePage {
         public platform: Platform,
         public loadingCtrl: LoadingController,
         private geolocation: Geolocation,
-        private locationAccuracy: LocationAccuracy) {
+        private locationAccuracy: LocationAccuracy,
+    ) {
 
     }
 
     ionViewDidLoad() {
-        this.slides.lockSwipes(true);
+        if (this.platform.is('cordova') && !this.config.DEBUG_MODE) {
+            this.slides.lockSwipes(true);
+        }
     }
 
     public loadPositionSlide(typeRecicleItem) {
@@ -54,9 +64,10 @@ export class RecyclePage {
         this.locationAccuracy.request(this.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY).then(
             (resp) => {
                 this.geolocation.getCurrentPosition().then((resp) => {
+                    this.location = resp;
                     // resp.coords.latitude
                     // resp.coords.longitude
-                    this.slideNext();
+                    this.navCtrl.push(MapPage)
                 }).catch((error) => {
                     this.presentToast('Error en la obtención de la ubicación.');
                     console.log('Error getting location', error);
@@ -66,6 +77,8 @@ export class RecyclePage {
             })
 
     }
+
+
 
     public takePicture(sourceType) {
 

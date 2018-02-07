@@ -25708,3 +25708,15 @@ ion-icon[class*="reciclaUA-recyle"] {
   -ms-flex-align: center !important;
   align-items: center !important;
 }
+
+page-map #map_canvas {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+#map_canvas {
+  display: block;
+  height: 100%;
+  width: 100%;
+}

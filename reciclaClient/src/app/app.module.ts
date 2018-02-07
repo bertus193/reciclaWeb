@@ -19,8 +19,10 @@ import { File } from '@ionic-native/file';
 import { Transfer } from '@ionic-native/transfer';
 import { FilePath } from '@ionic-native/file-path';
 import { Camera } from '@ionic-native/camera';
+
 import { Geolocation } from '@ionic-native/geolocation';
 import { LocationAccuracy } from '@ionic-native/location-accuracy';
+import { GoogleMaps } from '@ionic-native/google-maps';
 
 @NgModule({
     declarations: [
@@ -50,7 +52,8 @@ import { LocationAccuracy } from '@ionic-native/location-accuracy';
         Camera,
         FilePath,
         Geolocation,
-        LocationAccuracy
+        LocationAccuracy,
+        GoogleMaps
     ]
 })
 export class AppModule { }
