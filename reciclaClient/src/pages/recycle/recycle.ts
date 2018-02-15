@@ -5,7 +5,7 @@ import { Camera } from '@ionic-native/camera';
 import { File } from '@ionic-native/file';
 import { Transfer, TransferObject } from '@ionic-native/transfer';
 import { FilePath } from '@ionic-native/file-path';
-import { TypeRecicle } from '../../models/typeRecicle';
+import { TypeRecycle } from '../../models/typeRecicle';
 import { Geolocation } from '@ionic-native/geolocation';
 import { LocationAccuracy } from '@ionic-native/location-accuracy';
 import { ApplicationConfig, APP_CONFIG_TOKEN } from '../../app/app-config';
@@ -27,7 +27,7 @@ export class RecyclePage {
     loading: Loading;
     errorMsg: string = "";
 
-    location: any;
+    typeRecycleItem: string;
 
     @ViewChild(Slides) slides: Slides;
 
@@ -55,7 +55,7 @@ export class RecyclePage {
     }
 
     public loadPositionSlide(typeRecicleItem) {
-        console.log(TypeRecicle[typeRecicleItem])
+        this.typeRecycleItem = TypeRecycle[typeRecicleItem]
         this.slideNext();
     }
 
@@ -63,11 +63,21 @@ export class RecyclePage {
 
         this.locationAccuracy.request(this.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY).then(
             (resp) => {
-                this.geolocation.getCurrentPosition().then((resp) => {
-                    this.location = resp;
-                    // resp.coords.latitude
-                    // resp.coords.longitude
-                    this.navCtrl.push(MapPage)
+                this.geolocation.getCurrentPosition().then((position) => {
+                    var mapWindow;
+                    if (this.platform.is('ios')) {
+                        mapWindow = window.open('maps://?q=Yo&saddr=' + position.coords.latitude + ',' + position.coords.longitude + '&daddr=-0.5000000,38.5000000', '_system');
+                    }
+                    // android
+                    else if (this.platform.is('android')) {
+                        mapWindow = window.open('geo://0,0?q=' + position.coords.latitude + ',' + position.coords.longitude + '(Yo)', '_system');
+                    }
+                    if (mapWindow) {
+                        this.navCtrl.push(MapPage, {
+                            position: position,
+                            typeRecicleItem: this.typeRecycleItem
+                        })
+                    }
                 }).catch((error) => {
                     this.presentToast('Error en la obtención de la ubicación.');
                     console.log('Error getting location', error);

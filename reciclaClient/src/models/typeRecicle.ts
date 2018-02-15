@@ -1,4 +1,4 @@
-export enum TypeRecicle {
+export enum TypeRecycle {
     organic = 1,
     plastic = 2,
     glass = 3,

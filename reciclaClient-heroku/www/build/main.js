@@ -311,17 +311,29 @@ var RecyclePage = (function () {
         }
     };
     RecyclePage.prototype.loadPositionSlide = function (typeRecicleItem) {
-        console.log(__WEBPACK_IMPORTED_MODULE_6__models_typeRecicle__["a" /* TypeRecicle */][typeRecicleItem]);
+        this.typeRecycleItem = __WEBPACK_IMPORTED_MODULE_6__models_typeRecicle__["a" /* TypeRecycle */][typeRecicleItem];
         this.slideNext();
     };
     RecyclePage.prototype.getUserPosition = function () {
         var _this = this;
         this.locationAccuracy.request(this.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY).then(function (resp) {
-            _this.geolocation.getCurrentPosition().then(function (resp) {
-                _this.location = resp;
-                // resp.coords.latitude
-                // resp.coords.longitude
-                _this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_10__map_map__["a" /* MapPage */]);
+            _this.geolocation.getCurrentPosition().then(function (position) {
+                var mapWindow;
+                if (_this.platform.is('ios')) {
+                    mapWindow = window.open('maps://?q=Yo&saddr=' + position.coords.latitude + ',' + position.coords.longitude + '&daddr=-0.5000000,38.5000000', '_system');
+                }
+                ;
+                // android
+                if (_this.platform.is('android')) {
+                    mapWindow = window.open('geo://0,0?q=' + position.coords.latitude + ',' + position.coords.longitude + '(Yo)', '_system');
+                }
+                ;
+                if (mapWindow) {
+                    _this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_10__map_map__["a" /* MapPage */], {
+                        position: position,
+                        typeRecicleItem: _this.typeRecycleItem
+                    });
+                }
             }).catch(function (error) {
                 _this.presentToast('Error en la obtención de la ubicación.');
                 console.log('Error getting location', error);
@@ -476,12 +488,12 @@ var RecyclePage = (function () {
         });
     };
     __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_8" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* Slides */]),
-        __metadata("design:type", __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* Slides */])
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_8" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["k" /* Slides */]),
+        __metadata("design:type", __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["k" /* Slides */])
     ], RecyclePage.prototype, "slides", void 0);
     RecyclePage = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
-            selector: 'page-recycle',template:/*ion-inline-start:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/recycle/recycle.html"*/'<ion-header>\n    <ion-navbar>\n        <ion-title>\n            Reciclar!\n        </ion-title>\n    </ion-navbar>\n</ion-header>\n\n<ion-content padding>\n    <ion-slides pager>\n        <ion-slide>\n            <button ion-button (click)="presentActionSheet()">\n                Quiero reciclar\n            </button>\n        </ion-slide>\n        <ion-slide>\n            ¿Dónde me encuentro? Msg: {{errorMsg}}\n            <button ion-button (click)="getUserPosition()">\n                Seleccionar ubicación\n            </button>\n            <!--<img src="{{pathForImage(lastImage)}}" [hidden]="lastImage === null">\n            <button ion-button (click)="uploadImage()">\n                Buscar contenedor más cercano!\n            </button>-->\n        </ion-slide>\n    </ion-slides>\n</ion-content>'/*ion-inline-end:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/recycle/recycle.html"*/
+            selector: 'page-recycle',template:/*ion-inline-start:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/recycle/recycle.html"*/'<ion-header>\n    <ion-navbar>\n        <ion-title>\n            Reciclar!\n        </ion-title>\n    </ion-navbar>\n</ion-header>\n\n<ion-content padding>\n    <ion-slides pager>\n        <ion-slide>\n            <button ion-button (click)="presentActionSheet()">\n                Quiero reciclar\n            </button>\n        </ion-slide>\n        <ion-slide>\n            ¿Dónde me encuentro?\n            <button ion-button (click)="getUserPosition()">\n                Seleccionar ubicación\n            </button>\n            <!--<img src="{{pathForImage(lastImage)}}" [hidden]="lastImage === null">\n            <button ion-button (click)="uploadImage()">\n                Buscar contenedor más cercano!\n            </button>-->\n        </ion-slide>\n    </ion-slides>\n</ion-content>'/*ion-inline-end:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/recycle/recycle.html"*/
         }),
         __param(0, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["z" /* Inject */])(__WEBPACK_IMPORTED_MODULE_9__app_app_config__["b" /* APP_CONFIG_TOKEN */])),
         __metadata("design:paramtypes", [Object, __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* NavController */],
@@ -490,8 +502,8 @@ var RecyclePage = (function () {
             __WEBPACK_IMPORTED_MODULE_3__ionic_native_file__["a" /* File */],
             __WEBPACK_IMPORTED_MODULE_5__ionic_native_file_path__["a" /* FilePath */],
             __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["a" /* ActionSheetController */],
-            __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["k" /* ToastController */],
-            __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["i" /* Platform */],
+            __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["l" /* ToastController */],
+            __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* Platform */],
             __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["g" /* LoadingController */],
             __WEBPACK_IMPORTED_MODULE_7__ionic_native_geolocation__["a" /* Geolocation */],
             __WEBPACK_IMPORTED_MODULE_8__ionic_native_location_accuracy__["a" /* LocationAccuracy */]])
@@ -524,19 +536,24 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 var MapPage = (function () {
-    function MapPage(navCtrl, googleMaps) {
+    function MapPage(navCtrl, googleMaps, navParams) {
         this.navCtrl = navCtrl;
         this.googleMaps = googleMaps;
+        this.navParams = navParams;
+        this.typeRecycle = navParams.get("typeRecycle");
+        this.position = navParams.get("position");
     }
     MapPage.prototype.ionViewDidLoad = function () {
         this.loadMap();
     };
     MapPage.prototype.loadMap = function () {
+        var _this = this;
+        console.log(this.position);
         var mapOptions = {
             camera: {
                 target: {
-                    lat: 43.0741904,
-                    lng: -89.3809802 // default location
+                    lat: this.position.coords.latitude,
+                    lng: this.position.coords.longitude // default location
                 },
                 zoom: 18,
                 tilt: 30
@@ -546,19 +563,31 @@ var MapPage = (function () {
         // Wait the MAP_READY before using any methods.
         this.map.one(__WEBPACK_IMPORTED_MODULE_2__ionic_native_google_maps__["b" /* GoogleMapsEvent */].MAP_READY)
             .then(function () {
-            // Now you can use all methods safely.
-            //this.getPosition();
+            var latLng = new __WEBPACK_IMPORTED_MODULE_2__ionic_native_google_maps__["c" /* LatLng */](_this.position.coords.latitude, _this.position.coords.longitude);
+            _this.createMarker(latLng, "Yo").then(function (marker) {
+                marker.showInfoWindow();
+            }).catch(function (error) {
+                console.log(error);
+            });
         })
             .catch(function (error) {
             console.log(error);
         });
     };
+    MapPage.prototype.createMarker = function (loc, title) {
+        var markerOptions = {
+            position: loc,
+            title: title
+        };
+        return this.map.addMarker(markerOptions);
+    };
     MapPage = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
-            selector: 'page-map',template:/*ion-inline-start:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/map/map.html"*/'<ion-header>\n    <ion-navbar>\n        <ion-title>\n            Mapa\n        </ion-title>\n    </ion-navbar>\n</ion-header>\n\n<ion-content>\n    <div id="map_canvas"></div>\n</ion-content>'/*ion-inline-end:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/map/map.html"*/
+            selector: 'page-map',template:/*ion-inline-start:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/map/map.html"*/'<ion-header>\n    <ion-navbar>\n        <ion-title>\n            Mapa\n        </ion-title>\n    </ion-navbar>\n</ion-header>\n\n<ion-content>\n    <div #map id="map"></div>\n</ion-content>'/*ion-inline-end:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/map/map.html"*/
         }),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* NavController */],
-            __WEBPACK_IMPORTED_MODULE_2__ionic_native_google_maps__["a" /* GoogleMaps */]])
+            __WEBPACK_IMPORTED_MODULE_2__ionic_native_google_maps__["a" /* GoogleMaps */],
+            __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["i" /* NavParams */]])
     ], MapPage);
     return MapPage;
 }());
@@ -769,14 +798,14 @@ var AppModule = (function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return TypeRecicle; });
-var TypeRecicle;
-(function (TypeRecicle) {
-    TypeRecicle[TypeRecicle["organic"] = 1] = "organic";
-    TypeRecicle[TypeRecicle["plastic"] = 2] = "plastic";
-    TypeRecicle[TypeRecicle["glass"] = 3] = "glass";
-    TypeRecicle[TypeRecicle["paper"] = 4] = "paper";
-})(TypeRecicle || (TypeRecicle = {}));
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return TypeRecycle; });
+var TypeRecycle;
+(function (TypeRecycle) {
+    TypeRecycle[TypeRecycle["organic"] = 1] = "organic";
+    TypeRecycle[TypeRecycle["plastic"] = 2] = "plastic";
+    TypeRecycle[TypeRecycle["glass"] = 3] = "glass";
+    TypeRecycle[TypeRecycle["paper"] = 4] = "paper";
+})(TypeRecycle || (TypeRecycle = {}));
 //# sourceMappingURL=typeRecicle.js.map
 
 /***/ }),

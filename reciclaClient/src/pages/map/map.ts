@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, NavParams } from 'ionic-angular';
 
 import {
     GoogleMaps,
@@ -8,7 +8,8 @@ import {
     GoogleMapOptions,
     CameraPosition,
     MarkerOptions,
-    Marker
+    Marker,
+    LatLng
 } from '@ionic-native/google-maps';
 
 @Component({
@@ -19,9 +20,15 @@ export class MapPage {
 
     map: any;
 
-    constructor(public navCtrl: NavController,
-        private googleMaps: GoogleMaps) {
+    typeRecycle: any;
+    position: any;
 
+    constructor(private navCtrl: NavController,
+        private googleMaps: GoogleMaps,
+        private navParams: NavParams) {
+
+        this.typeRecycle = navParams.get("typeRecycle");
+        this.position = navParams.get("position");
     }
 
     ionViewDidLoad() {
@@ -29,11 +36,12 @@ export class MapPage {
     }
 
     loadMap() {
+        console.log(this.position)
         let mapOptions: GoogleMapOptions = {
             camera: {
                 target: {
-                    lat: 43.0741904, // default location
-                    lng: -89.3809802 // default location
+                    lat: this.position.coords.latitude, // default location
+                    lng: this.position.coords.longitude // default location
                 },
                 zoom: 18,
                 tilt: 30
@@ -45,13 +53,27 @@ export class MapPage {
         // Wait the MAP_READY before using any methods.
         this.map.one(GoogleMapsEvent.MAP_READY)
             .then(() => {
-                // Now you can use all methods safely.
-                //this.getPosition();
+                let latLng = new LatLng(this.position.coords.latitude, this.position.coords.longitude);
+
+                this.createMarker(latLng, "Yo").then((marker: Marker) => {
+                    marker.showInfoWindow();
+
+                }).catch(error => {
+                    console.log(error);
+                });
             })
             .catch(error => {
                 console.log(error);
             });
 
+    }
+
+    createMarker(loc: LatLng, title: string) {
+        let markerOptions: MarkerOptions = {
+            position: loc,
+            title: title
+        }
+        return this.map.addMarker(markerOptions);
     }
 
 

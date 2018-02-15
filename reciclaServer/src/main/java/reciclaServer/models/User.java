@@ -1,10 +1,17 @@
 package reciclaServer.models;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class User {
     private static final long serialVersionUID = 1L;
 
@@ -23,6 +30,9 @@ public class User {
     private String profilePicture;
 
     private String accessToken;
+
+    @OneToMany(mappedBy = "user")
+    List<RecycleItem> recycleItems;
 
     public User(){ //Needed for JPA
 
@@ -76,4 +86,7 @@ public class User {
         this.accessToken = accessToken;
     }
 
+    public List<RecycleItem> getRecycleItems() {
+        return recycleItems;
+    }
 }

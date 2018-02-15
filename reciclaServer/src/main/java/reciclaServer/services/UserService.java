@@ -38,8 +38,4 @@ public class UserService{
     public User findById(long id) {
         return userDAO.findFirstById(id);
     }
-
-    public void updateUser(User user) {
-        userDAO.save(user);
-    }
 }
