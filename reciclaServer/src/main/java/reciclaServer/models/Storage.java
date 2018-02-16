@@ -2,6 +2,7 @@ package reciclaServer.models;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import reciclaServer.config.EntityIdResolver;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -11,6 +12,8 @@ import java.util.List;
 @Table(name = "storage")
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
+        resolver = EntityIdResolver.class,
+        scope = Storage.class,
         property = "id")
 public class Storage {
 

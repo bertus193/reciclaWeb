@@ -9,7 +9,7 @@ export interface ApplicationConfig {
 // Configuration values for our app
 export const APP_CONFIG: ApplicationConfig = {
     appName: 'ReciclaWeb App',
-    apiEndpoint: 'https://reciclaweb-server.herokuapp.com',
+    apiEndpoint: 'http://127.0.0.1:8080',
     DEBUG_MODE: true
 
 };

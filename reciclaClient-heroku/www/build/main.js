@@ -11,7 +11,7 @@ webpackJsonp([1],{
 // Configuration values for our app
 var APP_CONFIG = {
     appName: 'ReciclaWeb App',
-    apiEndpoint: 'https://reciclaweb-server.herokuapp.com',
+    apiEndpoint: 'http://127.0.0.1:8080',
     DEBUG_MODE: true
 };
 var APP_CONFIG_TOKEN = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["B" /* InjectionToken */]('config');
@@ -322,12 +322,9 @@ var RecyclePage = (function () {
                 if (_this.platform.is('ios')) {
                     mapWindow = window.open('maps://?q=Yo&saddr=' + position.coords.latitude + ',' + position.coords.longitude + '&daddr=-0.5000000,38.5000000', '_system');
                 }
-                ;
-                // android
-                if (_this.platform.is('android')) {
+                else if (_this.platform.is('android')) {
                     mapWindow = window.open('geo://0,0?q=' + position.coords.latitude + ',' + position.coords.longitude + '(Yo)', '_system');
                 }
-                ;
                 if (mapWindow) {
                     _this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_10__map_map__["a" /* MapPage */], {
                         position: position,
@@ -661,8 +658,8 @@ var HomePage = (function () {
         this.app = app;
         sessionProvider.getSession().then(function (res) {
             _this.user = res;
+            console.log(_this.user);
         });
-        this.user = sessionProvider.getUser();
     }
     HomePage.prototype.logout = function () {
         this.sessionProvider.destroySession();
@@ -672,11 +669,10 @@ var HomePage = (function () {
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
             selector: 'page-home',template:/*ion-inline-start:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/home/home.html"*/'<ion-header>\n    <ion-navbar>\n        <ion-title>Home</ion-title>\n    </ion-navbar>\n</ion-header>\n\n<ion-content padding>\n    <br>\n    <button ion-button block (click)="logout()">Logout</button>\n\n    <ion-card *ngIf="user">\n        <ion-card-header>{{ user.fullName }}</ion-card-header>\n        <img [src]="user.profilePicture" />\n        <ion-card-content>\n            <p>Email: {{ user.email }}</p>\n            <p>First Name: {{ user.name }}</p>\n        </ion-card-content>\n    </ion-card>\n\n</ion-content>'/*ion-inline-end:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/home/home.html"*/
         }),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* NavController */],
-            __WEBPACK_IMPORTED_MODULE_2__providers_session__["a" /* SessionProvider */],
-            __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["b" /* App */]])
+        __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* NavController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* NavController */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__providers_session__["a" /* SessionProvider */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__providers_session__["a" /* SessionProvider */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["b" /* App */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["b" /* App */]) === "function" && _c || Object])
     ], HomePage);
     return HomePage;
+    var _a, _b, _c;
 }());
 
 //# sourceMappingURL=home.js.map

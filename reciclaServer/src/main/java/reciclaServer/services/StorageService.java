@@ -3,7 +3,7 @@ package reciclaServer.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import reciclaServer.models.StorageDAO;
+import reciclaServer.models.DAO.StorageDAO;
 
 @Service("storageService")
 public class StorageService {

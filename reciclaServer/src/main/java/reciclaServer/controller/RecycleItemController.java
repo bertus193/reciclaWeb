@@ -5,6 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reciclaServer.models.RecycleItem;
+import reciclaServer.models.exceptions.ItemTypeNotFoundException;
+import reciclaServer.models.exceptions.StorageNotFoundException;
+import reciclaServer.models.exceptions.UserNotFoundException;
 import reciclaServer.services.RecycleItemService;
 
 @RestController
@@ -23,9 +26,13 @@ public class RecycleItemController {
     public ResponseEntity<?> createRecycleItem(@RequestBody RecycleItem recycleItem){
         System.out.println("Creating RecycleItem " + recycleItem.getName());
 
+        try {
+            recycleItemService.saveRecycleItem(recycleItem);
+        } catch (UserNotFoundException | StorageNotFoundException | ItemTypeNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
 
-        recycleItemService.saveRecycleItem(recycleItem);
-        return new ResponseEntity<RecycleItem>(recycleItem, HttpStatus.CREATED);
+        return new ResponseEntity<>(recycleItem, HttpStatus.CREATED);
     }
 
 }

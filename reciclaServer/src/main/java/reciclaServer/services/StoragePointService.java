@@ -4,7 +4,7 @@ package reciclaServer.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reciclaServer.models.StoragePoint;
-import reciclaServer.models.StoragePointDAO;
+import reciclaServer.models.DAO.StoragePointDAO;
 
 import java.util.List;
 

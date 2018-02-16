@@ -3,7 +3,7 @@ package reciclaServer.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reciclaServer.models.User;
-import reciclaServer.models.UserDAO;
+import reciclaServer.models.DAO.UserDAO;
 import java.util.List;
 
 

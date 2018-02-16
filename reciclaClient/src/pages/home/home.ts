@@ -20,8 +20,9 @@ export class HomePage {
     ) {
         sessionProvider.getSession().then(res => {
             this.user = res
+            console.log(this.user)
         })
-        this.user = sessionProvider.getUser()
+
     }
 
     logout() {

@@ -2,6 +2,7 @@ package reciclaServer.models;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import reciclaServer.config.EntityIdResolver;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -10,6 +11,8 @@ import javax.validation.constraints.NotNull;
 @Table(name = "recycle_items")
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
+        resolver = EntityIdResolver.class,
+        scope = RecycleItem.class,
         property = "id")
 public class RecycleItem {
 
@@ -24,8 +27,8 @@ public class RecycleItem {
     private String image;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user")
-    private User user;
+    @JoinColumn(name = "recycle_user")
+    private User recycleUser;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "storage")
@@ -52,8 +55,8 @@ public class RecycleItem {
         return image;
     }
 
-    public User getUser() {
-        return user;
+    public User getRecycleUser() {
+        return recycleUser;
     }
 
     public ItemType getItemType() {

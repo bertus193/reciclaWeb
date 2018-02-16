@@ -2,6 +2,7 @@ package reciclaServer.models;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import reciclaServer.config.EntityIdResolver;
 
 import javax.persistence.*;
 import java.util.List;
@@ -11,6 +12,8 @@ import java.util.List;
 @Table(name = "item_type")
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
+        resolver = EntityIdResolver.class,
+        scope = ItemType.class,
         property = "id")
 public class ItemType {
 
