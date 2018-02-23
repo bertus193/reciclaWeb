@@ -1,3 +1,5 @@
+import { Position } from "./position";
+
 export interface StoragePoint {
     id: number;
     name: string;

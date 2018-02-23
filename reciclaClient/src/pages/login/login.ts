@@ -55,7 +55,8 @@ export class LoginPage {
                         name: profile['first_name'],
                         fullName: profile['name'],
                         profilePicture: profile['picture_large']['data']['url'],
-                        accessToken: fbUser.authResponse.accessToken
+                        accessToken: fbUser.authResponse.accessToken,
+                        recycleItems: []
                     }
                     return this.findOrCreateUser(user).map((res: any) => {
                         if (res.value != null) {
@@ -78,7 +79,8 @@ export class LoginPage {
                             name: 'Debug',
                             fullName: 'Debug user',
                             profilePicture: 'https://keluro.com/images/Blog/Debug.jpg',
-                            accessToken: 'DEBUG_MODE'
+                            accessToken: 'DEBUG_MODE',
+                            recycleItems: []
                         }
 
                         return this.findOrCreateUser(user).map((res: any) => {

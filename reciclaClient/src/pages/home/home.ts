@@ -14,13 +14,12 @@ export class HomePage {
     user: User
 
     constructor(
-        public navCtrl: NavController,
-        public sessionProvider: SessionProvider,
-        public app: App
+        private navCtrl: NavController,
+        private sessionProvider: SessionProvider,
+        private app: App
     ) {
         sessionProvider.getSession().then(res => {
             this.user = res
-            console.log(this.user)
         })
 
     }

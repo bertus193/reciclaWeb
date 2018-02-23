@@ -22,7 +22,7 @@ public class RecycleItemController {
         this.recycleItemService = recycleItemService;
     }
 
-    @RequestMapping(value = "/recycleItem", method = RequestMethod.POST)
+    @RequestMapping(value = "/recycleItems", method = RequestMethod.POST)
     public ResponseEntity<?> createRecycleItem(@RequestBody RecycleItem recycleItem){
         System.out.println("Creating RecycleItem " + recycleItem.getName());
 

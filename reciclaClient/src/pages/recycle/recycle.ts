@@ -10,7 +10,12 @@ import { Geolocation } from '@ionic-native/geolocation';
 import { LocationAccuracy } from '@ionic-native/location-accuracy';
 import { ApplicationConfig, APP_CONFIG_TOKEN } from '../../app/app-config';
 
-import { MapPage } from '../map/map';
+import { StoragePoint } from '../../models/storagePoint'
+import { Http } from '@angular/http';
+import { Position } from '../../models/position';
+
+import { Observable } from 'rxjs/Rx'
+import { recycleFinishPage } from '../recycleFinish/recycleFinish';
 
 
 
@@ -44,6 +49,7 @@ export class RecyclePage {
         public loadingCtrl: LoadingController,
         private geolocation: Geolocation,
         private locationAccuracy: LocationAccuracy,
+        private http: Http
     ) {
 
     }
@@ -64,20 +70,31 @@ export class RecyclePage {
         this.locationAccuracy.request(this.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY).then(
             (resp) => {
                 this.geolocation.getCurrentPosition().then((position) => {
-                    var mapWindow;
-                    if (this.platform.is('ios')) {
-                        mapWindow = window.open('maps://?q=Yo&saddr=' + position.coords.latitude + ',' + position.coords.longitude + '&daddr=-0.5000000,38.5000000', '_system');
-                    }
-                    // android
-                    else if (this.platform.is('android')) {
-                        mapWindow = window.open('geo://0,0?q=' + position.coords.latitude + ',' + position.coords.longitude + '(Yo)', '_system');
-                    }
-                    if (mapWindow) {
-                        this.navCtrl.push(MapPage, {
-                            position: position,
-                            typeRecicleItem: this.typeRecycleItem
+                    let myPosition: Position
+                    myPosition.latitude = position.coords.latitude
+                    myPosition.longitude = position.coords.longitude
+                    this.getNearestStoragePoint(myPosition).map(
+                        result => {
+                            if (result.status == 200) {
+                                var mapWindow;
+                                if (this.platform.is('ios')) {
+                                    mapWindow = window.open('maps://?q=Yo&saddr=' + position.coords.latitude + ',' + position.coords.longitude + '&daddr=' + result.storagePoint.position.latitude + ',' + result.storagePoint.position.longitude, '_system');
+                                }
+                                // android
+                                else if (this.platform.is('android')) {
+                                    mapWindow = window.open('geo://' + result.storagePoint.position.latitude + ',' + result.storagePoint.position.longitude + 'q=' + position.coords.latitude + ',' + position.coords.longitude + '(Yo)', '_system');
+                                }
+                                if (mapWindow) {
+                                    this.navCtrl.push(recycleFinishPage, {
+                                        typeRecicleItem: this.typeRecycleItem,
+                                        storageId: result.storagePoint.id,
+                                        recycleValue: 1
+                                    })
+                                }
+                            } else {
+                                return null
+                            }
                         })
-                    }
                 }).catch((error) => {
                     this.presentToast('Error en la obtención de la ubicación.');
                     console.log('Error getting location', error);
@@ -246,6 +263,31 @@ export class RecyclePage {
             this.loading.dismissAll()
             this.presentToast('Error while uploading file.');
         });
+    }
+
+    public getNearestStoragePoint(currentPosition: Position): Observable<{ storagePoint: StoragePoint, status: number }> {
+        var status: number
+        var storagePointList: StoragePoint[]
+        var nearestStoragePoint: StoragePoint
+        return this.http.get(this.config.apiEndpoint + "/storagePoints").map(res => {
+            status = res.status
+
+            if (status === 200) {
+                storagePointList = res.json();
+                nearestStoragePoint = storagePointList[0];
+                for (let storagePoint of storagePointList) {
+                    if ((currentPosition.latitude - storagePoint.position.latitude) < (currentPosition.latitude - nearestStoragePoint.position.latitude)) {
+                        if ((currentPosition.longitude - storagePoint.position.longitude) < (currentPosition.longitude - nearestStoragePoint.position.longitude)) {
+                            nearestStoragePoint = storagePoint
+                        }
+                    }
+                }
+            }
+            return { nearestStoragePoint, status }
+        }).catch(error => {
+            return Observable.throw(error);
+        });
+
     }
 
 }

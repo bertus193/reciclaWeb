@@ -26,6 +26,6 @@ public class StoragePointController {
     public ResponseEntity<?> findAll(){
         List<StoragePoint> storagePointList = storagePointService.findAll();
 
-        return new ResponseEntity<List<StoragePoint>>(storagePointList, HttpStatus.OK);
+        return new ResponseEntity<>(storagePointList, HttpStatus.OK);
     }
 }

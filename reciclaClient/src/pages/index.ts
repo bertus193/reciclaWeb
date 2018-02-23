@@ -3,7 +3,7 @@ import { ContactPage } from './contact/contact';
 import { HomePage } from './home/home';
 import { TabsPage } from './tabs/tabs';
 import { LoginPage } from './login/login';
-import { MapPage } from './map/map';
+import { recycleFinishPage } from './recycleFinish/recycleFinish';
 
 export const APP_PAGES = [
     RecyclePage,
@@ -11,5 +11,5 @@ export const APP_PAGES = [
     HomePage,
     TabsPage,
     LoginPage,
-    MapPage
+    recycleFinishPage
 ];
