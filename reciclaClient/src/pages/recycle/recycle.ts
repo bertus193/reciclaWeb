@@ -18,7 +18,7 @@ import { Position } from '../../models/position';
 
 
 
-import { recycleFinishPage } from '../recycleFinish/recycleFinish';
+import { recycleFinishPage } from './recycle_finish/recycleFinish';
 
 
 

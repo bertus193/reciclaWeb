@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
-import { App } from 'ionic-angular';
+import { App, NavController } from 'ionic-angular';
 import { SessionProvider } from '../../providers/session';
 import { LoginPage } from '../login/login';
 import { User } from '../../models/user';
+import { myRecycledItemsPage } from './profile_recycledItems/myRecycledItems';
 
 @Component({
     selector: 'page-profile',
@@ -14,6 +15,7 @@ export class ProfilePage {
 
     constructor(
         private sessionProvider: SessionProvider,
+        private navCtrl: NavController,
         private app: App
     ) {
         sessionProvider.getSession().then(res => {
@@ -21,9 +23,13 @@ export class ProfilePage {
         })
     }
 
-    logout() {
+    goToLogout() {
         this.sessionProvider.destroySession()
         this.app.getRootNavs()[0].setRoot(LoginPage)
+    }
+
+    goToMyRecycledItems() {
+        this.navCtrl.push(myRecycledItemsPage)
     }
 
 }

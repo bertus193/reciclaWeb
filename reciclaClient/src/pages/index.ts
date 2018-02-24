@@ -3,7 +3,8 @@ import { ProfilePage } from './profile/profile';
 import { HomePage } from './home/home';
 import { TabsPage } from './tabs/tabs';
 import { LoginPage } from './login/login';
-import { recycleFinishPage } from './recycleFinish/recycleFinish';
+import { recycleFinishPage } from './recycle/recycle_finish/recycleFinish';
+import { myRecycledItemsPage } from './profile/profile_recycledItems/myRecycledItems';
 
 export const APP_PAGES = [
     RecyclePage,
@@ -11,5 +12,6 @@ export const APP_PAGES = [
     HomePage,
     TabsPage,
     LoginPage,
-    recycleFinishPage
+    recycleFinishPage,
+    myRecycledItemsPage
 ];
