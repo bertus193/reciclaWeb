@@ -4,17 +4,12 @@
     </ion-navbar>
 </ion-header>
 
-<ion-content padding>
-    <br>
-    <button ion-button block (click)="logout()">Logout</button>
-
-    <ion-card *ngIf="user">
-        <ion-card-header>{{ user.fullName }}</ion-card-header>
-        <img [src]="user.profilePicture" />
-        <ion-card-content>
-            <p>Email: {{ user.email }}</p>
-            <p>First Name: {{ user.name }}</p>
-        </ion-card-content>
-    </ion-card>
-
+<ion-content text-center class="vertical-align-content">
+    <ion-grid>
+        <ion-row>
+            <ion-col>
+                <h5>ReciclaUA</h5>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
 </ion-content>

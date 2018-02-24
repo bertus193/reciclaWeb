@@ -17,3 +17,10 @@ ion-icon {
         mask-image: url("../assets/imgs/icons/recycle.svg");
     }
 }
+
+.vertical-align-content > *
+{
+     display: flex!important;
+     align-content: center!important;
+     align-items: center!important;
+}

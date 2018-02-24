@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 import { RecyclePage } from '../recycle/recycle';
-import { ContactPage } from '../contact/contact';
+import { ProfilePage } from '../profile/profile';
 import { HomePage } from '../home/home';
 import { IonicPage } from 'ionic-angular';
 
@@ -13,7 +13,7 @@ export class TabsPage {
 
     tab1Root = HomePage;
     tab2Root = RecyclePage;
-    tab3Root = ContactPage;
+    tab3Root = ProfilePage;
 
     constructor() {
 

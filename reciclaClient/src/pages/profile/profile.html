@@ -1,0 +1,26 @@
+<ion-header>
+    <ion-navbar>
+        <ion-title>
+            Perfil
+        </ion-title>
+    </ion-navbar>
+</ion-header>
+
+<ion-content>
+    <ion-grid>
+        <ion-row>
+            <ion-col>
+                <button ion-button block (click)="logout()">Logout</button>
+
+                <ion-card *ngIf="user">
+                    <ion-card-header>{{ user.fullName }}</ion-card-header>
+                    <img [src]="user.profilePicture" />
+                    <ion-card-content>
+                        <p>Email: {{ user.email }}</p>
+                        <p>First Name: {{ user.name }}</p>
+                    </ion-card-content>
+                </ion-card>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+</ion-content>

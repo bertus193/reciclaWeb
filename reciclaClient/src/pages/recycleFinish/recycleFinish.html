@@ -6,9 +6,18 @@
     </ion-navbar>
 </ion-header>
 
-<ion-content padding>
-    <p>Msg: {{ msg }}</p>
-    <button ion-button (click)="recycleFinish()">
-        Finalizar reciclaje
-    </button>
+<ion-content text-center class="vertical-align-content">
+    <ion-grid>
+        <ion-row>
+            <ion-col>
+                <h5>{{ msg }}</h5>
+                <ion-col>
+                    <button ion-button (click)="recycleFinish()">
+                        Finalizar reciclaje
+                    </button>
+                </ion-col>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+
 </ion-content>

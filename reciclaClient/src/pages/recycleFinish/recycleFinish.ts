@@ -8,7 +8,6 @@ import { Http, RequestOptions } from '@angular/http';
 
 import { Headers } from '@angular/http';
 import { ApplicationConfig, APP_CONFIG_TOKEN } from '../../app/app-config';
-import { ItemType } from '../../models/itemType';
 
 @Component({
     selector: 'page-recycleFinish',
