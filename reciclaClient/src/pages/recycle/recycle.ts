@@ -9,12 +9,16 @@ import { TypeRecycle } from '../../models/typeRecicle';
 import { Geolocation } from '@ionic-native/geolocation';
 import { LocationAccuracy } from '@ionic-native/location-accuracy';
 import { ApplicationConfig, APP_CONFIG_TOKEN } from '../../app/app-config';
-
 import { StoragePoint } from '../../models/storagePoint'
+
 import { Http } from '@angular/http';
+import { Observable } from 'rxjs/Rx'
+import 'rxjs/add/operator/map'
+
 import { Position } from '../../models/position';
 
-import { Observable } from 'rxjs/Rx'
+
+
 import { recycleFinishPage } from '../recycleFinish/recycleFinish';
 
 
@@ -32,7 +36,7 @@ export class RecyclePage {
     loading: Loading;
     errorMsg: string = "";
 
-    typeRecycleItem: string;
+    recycleItemType: number;
 
     @ViewChild(Slides) slides: Slides;
 
@@ -60,49 +64,49 @@ export class RecyclePage {
         }
     }
 
-    public loadPositionSlide(typeRecicleItem) {
-        this.typeRecycleItem = TypeRecycle[typeRecicleItem]
+    public loadPositionSlide(recycleItemType: number) {
+        this.recycleItemType = recycleItemType
         this.slideNext();
     }
 
     public getUserPosition() {
 
+        let myPosition: Position
+
         this.locationAccuracy.request(this.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY).then(
             (resp) => {
                 this.geolocation.getCurrentPosition().then((position) => {
-                    let myPosition: Position
-                    myPosition.latitude = position.coords.latitude
-                    myPosition.longitude = position.coords.longitude
-                    this.getNearestStoragePoint(myPosition).map(
+                    myPosition = {
+                        id: null,
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude
+                    }
+                    this.getNearestStoragePoint(myPosition).subscribe(
                         result => {
+                            var storagePoint: StoragePoint = result.storagePoint
                             if (result.status == 200) {
                                 var mapWindow;
                                 if (this.platform.is('ios')) {
-                                    mapWindow = window.open('maps://?q=Yo&saddr=' + position.coords.latitude + ',' + position.coords.longitude + '&daddr=' + result.storagePoint.position.latitude + ',' + result.storagePoint.position.longitude, '_system');
+                                    mapWindow = window.open('maps://?q=Yo&saddr=' + myPosition.latitude + ',' + myPosition.longitude + '&daddr=' + storagePoint.position.latitude + ',' + storagePoint.position.longitude, '_system');
                                 }
                                 // android
                                 else if (this.platform.is('android')) {
-                                    mapWindow = window.open('geo://' + result.storagePoint.position.latitude + ',' + result.storagePoint.position.longitude + 'q=' + position.coords.latitude + ',' + position.coords.longitude + '(Yo)', '_system');
+                                    mapWindow = window.open('geo://' + storagePoint.position.latitude + ',' + storagePoint.position.longitude + 'q=' + myPosition.latitude + ',' + myPosition.longitude + '(Yo)', '_system');
                                 }
                                 if (mapWindow) {
                                     this.navCtrl.push(recycleFinishPage, {
-                                        typeRecicleItem: this.typeRecycleItem,
-                                        storageId: result.storagePoint.id,
-                                        recycleValue: 1
+                                        recycleItemType: this.recycleItemType,
+                                        storageId: result.storagePoint.id
                                     })
                                 }
-                            } else {
-                                return null
                             }
                         })
                 }).catch((error) => {
                     this.presentToast('Error en la obtención de la ubicación.');
-                    console.log('Error getting location', error);
                 });
             }).catch((error) => {
                 this.presentToast('Error en la obtención de los permisos necesarios.');
             })
-
     }
 
 
@@ -178,6 +182,12 @@ export class RecyclePage {
                     text: 'Papel',
                     handler: () => {
                         this.loadPositionSlide(4);
+                    }
+                },
+                {
+                    text: 'Material de oficina',
+                    handler: () => {
+                        this.loadPositionSlide(5);
                     }
                 },
                 {
@@ -268,26 +278,25 @@ export class RecyclePage {
     public getNearestStoragePoint(currentPosition: Position): Observable<{ storagePoint: StoragePoint, status: number }> {
         var status: number
         var storagePointList: StoragePoint[]
-        var nearestStoragePoint: StoragePoint
+        var storagePoint: StoragePoint
         return this.http.get(this.config.apiEndpoint + "/storagePoints").map(res => {
             status = res.status
-
             if (status === 200) {
                 storagePointList = res.json();
-                nearestStoragePoint = storagePointList[0];
-                for (let storagePoint of storagePointList) {
-                    if ((currentPosition.latitude - storagePoint.position.latitude) < (currentPosition.latitude - nearestStoragePoint.position.latitude)) {
-                        if ((currentPosition.longitude - storagePoint.position.longitude) < (currentPosition.longitude - nearestStoragePoint.position.longitude)) {
-                            nearestStoragePoint = storagePoint
+                storagePoint = storagePointList[0];
+                for (let currentSPoint of storagePointList) {
+                    if ((currentPosition.latitude - currentSPoint.position.latitude) < (currentPosition.latitude - storagePoint.position.latitude)) {
+                        if ((currentPosition.longitude - currentSPoint.position.longitude) < (currentPosition.longitude - storagePoint.position.longitude)) {
+                            storagePoint = currentSPoint
                         }
                     }
                 }
             }
-            return { nearestStoragePoint, status }
+            return { storagePoint, status }
         }).catch(error => {
+            console.log(error)
             return Observable.throw(error);
         });
-
     }
 
 }

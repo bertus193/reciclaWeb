@@ -1,12 +1,10 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavParams } from 'ionic-angular';
 
 import {
     GoogleMaps,
-    GoogleMap,
     GoogleMapsEvent,
     GoogleMapOptions,
-    CameraPosition,
     MarkerOptions,
     Marker,
     LatLng
@@ -23,12 +21,12 @@ export class MapPage {
     typeRecycle: any;
     position: any;
 
-    constructor(private navCtrl: NavController,
+    constructor(
         private googleMaps: GoogleMaps,
         private navParams: NavParams) {
 
-        this.typeRecycle = navParams.get("typeRecycle");
-        this.position = navParams.get("position");
+        this.typeRecycle = this.navParams.get("typeRecycle");
+        this.position = this.navParams.get("position");
     }
 
     ionViewDidLoad() {

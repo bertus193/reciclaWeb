@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, App } from 'ionic-angular';
+import { App } from 'ionic-angular';
 import { SessionProvider } from '../../providers/session';
 import { LoginPage } from '../login/login';
 import { User } from '../../models/user';
@@ -14,7 +14,6 @@ export class HomePage {
     user: User
 
     constructor(
-        private navCtrl: NavController,
         private sessionProvider: SessionProvider,
         private app: App
     ) {

@@ -3,9 +3,8 @@ import { SessionProvider } from '../../providers/session'
 import { TabsPage } from '../tabs/tabs'
 import { App } from 'ionic-angular/components/app/app'
 
-import { Http, RequestOptions } from '@angular/http'
+import { Http, RequestOptions, Headers } from '@angular/http'
 import { Observable } from 'rxjs/Rx'
-import { Headers } from '@angular/http'
 import { User } from '../../models/user'
 import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
 

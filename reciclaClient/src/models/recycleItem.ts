@@ -1,12 +1,13 @@
 import { User } from "./user";
 import { ItemType } from "./itemType";
+import { Storage } from "./storage";
 
 
-export interface RecycleItem {
+export class RecycleItem {
     id: number;
     name: string;
     image: string;
-    user: User;
-    storage: number;
-    itemType: ItemType;
+    recycleUser: any;
+    storage: any;
+    itemType: any;
 }

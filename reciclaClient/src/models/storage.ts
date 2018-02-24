@@ -1,6 +1,6 @@
 import { RecycleItem } from "./recycleItem";
 
-export interface Storage {
+export class Storage {
     id: number;
     name: string;
     recycledItems: RecycleItem[];

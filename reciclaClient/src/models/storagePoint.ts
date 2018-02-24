@@ -1,8 +1,8 @@
 import { Position } from "./position";
 
-export interface StoragePoint {
+export class StoragePoint {
     id: number;
     name: string;
     storages: Storage[];
-    position: Position;
+    position: any;
 }

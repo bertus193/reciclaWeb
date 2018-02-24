@@ -1,10 +1,14 @@
-import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { Component, Inject } from '@angular/core';
+import { NavParams, ToastController } from 'ionic-angular';
 import { TypeRecycle } from '../../models/typeRecicle';
 import { RecycleItem } from '../../models/recycleItem';
-import { SessionProvider } from '../../providers/session';
-import { Http, RequestOptions, Headers } from '@angular/http';
-import { ApplicationConfig } from '../../app/app-config';
+import { SessionProvider } from '../../providers/session'
+
+import { Http, RequestOptions } from '@angular/http';
+
+import { Headers } from '@angular/http';
+import { ApplicationConfig, APP_CONFIG_TOKEN } from '../../app/app-config';
+import { ItemType } from '../../models/itemType';
 
 @Component({
     selector: 'page-recycleFinish',
@@ -12,54 +16,66 @@ import { ApplicationConfig } from '../../app/app-config';
 })
 export class recycleFinishPage {
 
-    recycleItemType: TypeRecycle
+    recycleItemType: number
     storageId: number
-    recycleValue: number
     msg: string = ""
 
-    options: any
 
-
-    constructor(private navCtrl: NavController,
+    constructor(
         private sessionProvider: SessionProvider,
         private http: Http,
-        private config: ApplicationConfig,
+        public toastCtrl: ToastController,
+        @Inject(APP_CONFIG_TOKEN) private config: ApplicationConfig,
         private navParams: NavParams) {
-        this.recycleItemType = navParams.get("typeRecycle");
-        this.storageId = navParams.get("storageId");
-        this.recycleValue = navParams.get("recycleValue");
+
+        this.recycleItemType = this.navParams.get("recycleItemType");
+        this.storageId = this.navParams.get("storageId");
     }
 
     ionViewDidLoad() {
-        this.options = new RequestOptions({
+
+    }
+
+    public recycleFinish() {
+        var options = new RequestOptions({
             headers: new Headers({
                 'Content-Type': 'application/json'
             })
         });
-    }
 
-    public recycleFinish() {
         this.sessionProvider.getSession().then(res => {
             var recycleItem: RecycleItem
-            recycleItem.itemType.type = this.recycleItemType
-            recycleItem.itemType.recycleValue = this.recycleValue
-            recycleItem.storage = this.storageId
-            recycleItem.user = res
-            return this.http.post(this.config.apiEndpoint + "/recycleItems", JSON.stringify(recycleItem), this.options).map(function (res) {
+            recycleItem = {
+                id: null,
+                name: TypeRecycle[this.recycleItemType],
+                image: "",
+                recycleUser: res.id,
+                storage: this.storageId,
+                itemType: this.recycleItemType
+            }
+            return this.http.post(this.config.apiEndpoint + "/recycleItems", JSON.stringify(recycleItem), options).subscribe(res => {
+                this.msg = "recycleItem: " + JSON.stringify(recycleItem)
                 var status = res.status;
                 if (status === 201) {
                     this.msg = "Item creado correctamente."
                 }
-
-            });
+                else {
+                    this.presentToast("Los datos insertados son incorrectos.")
+                }
+            })
+        }).catch(error => {
+            this.presentToast("Error encontrado, por favor contacte con el administrador." + error)
         })
-
-
-
     }
 
-
-
+    private presentToast(text) {
+        let toast = this.toastCtrl.create({
+            message: text,
+            duration: 3000,
+            position: 'top'
+        });
+        toast.present();
+    }
 
 
 }
