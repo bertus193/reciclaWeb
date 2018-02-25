@@ -44,10 +44,6 @@ public class StoragePoint {
         return name;
     }
 
-    public List<Storage> getStorages() {
-        return storages;
-    }
-
     public Position getPosition() {
         return position;
     }

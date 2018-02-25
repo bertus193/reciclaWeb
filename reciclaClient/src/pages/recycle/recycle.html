@@ -16,10 +16,17 @@
             </p>
         </ion-slide>
         <ion-slide>
-            ¿Dónde me encuentro?
-            <button ion-button (click)="getUserPosition()">
-                Seleccionar ubicación
-            </button>
+            <p>¿Dónde me encuentro?</p>
+            <p>
+                <button ion-button icon-only (click)='slidePrev()' color="dark">
+                    <ion-icon name="arrow-back"></ion-icon>
+                </button>
+                <button ion-button (click)="getUserPosition()">
+                    Seleccionar ubicación
+                </button>
+            </p>
+
+
             <!--<img src="{{pathForImage(lastImage)}}" [hidden]="lastImage === null">
             <button ion-button (click)="uploadImage()">
                 Buscar contenedor más cercano!

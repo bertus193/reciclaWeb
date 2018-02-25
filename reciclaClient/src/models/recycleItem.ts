@@ -5,4 +5,5 @@ export class RecycleItem {
     recycleUser: any;
     storage: any;
     itemType: any;
+    createdDate: Date
 }

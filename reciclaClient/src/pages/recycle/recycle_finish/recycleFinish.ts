@@ -50,7 +50,8 @@ export class recycleFinishPage {
                 image: "",
                 recycleUser: res.id,
                 storage: this.storageId,
-                itemType: this.recycleItemType
+                itemType: this.recycleItemType,
+                createdDate: null
             }
             return this.http.post(this.config.apiEndpoint + "/recycleItems", JSON.stringify(recycleItem), options).subscribe(res => {
                 this.msg = "recycleItem: " + JSON.stringify(recycleItem)

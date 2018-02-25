@@ -8,4 +8,5 @@ export interface User {
     profilePicture: string;
     accessToken: string;
     recycleItems: RecycleItem[];
+    createdDate: Date
 }

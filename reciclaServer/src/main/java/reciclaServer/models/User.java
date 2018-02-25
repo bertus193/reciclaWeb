@@ -6,6 +6,7 @@ import reciclaServer.config.EntityIdResolver;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.sql.Timestamp;
 import java.util.List;
 
 @Entity
@@ -33,8 +34,10 @@ public class User {
 
     private String accessToken;
 
+    private Timestamp createdDate;
+
     @OneToMany(mappedBy = "recycleUser")
-    List<RecycleItem> recycleItems;
+    private List<RecycleItem> recycleItems;
 
     public User(){ //Needed for JPA
 
@@ -88,7 +91,16 @@ public class User {
         this.accessToken = accessToken;
     }
 
-    /*public List<RecycleItem> getRecycleItems() {
-        return recycleItems;
-    }*/
+    public void setRecycleItems(List<RecycleItem> recycleItems) {
+        this.recycleItems = recycleItems;
+    }
+
+    public Timestamp getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Timestamp createdDate) {
+        this.createdDate = createdDate;
+    }
+
 }

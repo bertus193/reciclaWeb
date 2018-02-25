@@ -49,12 +49,4 @@ public class ItemType {
     public long getId() {
         return id;
     }
-
-    public List<RecycleItem> getRecycleItems() {
-        return recycleItems;
-    }
-
-    public List<Storage> getStorages() {
-        return storages;
-    }
 }

@@ -6,6 +6,7 @@ import reciclaServer.config.EntityIdResolver;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "recycle_items")
@@ -39,6 +40,8 @@ public class RecycleItem {
     @JoinColumn(name = "item_type")
     private ItemType itemType;
 
+    private Timestamp createdDate;
+
     public RecycleItem(){ //Needed for JPA
 
     }
@@ -65,5 +68,37 @@ public class RecycleItem {
 
     public Storage getStorage() {
         return storage;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public void setRecycleUser(User recycleUser) {
+        this.recycleUser = recycleUser;
+    }
+
+    public void setStorage(Storage storage) {
+        this.storage = storage;
+    }
+
+    public void setItemType(ItemType itemType) {
+        this.itemType = itemType;
+    }
+
+    public Timestamp getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Timestamp createdDate) {
+        this.createdDate = createdDate;
     }
 }

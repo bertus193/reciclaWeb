@@ -10,7 +10,6 @@ import { myRecycledItemsPage } from './profile_recycledItems/myRecycledItems';
     templateUrl: 'profile.html'
 })
 export class ProfilePage {
-    sessionToken: any
     user: User
 
     constructor(

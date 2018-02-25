@@ -50,10 +50,6 @@ public class Storage {
         return name;
     }
 
-    public List<RecycleItem> getRecycledItems() {
-        return recycledItems;
-    }
-
     public ItemType getItemType() {
         return itemType;
     }

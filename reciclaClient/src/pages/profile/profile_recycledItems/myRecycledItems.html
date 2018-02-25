@@ -4,12 +4,42 @@
     </ion-navbar>
 </ion-header>
 
-<ion-content text-center class="vertical-align-content">
-    <ion-grid>
-        <ion-row>
-            <ion-col>
-                <h5>ReciclaUA</h5>
-            </ion-col>
-        </ion-row>
+<ion-content>
+    <ion-grid style="height: 100%">
+
+        <div *ngIf="recycleItems?.length > 0;else recycleItemsNotFound">
+            <ion-row justify-content-center align-items-center style="height: 100%">
+                <ion-col>
+                    <div *ngFor="let recycleItem of recycleItems">
+
+                        <ion-card>
+                            <ion-item>
+                                <ion-avatar item-start>
+                                    <img src="img/marty-avatar.png">
+                                </ion-avatar>
+                                {{recycleItem.name}}
+                                <p>{{ getItemType(recycleItem.itemType) }} - {{ recycleItem.createdDate | date: 'dd/MM/yyyy
+                                    H:mm'}}
+                                </p>
+                            </ion-item>
+                        </ion-card>
+                    </div>
+                </ion-col>
+            </ion-row>
+        </div>
+
     </ion-grid>
 </ion-content>
+
+
+
+<ng-template #recycleItemsNotFound>
+    <ion-row align-items-center text-center style="height: 100%">
+        <ion-col>
+            <div>
+                <p>Todavía no has reciclado nada</p>
+                <h5 style="font-weight: bold">¡A qué esperas!</h5>
+            </div>
+        </ion-col>
+    </ion-row>
+</ng-template>

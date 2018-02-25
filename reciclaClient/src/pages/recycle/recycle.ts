@@ -204,6 +204,12 @@ export class RecyclePage {
         this.slides.lockSwipes(true);
     }
 
+    private slidePrev() {
+        this.slides.lockSwipes(false);
+        this.slides.slidePrev();
+        this.slides.lockSwipes(true);
+    }
+
     private createFileName() {
         var d = new Date(),
             n = d.getTime(),

@@ -1,7 +1,8 @@
 export enum TypeRecycle {
-    organic = 1,
-    plastic = 2,
-    glass = 3,
-    paper = 4
+    'Orgánico' = 1,
+    'Plástico' = 2,
+    'Cristal' = 3,
+    'Papel' = 4,
+    'Material de Oficina' = 5
 
 }

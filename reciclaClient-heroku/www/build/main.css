@@ -25694,17 +25694,3 @@ ion-icon[class*="reciclaUA-recyle"] {
   -webkit-mask-image: url("../assets/imgs/icons/recycle.svg");
   mask-image: url("../assets/imgs/icons/recycle.svg");
 }
-
-.vertical-align-content > * {
-  display: -webkit-box !important;
-  display: -webkit-flex !important;
-  display: -ms-flexbox !important;
-  display: flex !important;
-  -webkit-align-content: center !important;
-  -ms-flex-line-pack: center !important;
-  align-content: center !important;
-  -webkit-box-align: center !important;
-  -webkit-align-items: center !important;
-  -ms-flex-align: center !important;
-  align-items: center !important;
-}
