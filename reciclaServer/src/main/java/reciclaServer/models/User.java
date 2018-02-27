@@ -1,6 +1,7 @@
 package reciclaServer.models;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import reciclaServer.config.EntityIdResolver;
 
@@ -103,4 +104,8 @@ public class User {
         this.createdDate = createdDate;
     }
 
+    @JsonIgnore
+    public List<RecycleItem> getRecycleItems() {
+        return recycleItems;
+    }
 }

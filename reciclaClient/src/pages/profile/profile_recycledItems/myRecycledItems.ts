@@ -1,6 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { RecycleItem } from '../../../models/recycleItem';
 import { TypeRecycle } from '../../../models/typeRecicle';
+
+import { Observable } from 'rxjs/Rx'
+import { Http } from '@angular/http';
+import { APP_CONFIG_TOKEN, ApplicationConfig } from '../../../app/app-config';
+import { SessionProvider } from '../../../providers/session';
+import 'rxjs/add/operator/map'
 
 @Component({
     selector: 'page-myRecycledItems',
@@ -9,10 +15,15 @@ import { TypeRecycle } from '../../../models/typeRecicle';
 export class myRecycledItemsPage {
     recycleItems: RecycleItem[]
     recycleItemHTML: string
+    showLoadingMsg = true
 
     constructor(
+        private http: Http,
+        @Inject(APP_CONFIG_TOKEN) private config: ApplicationConfig,
+        private sessionProvider: SessionProvider,
     ) {
         this.recycleItems = []
+        this.getRecycleItems();
     }
 
     ionViewDidLoad() {
@@ -28,10 +39,23 @@ export class myRecycledItemsPage {
     }
 
     public getItemType(itemTypeId: number): string {
-        console.log(itemTypeId + " " + TypeRecycle[itemTypeId])
         if (TypeRecycle[itemTypeId]) {
             return TypeRecycle[itemTypeId]
         }
+    }
+
+    getRecycleItems() {
+        var status: number
+
+        this.sessionProvider.getSession().then(res => {
+            this.http.get(this.config.apiEndpoint + "/users/" + res.id + "/recycleItems").subscribe(res => {
+                status = res.status
+                if (status === 200) {
+                    this.recycleItems = res.json();
+                }
+                this.showLoadingMsg = false
+            })
+        })
     }
 
 

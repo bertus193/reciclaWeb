@@ -15,10 +15,10 @@
                         <ion-card>
                             <ion-item>
                                 <ion-avatar item-start>
-                                    <img src="img/marty-avatar.png">
+                                    <img src="{{recycleItem.image}}">
                                 </ion-avatar>
                                 {{recycleItem.name}}
-                                <p>{{ getItemType(recycleItem.itemType) }} - {{ recycleItem.createdDate | date: 'dd/MM/yyyy
+                                <p>{{ getItemType(recycleItem.itemType.id) }} - {{ recycleItem.createdDate | date: 'dd/MM/yyyy
                                     H:mm'}}
                                 </p>
                             </ion-item>
@@ -36,10 +36,15 @@
 <ng-template #recycleItemsNotFound>
     <ion-row align-items-center text-center style="height: 100%">
         <ion-col>
-            <div>
-                <p>Todavía no has reciclado nada</p>
-                <h5 style="font-weight: bold">¡A qué esperas!</h5>
+            <div *ngIf="showLoadingMsg == true; else showNoRecycledItemsFound">
+                <h5>Cargando...</h5>
             </div>
+            <ng-template #showNoRecycledItemsFound>
+                <div>
+                    <p>Todavía no has reciclado nada</p>
+                    <h5 style="font-weight: bold">¡A qué esperas!</h5>
+                </div>
+            </ng-template>
         </ion-col>
     </ion-row>
 </ng-template>

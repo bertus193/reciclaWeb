@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reciclaServer.models.RecycleItem;
 import reciclaServer.models.User;
 import reciclaServer.services.UserService;
 
@@ -20,7 +21,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/users", method = RequestMethod.GET)
-    public ResponseEntity<?> findByEmail(@RequestParam("email") String email){
+    public ResponseEntity<?> getUserByEmail(@RequestParam("email") String email){
         User user = userService.findByEmail(email);
 
         if(user == null){
@@ -58,5 +59,16 @@ public class UserController {
 
         userService.saveUser(user);
         return new ResponseEntity<User>(currentUser, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/users/{id}/recycleItems", method = RequestMethod.GET)
+    public ResponseEntity<?> getUserRecycleItems(@PathVariable("id") long id){
+        User user = userService.findById(id);
+
+        if(user == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(user.getRecycleItems(), HttpStatus.OK);
     }
 }

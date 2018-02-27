@@ -22,7 +22,7 @@ import { Camera } from '@ionic-native/camera';
 
 import { Geolocation } from '@ionic-native/geolocation';
 import { LocationAccuracy } from '@ionic-native/location-accuracy';
-import { GoogleMaps } from '@ionic-native/google-maps';
+import { GoogleMaps } from '@ionic-native/google-maps'
 
 @NgModule({
     declarations: [
