@@ -526,7 +526,7 @@ var RecyclePage = (function () {
     ], RecyclePage.prototype, "slides", void 0);
     RecyclePage = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
-            selector: 'page-recycle',template:/*ion-inline-start:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/recycle/recycle.html"*/'<ion-header>\n    <ion-navbar>\n        <ion-title>\n            Reciclar!\n        </ion-title>\n    </ion-navbar>\n</ion-header>\n\n<ion-content padding>\n    <ion-slides pager>\n        <ion-slide>\n            <img src="https://reciclaweb.000webhostapp.com/quieroReciclar.png" />\n            <p>\n                <button ion-button (click)="presentActionSheet()">\n                    Quiero reciclar\n                </button>\n            </p>\n        </ion-slide>\n        <ion-slide>\n            <p>¿Dónde me encuentro?</p>\n            <p>\n                <button ion-button icon-only (click)=\'slidePrev()\' color="dark">\n                    <ion-icon name="arrow-back"></ion-icon>\n                </button>\n                <button ion-button (click)="getUserPosition()">\n                    Seleccionar ubicación\n                </button>\n            </p>\n\n\n            <!--<img src="{{pathForImage(lastImage)}}" [hidden]="lastImage === null">\n            <button ion-button (click)="uploadImage()">\n                Buscar contenedor más cercano!\n            </button>-->\n        </ion-slide>\n    </ion-slides>\n</ion-content>'/*ion-inline-end:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/recycle/recycle.html"*/
+            selector: 'page-recycle',template:/*ion-inline-start:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/recycle/recycle.html"*/'<ion-header>\n    <ion-navbar>\n        <ion-title>\n            Reciclar!\n        </ion-title>\n    </ion-navbar>\n</ion-header>\n\n<ion-content padding>\n    <ion-slides pager>\n        <ion-slide>\n            <img src="/assets/imgs/quieroReciclar.png" />\n            <p>\n                <button ion-button (click)="presentActionSheet()">\n                    Quiero reciclar\n                </button>\n            </p>\n        </ion-slide>\n        <ion-slide>\n            <p>¿Dónde me encuentro?</p>\n            <p>\n                <button ion-button icon-only (click)=\'slidePrev()\' color="dark">\n                    <ion-icon name="arrow-back"></ion-icon>\n                </button>\n                <button ion-button (click)="getUserPosition()">\n                    Seleccionar ubicación\n                </button>\n            </p>\n\n\n            <!--<img src="{{pathForImage(lastImage)}}" [hidden]="lastImage === null">\n            <button ion-button (click)="uploadImage()">\n                Buscar contenedor más cercano!\n            </button>-->\n        </ion-slide>\n    </ion-slides>\n</ion-content>'/*ion-inline-end:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/recycle/recycle.html"*/
         }),
         __param(0, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["z" /* Inject */])(__WEBPACK_IMPORTED_MODULE_8__app_app_config__["b" /* APP_CONFIG_TOKEN */])),
         __metadata("design:paramtypes", [Object, __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* NavController */],
@@ -757,6 +757,7 @@ var myRecycledItemsPage = (function () {
         this.config = config;
         this.sessionProvider = sessionProvider;
         this.showLoadingMsg = true;
+        this.errorLoadingContent = false;
         this.recycleItems = [];
         this.getRecycleItems();
     }
@@ -772,26 +773,37 @@ var myRecycledItemsPage = (function () {
                 "</ion-item></ion-card>";
     };
     myRecycledItemsPage.prototype.getItemType = function (itemTypeId) {
+        var out = "Desconocido";
         if (__WEBPACK_IMPORTED_MODULE_1__models_typeRecicle__["a" /* TypeRecycle */][itemTypeId]) {
-            return __WEBPACK_IMPORTED_MODULE_1__models_typeRecicle__["a" /* TypeRecycle */][itemTypeId];
+            out = __WEBPACK_IMPORTED_MODULE_1__models_typeRecicle__["a" /* TypeRecycle */][itemTypeId];
         }
+        return out;
     };
     myRecycledItemsPage.prototype.getRecycleItems = function () {
         var _this = this;
         var status;
         this.sessionProvider.getSession().then(function (res) {
-            _this.http.get(_this.config.apiEndpoint + "/users/" + res.id + "/recycleItems").subscribe(function (res) {
+            _this.http.get(_this.config.apiEndpoint + "/users/" + res.id + "/recycleItems").timeout(5000).subscribe(function (res) {
                 status = res.status;
                 if (status === 200) {
                     _this.recycleItems = res.json();
                 }
+                else {
+                    _this.errorLoadingContent = true;
+                }
                 _this.showLoadingMsg = false;
+            }, function (error) {
+                _this.showLoadingMsg = false;
+                _this.errorLoadingContent = true;
             });
+        }).catch(function (error) {
+            _this.showLoadingMsg = false;
+            _this.errorLoadingContent = true;
         });
     };
     myRecycledItemsPage = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
-            selector: 'page-myRecycledItems',template:/*ion-inline-start:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/profile/profile_recycledItems/myRecycledItems.html"*/'<ion-header>\n    <ion-navbar>\n        <ion-title>Historial de reciclaje</ion-title>\n    </ion-navbar>\n</ion-header>\n\n<ion-content>\n    <ion-grid style="height: 100%">\n\n        <div *ngIf="recycleItems?.length > 0;else recycleItemsNotFound">\n            <ion-row justify-content-center align-items-center style="height: 100%">\n                <ion-col>\n                    <div *ngFor="let recycleItem of recycleItems">\n\n                        <ion-card>\n                            <ion-item>\n                                <ion-avatar item-start>\n                                    <img src="{{recycleItem.image}}">\n                                </ion-avatar>\n                                {{recycleItem.name}}\n                                <p>{{ getItemType(recycleItem.itemType.id) }} - {{ recycleItem.createdDate | date: \'dd/MM/yyyy\n                                    H:mm\'}}\n                                </p>\n                            </ion-item>\n                        </ion-card>\n                    </div>\n                </ion-col>\n            </ion-row>\n        </div>\n\n    </ion-grid>\n</ion-content>\n\n\n\n<ng-template #recycleItemsNotFound>\n    <ion-row align-items-center text-center style="height: 100%">\n        <ion-col>\n            <div *ngIf="showLoadingMsg == true; else showNoRecycledItemsFound">\n                <h5>Cargando...</h5>\n            </div>\n            <ng-template #showNoRecycledItemsFound>\n                <div>\n                    <p>Todavía no has reciclado nada</p>\n                    <h5 style="font-weight: bold">¡A qué esperas!</h5>\n                </div>\n            </ng-template>\n        </ion-col>\n    </ion-row>\n</ng-template>'/*ion-inline-end:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/profile/profile_recycledItems/myRecycledItems.html"*/
+            selector: 'page-myRecycledItems',template:/*ion-inline-start:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/profile/profile_recycledItems/myRecycledItems.html"*/'<ion-header>\n    <ion-navbar>\n        <ion-title>Historial de reciclaje</ion-title>\n    </ion-navbar>\n</ion-header>\n\n<ion-content>\n    <ion-grid style="height: 100%">\n\n        <div *ngIf="recycleItems?.length > 0;else recycleItemsNotFound">\n            <ion-row justify-content-center align-items-center style="height: 100%">\n                <ion-col>\n                    <div *ngFor="let recycleItem of recycleItems">\n\n                        <ion-card>\n                            <ion-item>\n                                <ion-avatar item-start>\n                                    <img src="{{recycleItem.image}}">\n                                </ion-avatar>\n                                {{recycleItem.name}}\n                                <p>{{ getItemType(recycleItem.itemType.id) }} - {{ recycleItem.createdDate | date: \'dd/MM/yyyy\n                                    H:mm\'}}\n                                </p>\n                            </ion-item>\n                        </ion-card>\n                    </div>\n                </ion-col>\n            </ion-row>\n        </div>\n\n    </ion-grid>\n</ion-content>\n\n\n\n<ng-template #recycleItemsNotFound>\n    <ion-row align-items-center text-center style="height: 100%">\n        <ion-col>\n            <div *ngIf="showLoadingMsg == true; else showLoadingResult">\n                <h5>Cargando...</h5>\n            </div>\n            <ng-template #showLoadingResult>\n                <div *ngIf="errorLoadingContent == true; else showNoRecycledItemsFound">\n                    <div>\n                        <p>Ha habido algún problema</p>\n                        <h5 style="font-weight: bold">Intentalo de nuevo en unos minutos</h5>\n                    </div>\n                </div>\n                <ng-template #showNoRecycledItemsFound>\n                    <div>\n                        <p>Todavía no has reciclado nada</p>\n                        <h5 style="font-weight: bold">¡A qué esperas!</h5>\n                    </div>\n                </ng-template>\n            </ng-template>\n        </ion-col>\n    </ion-row>\n</ng-template>'/*ion-inline-end:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/profile/profile_recycledItems/myRecycledItems.html"*/
         }),
         __param(1, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["z" /* Inject */])(__WEBPACK_IMPORTED_MODULE_3__app_app_config__["b" /* APP_CONFIG_TOKEN */])),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2__angular_http__["b" /* Http */], Object, __WEBPACK_IMPORTED_MODULE_4__providers_session__["a" /* SessionProvider */]])

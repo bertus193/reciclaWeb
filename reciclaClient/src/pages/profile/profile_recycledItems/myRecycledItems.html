@@ -36,14 +36,22 @@
 <ng-template #recycleItemsNotFound>
     <ion-row align-items-center text-center style="height: 100%">
         <ion-col>
-            <div *ngIf="showLoadingMsg == true; else showNoRecycledItemsFound">
+            <div *ngIf="showLoadingMsg == true; else showLoadingResult">
                 <h5>Cargando...</h5>
             </div>
-            <ng-template #showNoRecycledItemsFound>
-                <div>
-                    <p>Todavía no has reciclado nada</p>
-                    <h5 style="font-weight: bold">¡A qué esperas!</h5>
+            <ng-template #showLoadingResult>
+                <div *ngIf="errorLoadingContent == true; else showNoRecycledItemsFound">
+                    <div>
+                        <p>Ha habido algún problema</p>
+                        <h5 style="font-weight: bold">Intentalo de nuevo en unos minutos</h5>
+                    </div>
                 </div>
+                <ng-template #showNoRecycledItemsFound>
+                    <div>
+                        <p>Todavía no has reciclado nada</p>
+                        <h5 style="font-weight: bold">¡A qué esperas!</h5>
+                    </div>
+                </ng-template>
             </ng-template>
         </ion-col>
     </ion-row>
