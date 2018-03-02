@@ -103,8 +103,7 @@ public class User {
     public void setCreatedDate(Timestamp createdDate) {
         this.createdDate = createdDate;
     }
-
-    @JsonIgnore
+    
     public List<RecycleItem> getRecycleItems() {
         return recycleItems;
     }
