@@ -63,6 +63,13 @@ export class RecyclePage {
         }
     }
 
+    public test() {
+        this.navCtrl.push(recycleFinishPage, {
+            recycleItemType: 3,
+            storageId: 1
+        })
+    }
+
     public loadPositionSlide(recycleItemType: number) {
         this.recycleItemType = recycleItemType
         this.slideNext();

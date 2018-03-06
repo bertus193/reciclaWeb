@@ -1,6 +1,7 @@
 package reciclaServer.models;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import reciclaServer.config.EntityIdResolver;
 
@@ -33,6 +34,7 @@ public class RecycleItem {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "storage")
+    @JsonIdentityReference(alwaysAsId=true)
     private Storage storage;
 
     @ManyToOne(cascade = CascadeType.ALL)

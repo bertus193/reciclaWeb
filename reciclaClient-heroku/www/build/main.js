@@ -16,6 +16,7 @@ webpackJsonp([1],{
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_rxjs_add_operator_map__ = __webpack_require__(62);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7_rxjs_add_operator_map__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__app_app_config__ = __webpack_require__(45);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_ionic_angular__ = __webpack_require__(64);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -37,13 +38,15 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 
 
 
+
 var LoginPage = (function () {
-    function LoginPage(config, sessionProvider, app, http, fb) {
+    function LoginPage(config, sessionProvider, app, http, fb, toastCtrl) {
         this.config = config;
         this.sessionProvider = sessionProvider;
         this.app = app;
         this.http = http;
         this.fb = fb;
+        this.toastCtrl = toastCtrl;
     }
     LoginPage.prototype.ionViewDidLoad = function () {
         console.log('ionViewDidLoad LoginPage');
@@ -56,7 +59,11 @@ var LoginPage = (function () {
                     _this.sessionProvider.updateSession(user);
                     _this.app.getRootNavs()[0].setRoot(__WEBPACK_IMPORTED_MODULE_2__tabs_tabs__["a" /* TabsPage */]);
                 }
+            }, function (error) {
+                _this.presentToast('Ups! Hay algún problema, prueba en unos minutos.');
             });
+        }).catch(function (error) {
+            _this.presentToast('Ups! Hay algún problema, prueba en unos minutos.');
         });
     };
     LoginPage.prototype.login = function () {
@@ -109,12 +116,14 @@ var LoginPage = (function () {
                     }
                     return user;
                 }).catch(function (error) {
-                    return __WEBPACK_IMPORTED_MODULE_5_rxjs_Rx__["Observable"].throw("[login()] ->" + error);
+                    return __WEBPACK_IMPORTED_MODULE_5_rxjs_Rx__["Observable"].throw("[findOrCreateUser()] ->" + error);
                 });
             }
             else {
                 return null;
             }
+        }).catch(function (error) {
+            return __WEBPACK_IMPORTED_MODULE_5_rxjs_Rx__["Observable"].throw("[login()] ->" + error);
         });
     };
     LoginPage.prototype.findOrCreateUser = function (user) {
@@ -173,17 +182,23 @@ var LoginPage = (function () {
             return { user: user, status: status };
         });
     };
+    LoginPage.prototype.presentToast = function (text) {
+        var toast = this.toastCtrl.create({
+            message: text,
+            duration: 3000,
+            position: 'top'
+        });
+        toast.present();
+    };
     LoginPage = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
             selector: 'page-login',template:/*ion-inline-start:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/login/login.html"*/'<ion-content>\n    <ion-grid style="height: 100%">\n        <ion-row align-items-center text-center style="height: 100%">\n            <ion-col>\n                <h2>{{ config.appName }}</h2>\n                <p>\n                    Proyecto reciclaje TFG en la universidad de Alicante.\n                </p>\n\n                <ion-col class="login-button">\n                    <button ion-button block (click)="doFbLogin()">Facebook Login</button>\n                </ion-col>\n            </ion-col>\n        </ion-row>\n    </ion-grid>\n</ion-content>'/*ion-inline-end:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/login/login.html"*/,
         }),
         __param(0, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["z" /* Inject */])(__WEBPACK_IMPORTED_MODULE_8__app_app_config__["b" /* APP_CONFIG_TOKEN */])),
-        __metadata("design:paramtypes", [Object, __WEBPACK_IMPORTED_MODULE_1__providers_session__["a" /* SessionProvider */],
-            __WEBPACK_IMPORTED_MODULE_3_ionic_angular_components_app_app__["a" /* App */],
-            __WEBPACK_IMPORTED_MODULE_4__angular_http__["b" /* Http */],
-            __WEBPACK_IMPORTED_MODULE_6__ionic_native_facebook__["a" /* Facebook */]])
+        __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_8__app_app_config__["ApplicationConfig"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_8__app_app_config__["ApplicationConfig"]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__providers_session__["a" /* SessionProvider */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__providers_session__["a" /* SessionProvider */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_3_ionic_angular_components_app_app__["a" /* App */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3_ionic_angular_components_app_app__["a" /* App */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_4__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__angular_http__["b" /* Http */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_6__ionic_native_facebook__["a" /* Facebook */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_6__ionic_native_facebook__["a" /* Facebook */]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_9_ionic_angular__["l" /* ToastController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_9_ionic_angular__["l" /* ToastController */]) === "function" && _f || Object])
     ], LoginPage);
     return LoginPage;
+    var _a, _b, _c, _d, _e, _f;
 }());
 
 //# sourceMappingURL=login.js.map
@@ -300,6 +315,12 @@ var RecyclePage = (function () {
         if (this.platform.is('cordova') && !this.config.DEBUG_MODE) {
             this.slides.lockSwipes(true);
         }
+    };
+    RecyclePage.prototype.test = function () {
+        this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_12__recycle_finish_recycleFinish__["a" /* recycleFinishPage */], {
+            recycleItemType: 3,
+            storageId: 1
+        });
     };
     RecyclePage.prototype.loadPositionSlide = function (recycleItemType) {
         this.recycleItemType = recycleItemType;
@@ -526,7 +547,7 @@ var RecyclePage = (function () {
     ], RecyclePage.prototype, "slides", void 0);
     RecyclePage = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
-            selector: 'page-recycle',template:/*ion-inline-start:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/recycle/recycle.html"*/'<ion-header>\n    <ion-navbar>\n        <ion-title>\n            Reciclar!\n        </ion-title>\n    </ion-navbar>\n</ion-header>\n\n<ion-content padding>\n    <ion-slides pager>\n        <ion-slide>\n            <img src="/assets/imgs/quieroReciclar.png" />\n            <p>\n                <button ion-button (click)="presentActionSheet()">\n                    Quiero reciclar\n                </button>\n            </p>\n        </ion-slide>\n        <ion-slide>\n            <p>¿Dónde me encuentro?</p>\n            <p>\n                <button ion-button icon-only (click)=\'slidePrev()\' color="dark">\n                    <ion-icon name="arrow-back"></ion-icon>\n                </button>\n                <button ion-button (click)="getUserPosition()">\n                    Seleccionar ubicación\n                </button>\n            </p>\n\n\n            <!--<img src="{{pathForImage(lastImage)}}" [hidden]="lastImage === null">\n            <button ion-button (click)="uploadImage()">\n                Buscar contenedor más cercano!\n            </button>-->\n        </ion-slide>\n    </ion-slides>\n</ion-content>'/*ion-inline-end:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/recycle/recycle.html"*/
+            selector: 'page-recycle',template:/*ion-inline-start:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/recycle/recycle.html"*/'<ion-header>\n    <ion-navbar>\n        <ion-title>\n            Reciclar!\n        </ion-title>\n    </ion-navbar>\n</ion-header>\n\n<ion-content padding>\n    <ion-slides pager>\n        <ion-slide>\n            <img src="assets/imgs/quieroReciclar.png" />\n            <p>\n                <button ion-button (click)="presentActionSheet()">\n                    Quiero reciclar\n                </button>\n                <button ion-button (click)="test()">\n                    Quiero asdas\n                </button>\n            </p>\n        </ion-slide>\n        <ion-slide>\n            <p>¿Dónde me encuentro?</p>\n            <p>\n                <button ion-button icon-only (click)=\'slidePrev()\' color="dark">\n                    <ion-icon name="arrow-back"></ion-icon>\n                </button>\n                <button ion-button (click)="getUserPosition()">\n                    Seleccionar ubicación\n                </button>\n            </p>\n\n\n            <!--<img src="{{pathForImage(lastImage)}}" [hidden]="lastImage === null">\n            <button ion-button (click)="uploadImage()">\n                Buscar contenedor más cercano!\n            </button>-->\n        </ion-slide>\n    </ion-slides>\n</ion-content>'/*ion-inline-end:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/recycle/recycle.html"*/
         }),
         __param(0, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["z" /* Inject */])(__WEBPACK_IMPORTED_MODULE_8__app_app_config__["b" /* APP_CONFIG_TOKEN */])),
         __metadata("design:paramtypes", [Object, __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* NavController */],
@@ -599,13 +620,13 @@ var recycleFinishPage = (function () {
                 'Content-Type': 'application/json'
             })
         });
-        this.sessionProvider.getSession().then(function (res) {
+        this.sessionProvider.getSession().then(function (user) {
             var recycleItem;
             recycleItem = {
                 id: null,
                 name: __WEBPACK_IMPORTED_MODULE_2__models_typeRecicle__["a" /* TypeRecycle */][_this.recycleItemType],
                 image: "",
-                recycleUser: res.id,
+                recycleUser: user.id,
                 storage: _this.storageId,
                 itemType: _this.recycleItemType,
                 createdDate: null
@@ -637,11 +658,10 @@ var recycleFinishPage = (function () {
             selector: 'page-recycleFinish',template:/*ion-inline-start:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/recycle/recycle_finish/recycleFinish.html"*/'<ion-header>\n    <ion-navbar>\n        <ion-title>\n            Finalizar Reciclaje\n        </ion-title>\n    </ion-navbar>\n</ion-header>\n\n<ion-content>\n    <ion-grid style="height: 100%">\n        <ion-row align-items-center text-center style="height: 100%">\n            <ion-col>\n                <h5>{{ msg }}</h5>\n                <ion-col>\n                    <button ion-button (click)="recycleFinish()">\n                        Finalizar reciclaje\n                    </button>\n                </ion-col>\n            </ion-col>\n        </ion-row>\n    </ion-grid>\n\n</ion-content>'/*ion-inline-end:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/recycle/recycle_finish/recycleFinish.html"*/
         }),
         __param(3, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["z" /* Inject */])(__WEBPACK_IMPORTED_MODULE_5__app_app_config__["b" /* APP_CONFIG_TOKEN */])),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_3__providers_session__["a" /* SessionProvider */],
-            __WEBPACK_IMPORTED_MODULE_4__angular_http__["b" /* Http */],
-            __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["l" /* ToastController */], Object, __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["i" /* NavParams */]])
+        __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_3__providers_session__["a" /* SessionProvider */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__providers_session__["a" /* SessionProvider */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_4__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__angular_http__["b" /* Http */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["l" /* ToastController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["l" /* ToastController */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_5__app_app_config__["ApplicationConfig"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__app_app_config__["ApplicationConfig"]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["i" /* NavParams */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["i" /* NavParams */]) === "function" && _e || Object])
     ], recycleFinishPage);
     return recycleFinishPage;
+    var _a, _b, _c, _d, _e;
 }());
 
 //# sourceMappingURL=recycleFinish.js.map
@@ -783,10 +803,13 @@ var myRecycledItemsPage = (function () {
         var _this = this;
         var status;
         this.sessionProvider.getSession().then(function (res) {
+            for (var item in res.recycleItems) {
+            }
             _this.http.get(_this.config.apiEndpoint + "/users/" + res.id + "/recycleItems").timeout(5000).subscribe(function (res) {
                 status = res.status;
                 if (status === 200) {
-                    _this.recycleItems = res.json();
+                    var recycleItemTempList = res.json();
+                    _this.recycleItems = _this.readRecycleItems(recycleItemTempList);
                 }
                 else {
                     _this.errorLoadingContent = true;
@@ -801,14 +824,30 @@ var myRecycledItemsPage = (function () {
             _this.errorLoadingContent = true;
         });
     };
+    myRecycledItemsPage.prototype.readRecycleItems = function (recycleItemList) {
+        var itemTypeItems = [];
+        var _loop_1 = function (item) {
+            if (!parseInt(recycleItemList[item].itemType)) {
+                itemTypeItems.push(recycleItemList[item].itemType);
+            }
+            else {
+                recycleItemList[item].itemType = itemTypeItems.filter(function (x) { return x.id == recycleItemList[item].itemType; })[0];
+            }
+        };
+        for (var item in recycleItemList) {
+            _loop_1(item);
+        }
+        return recycleItemList;
+    };
     myRecycledItemsPage = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
             selector: 'page-myRecycledItems',template:/*ion-inline-start:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/profile/profile_recycledItems/myRecycledItems.html"*/'<ion-header>\n    <ion-navbar>\n        <ion-title>Historial de reciclaje</ion-title>\n    </ion-navbar>\n</ion-header>\n\n<ion-content>\n    <ion-grid style="height: 100%">\n\n        <div *ngIf="recycleItems?.length > 0;else recycleItemsNotFound">\n            <ion-row justify-content-center align-items-center style="height: 100%">\n                <ion-col>\n                    <div *ngFor="let recycleItem of recycleItems">\n\n                        <ion-card>\n                            <ion-item>\n                                <ion-avatar item-start>\n                                    <img src="{{recycleItem.image}}">\n                                </ion-avatar>\n                                {{recycleItem.name}}\n                                <p>{{ getItemType(recycleItem.itemType.id) }} - {{ recycleItem.createdDate | date: \'dd/MM/yyyy\n                                    H:mm\'}}\n                                </p>\n                            </ion-item>\n                        </ion-card>\n                    </div>\n                </ion-col>\n            </ion-row>\n        </div>\n\n    </ion-grid>\n</ion-content>\n\n\n\n<ng-template #recycleItemsNotFound>\n    <ion-row align-items-center text-center style="height: 100%">\n        <ion-col>\n            <div *ngIf="showLoadingMsg == true; else showLoadingResult">\n                <h5>Cargando...</h5>\n            </div>\n            <ng-template #showLoadingResult>\n                <div *ngIf="errorLoadingContent == true; else showNoRecycledItemsFound">\n                    <div>\n                        <p>Ha habido algún problema</p>\n                        <h5 style="font-weight: bold">Intentalo de nuevo en unos minutos</h5>\n                    </div>\n                </div>\n                <ng-template #showNoRecycledItemsFound>\n                    <div>\n                        <p>Todavía no has reciclado nada</p>\n                        <h5 style="font-weight: bold">¡A qué esperas!</h5>\n                    </div>\n                </ng-template>\n            </ng-template>\n        </ion-col>\n    </ion-row>\n</ng-template>'/*ion-inline-end:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/profile/profile_recycledItems/myRecycledItems.html"*/
         }),
         __param(1, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["z" /* Inject */])(__WEBPACK_IMPORTED_MODULE_3__app_app_config__["b" /* APP_CONFIG_TOKEN */])),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2__angular_http__["b" /* Http */], Object, __WEBPACK_IMPORTED_MODULE_4__providers_session__["a" /* SessionProvider */]])
+        __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_http__["b" /* Http */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3__app_app_config__["ApplicationConfig"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__app_app_config__["ApplicationConfig"]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_4__providers_session__["a" /* SessionProvider */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__providers_session__["a" /* SessionProvider */]) === "function" && _c || Object])
     ], myRecycledItemsPage);
     return myRecycledItemsPage;
+    var _a, _b, _c;
 }());
 
 //# sourceMappingURL=myRecycledItems.js.map
@@ -1006,7 +1045,7 @@ var AppModule = (function () {
 // Configuration values for our app
 var APP_CONFIG = {
     appName: 'ReciclaWeb App',
-    apiEndpoint: 'https://reciclaweb-server.herokuapp.com',
+    apiEndpoint: 'http://127.0.0.1:8080',
     DEBUG_MODE: true
 };
 var APP_CONFIG_TOKEN = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["B" /* InjectionToken */]('config');

@@ -42,13 +42,13 @@ export class recycleFinishPage {
             })
         });
 
-        this.sessionProvider.getSession().then(res => {
+        this.sessionProvider.getSession().then(user => {
             var recycleItem: RecycleItem
             recycleItem = {
                 id: null,
                 name: TypeRecycle[this.recycleItemType],
                 image: "",
-                recycleUser: res.id,
+                recycleUser: user.id,
                 storage: this.storageId,
                 itemType: this.recycleItemType,
                 createdDate: null

@@ -10,6 +10,7 @@ import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
 
 import 'rxjs/add/operator/map'
 import { APP_CONFIG_TOKEN, ApplicationConfig } from '../../app/app-config';
+import { ToastController } from 'ionic-angular';
 
 @Component({
     selector: 'page-login',
@@ -22,7 +23,8 @@ export class LoginPage {
         private sessionProvider: SessionProvider,
         private app: App,
         private http: Http,
-        private fb: Facebook
+        private fb: Facebook,
+        public toastCtrl: ToastController,
     ) { }
 
     ionViewDidLoad() {
@@ -36,7 +38,11 @@ export class LoginPage {
                     this.sessionProvider.updateSession(user)
                     this.app.getRootNavs()[0].setRoot(TabsPage)
                 }
+            }, error => {
+                this.presentToast('Ups! Hay algún problema, prueba en unos minutos.');
             })
+        }).catch(error => {
+            this.presentToast('Ups! Hay algún problema, prueba en unos minutos.');
         })
 
     }
@@ -92,13 +98,15 @@ export class LoginPage {
                             }
                             return user
                         }).catch(error => {
-                            return Observable.throw("[login()] ->" + error)
+                            return Observable.throw("[findOrCreateUser()] ->" + error)
                         })
 
 
                     } else {
                         return null
                     }
+                }).catch(error => {
+                    return Observable.throw("[login()] ->" + error)
                 });
     }
 
@@ -163,5 +171,14 @@ export class LoginPage {
             }
             return { user, status }
         })
+    }
+
+    private presentToast(text) {
+        let toast = this.toastCtrl.create({
+            message: text,
+            duration: 3000,
+            position: 'top'
+        });
+        toast.present();
     }
 }

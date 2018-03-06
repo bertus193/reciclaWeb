@@ -50,10 +50,16 @@ export class myRecycledItemsPage {
         var status: number
 
         this.sessionProvider.getSession().then(res => {
+
+            for (let item in res.recycleItems) {
+
+            }
             this.http.get(this.config.apiEndpoint + "/users/" + res.id + "/recycleItems").timeout(5000).subscribe(res => {
                 status = res.status
                 if (status === 200) {
-                    this.recycleItems = res.json();
+                    var recycleItemTempList = res.json();
+                    this.recycleItems = this.readRecycleItems(recycleItemTempList)
+
                 } else {
                     this.errorLoadingContent = true
                 }
@@ -66,6 +72,19 @@ export class myRecycledItemsPage {
             this.showLoadingMsg = false
             this.errorLoadingContent = true
         })
+    }
+
+    readRecycleItems(recycleItemList): RecycleItem[] {
+        var itemTypeItems = []
+        for (let item in recycleItemList) {
+            if (!parseInt(recycleItemList[item].itemType)) {
+                itemTypeItems.push(recycleItemList[item].itemType)
+            }
+            else {
+                recycleItemList[item].itemType = itemTypeItems.filter(x => x.id == recycleItemList[item].itemType)[0]
+            }
+        }
+        return recycleItemList;
     }
 
 

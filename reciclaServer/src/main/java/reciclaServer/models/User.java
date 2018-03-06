@@ -1,6 +1,7 @@
 package reciclaServer.models;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import reciclaServer.config.EntityIdResolver;
@@ -38,6 +39,7 @@ public class User {
     private Timestamp createdDate;
 
     @OneToMany(mappedBy = "recycleUser")
+    @JsonIdentityReference(alwaysAsId=true)
     private List<RecycleItem> recycleItems;
 
     public User(){ //Needed for JPA
@@ -103,7 +105,7 @@ public class User {
     public void setCreatedDate(Timestamp createdDate) {
         this.createdDate = createdDate;
     }
-    
+
     public List<RecycleItem> getRecycleItems() {
         return recycleItems;
     }
