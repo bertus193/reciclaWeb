@@ -23,6 +23,7 @@ import { Camera } from '@ionic-native/camera';
 import { Geolocation } from '@ionic-native/geolocation';
 import { LocationAccuracy } from '@ionic-native/location-accuracy';
 import { GoogleMaps } from '@ionic-native/google-maps'
+import { ToastProvider } from '../providers/toast';
 
 @NgModule({
     declarations: [
@@ -46,6 +47,7 @@ import { GoogleMaps } from '@ionic-native/google-maps'
         Facebook,
         { provide: ErrorHandler, useClass: IonicErrorHandler },
         SessionProvider,
+        ToastProvider,
         { provide: APP_CONFIG_TOKEN, useValue: APP_CONFIG },
         File,
         Transfer,

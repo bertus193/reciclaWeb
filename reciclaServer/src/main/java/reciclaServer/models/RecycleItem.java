@@ -30,6 +30,7 @@ public class RecycleItem {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "recycle_user")
+    @JsonIdentityReference(alwaysAsId=true)
     private User recycleUser;
 
     @ManyToOne(cascade = CascadeType.ALL)

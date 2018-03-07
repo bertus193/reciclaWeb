@@ -39,6 +39,7 @@ public class User {
     private Timestamp createdDate;
 
     @OneToMany(mappedBy = "recycleUser")
+    @JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
     @JsonIdentityReference(alwaysAsId=true)
     private List<RecycleItem> recycleItems;
 

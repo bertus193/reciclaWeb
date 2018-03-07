@@ -81,9 +81,11 @@ export class myRecycledItemsPage {
                 itemTypeItems.push(recycleItemList[item].itemType)
             }
             else {
+                console.log("prueba")
                 recycleItemList[item].itemType = itemTypeItems.filter(x => x.id == recycleItemList[item].itemType)[0]
             }
         }
+        console.log(recycleItemList)
         return recycleItemList;
     }
 

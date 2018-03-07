@@ -1,5 +1,5 @@
 import { Component, ViewChild, Inject } from '@angular/core';
-import { NavController, LoadingController, ActionSheetController, ToastController, Platform, Loading, Slides } from 'ionic-angular';
+import { NavController, LoadingController, ActionSheetController, Platform, Loading, Slides } from 'ionic-angular';
 
 import { Camera } from '@ionic-native/camera';
 import { File } from '@ionic-native/file';
@@ -15,10 +15,8 @@ import { Observable } from 'rxjs/Rx'
 import 'rxjs/add/operator/map'
 
 import { Position } from '../../models/position';
-
-
-
-import { recycleFinishPage } from './recycle_finish/recycleFinish';
+import { MapPage } from './recycle_map/recycleMap';
+import { ToastProvider } from '../../providers/toast';
 
 
 
@@ -47,12 +45,12 @@ export class RecyclePage {
         private file: File,
         private filePath: FilePath,
         public actionSheetCtrl: ActionSheetController,
-        public toastCtrl: ToastController,
         public platform: Platform,
         public loadingCtrl: LoadingController,
         private geolocation: Geolocation,
         private locationAccuracy: LocationAccuracy,
-        private http: Http
+        private http: Http,
+        private toastProvider: ToastProvider,
     ) {
 
     }
@@ -64,9 +62,10 @@ export class RecyclePage {
     }
 
     public test() {
-        this.navCtrl.push(recycleFinishPage, {
-            recycleItemType: 3,
-            storageId: 1
+        this.navCtrl.push(MapPage, {
+            recycleItemType: this.recycleItemType,
+            myPosition: null,
+            storagePoint: null
         })
     }
 
@@ -81,37 +80,31 @@ export class RecyclePage {
 
         this.locationAccuracy.request(this.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY).then(
             (resp) => {
-                this.geolocation.getCurrentPosition().then((position) => {
-                    myPosition = {
-                        id: null,
-                        latitude: position.coords.latitude,
-                        longitude: position.coords.longitude
-                    }
-                    this.getNearestStoragePoint(myPosition).subscribe(
+                this.geolocation.getCurrentPosition().then(position => {
+
+                    myPosition = new Position(position.coords.latitude, position.coords.longitude)
+
+                    this.getNearestStoragePoint(myPosition).timeout(this.config.defaultTimeoutTime).subscribe(
                         result => {
                             var storagePoint: StoragePoint = result.storagePoint
                             if (result.status == 200) {
-                                var mapWindow;
-                                if (this.platform.is('ios')) {
-                                    mapWindow = window.open('maps://?q=Yo&saddr=' + myPosition.latitude + ',' + myPosition.longitude + '&daddr=' + storagePoint.position.latitude + ',' + storagePoint.position.longitude, '_system');
-                                }
-                                // android
-                                else if (this.platform.is('android')) {
-                                    mapWindow = window.open('geo://' + storagePoint.position.latitude + ',' + storagePoint.position.longitude + 'q=' + myPosition.latitude + ',' + myPosition.longitude + '(Yo)', '_system');
-                                }
-                                if (mapWindow) {
-                                    this.navCtrl.push(recycleFinishPage, {
-                                        recycleItemType: this.recycleItemType,
-                                        storageId: result.storagePoint.id
-                                    })
-                                }
+
+                                this.navCtrl.push(MapPage, {
+                                    recycleItemType: this.recycleItemType,
+                                    myPosition: myPosition,
+                                    storagePoint: storagePoint
+                                })
                             }
+                            else {
+                                this.toastProvider.presentToast('No hay ningún punto de reciclaje cercano.');
+                            }
+                        },
+                        error => {
+                            this.toastProvider.presentToast('Parece que ha habido algún problema, prueba en unos minutos.')
                         })
-                }).catch((error) => {
-                    this.presentToast('Error en la obtención de la ubicación.');
-                });
+                })
             }).catch((error) => {
-                this.presentToast('Error en la obtención de los permisos necesarios.');
+                this.toastProvider.presentToast('Error en la obtención de los permisos necesarios.');
             })
     }
 
@@ -144,7 +137,7 @@ export class RecyclePage {
             }
             this.slideNext();
         }, (err) => {
-            this.presentToast('Error en la selección de la imagen.');
+            this.toastProvider.presentToast('Error en la selección de la imagen.');
         });
     }
 
@@ -230,17 +223,8 @@ export class RecyclePage {
             this.lastImage = newFileName;
         }, error => {
             this.errorMsg = error;
-            this.presentToast('Error en el almacenamiento de la imagen.');
+            this.toastProvider.presentToast('Error en el almacenamiento de la imagen.');
         });
-    }
-
-    private presentToast(text) {
-        let toast = this.toastCtrl.create({
-            message: text,
-            duration: 3000,
-            position: 'top'
-        });
-        toast.present();
     }
 
     // Always get the accurate path to your apps folder
@@ -280,10 +264,10 @@ export class RecyclePage {
         // Use the FileTransfer to upload the image
         fileTransfer.upload(targetPath, url, options).then(data => {
             this.loading.dismissAll()
-            this.presentToast('Image succesful uploaded.');
+            this.toastProvider.presentToast('Image succesful uploaded.');
         }, err => {
             this.loading.dismissAll()
-            this.presentToast('Error while uploading file.');
+            this.toastProvider.presentToast('Error while uploading file.');
         });
     }
 
@@ -310,5 +294,17 @@ export class RecyclePage {
             return Observable.throw(error);
         });
     }
+
+    /*
+
+                                    var mapWindow;
+                                if (this.platform.is('ios')) {
+                                    mapWindow = window.open('maps://?q=Yo&saddr=' + myPosition.latitude + ',' + myPosition.longitude + '&daddr=' + storagePoint.position.latitude + ',' + storagePoint.position.longitude, '_system');
+                                }
+                                // android
+                                else if (this.platform.is('android')) {
+                                    mapWindow = window.open('geo://' + storagePoint.position.latitude + ',' + storagePoint.position.longitude + 'q=' + myPosition.latitude + ',' + myPosition.longitude + '(Yo)', '_system');
+                                }
+                                if (mapWindow) {*/
 
 }

@@ -1,5 +1,6 @@
 import { Component, Inject } from '@angular/core'
 import { SessionProvider } from '../../providers/session'
+import { ToastProvider } from '../../providers/toast';
 import { TabsPage } from '../tabs/tabs'
 import { App } from 'ionic-angular/components/app/app'
 
@@ -10,7 +11,7 @@ import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
 
 import 'rxjs/add/operator/map'
 import { APP_CONFIG_TOKEN, ApplicationConfig } from '../../app/app-config';
-import { ToastController } from 'ionic-angular';
+
 
 @Component({
     selector: 'page-login',
@@ -24,12 +25,8 @@ export class LoginPage {
         private app: App,
         private http: Http,
         private fb: Facebook,
-        public toastCtrl: ToastController,
+        private toastProvider: ToastProvider
     ) { }
-
-    ionViewDidLoad() {
-        console.log('ionViewDidLoad LoginPage');
-    }
 
     doFbLogin() {
         this.login().then(res => {
@@ -39,10 +36,10 @@ export class LoginPage {
                     this.app.getRootNavs()[0].setRoot(TabsPage)
                 }
             }, error => {
-                this.presentToast('Ups! Hay algún problema, prueba en unos minutos.');
+                this.toastProvider.presentToast('Ups! Hay algún problema, prueba en unos minutos.');
             })
         }).catch(error => {
-            this.presentToast('Ups! Hay algún problema, prueba en unos minutos.');
+            this.toastProvider.presentToast('Ups! Hay algún problema, prueba en unos minutos.');
         })
 
     }
@@ -64,7 +61,7 @@ export class LoginPage {
                         recycleItems: [],
                         createdDate: null
                     }
-                    return this.findOrCreateUser(user).map((res: any) => {
+                    return this.findOrCreateUser(user).timeout(5000).map((res: any) => {
                         if (res.value != null) {
                             user = res.value
                         } else {
@@ -90,7 +87,7 @@ export class LoginPage {
                             createdDate: new Date()
                         }
 
-                        return this.findOrCreateUser(user).map((res: any) => {
+                        return this.findOrCreateUser(user).timeout(5000).map((res: any) => {
                             if (res.value != null) {
                                 user = res.value
                             } else {
@@ -171,14 +168,5 @@ export class LoginPage {
             }
             return { user, status }
         })
-    }
-
-    private presentToast(text) {
-        let toast = this.toastCtrl.create({
-            message: text,
-            duration: 3000,
-            position: 'top'
-        });
-        toast.present();
     }
 }

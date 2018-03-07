@@ -25694,3 +25694,35 @@ ion-icon[class*="reciclaUA-recyle"] {
   -webkit-mask-image: url("../assets/imgs/icons/recycle.svg");
   mask-image: url("../assets/imgs/icons/recycle.svg");
 }
+
+page-recycleMap #map_canvas {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+page-recycleMap .ion-md-close {
+  padding-top: 19px;
+}
+
+page-recycleMap .fab {
+  contain: layout;
+}
+
+page-recycleMap button[ion-fab] {
+  overflow: visible;
+  position: relative;
+}
+
+page-recycleMap button[ion-fab] ion-label {
+  position: absolute;
+  top: -6px;
+  left: 50px;
+  color: white;
+  background-color: #002C31;
+  -webkit-box-shadow: 0 3px 4px #6b6b6b;
+  box-shadow: 0 3px 4px #6b6b6b;
+  line-height: 20px;
+  padding: 4px 8px;
+  border-radius: 4px;
+}

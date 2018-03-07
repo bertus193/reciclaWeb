@@ -5,6 +5,7 @@ import { TabsPage } from './tabs/tabs';
 import { LoginPage } from './login/login';
 import { recycleFinishPage } from './recycle/recycle_finish/recycleFinish';
 import { myRecycledItemsPage } from './profile/profile_recycledItems/myRecycledItems';
+import { MapPage } from './recycle/recycle_map/recycleMap';
 
 export const APP_PAGES = [
     RecyclePage,
@@ -13,5 +14,6 @@ export const APP_PAGES = [
     TabsPage,
     LoginPage,
     recycleFinishPage,
-    myRecycledItemsPage
+    myRecycledItemsPage,
+    MapPage
 ];

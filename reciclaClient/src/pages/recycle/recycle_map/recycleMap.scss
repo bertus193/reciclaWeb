@@ -4,4 +4,30 @@ page-recycleMap {
         height: 100%;
         width: 100%;
     }
+
+    .ion-md-close{
+        padding-top: 19px;
+    }
+    
+    .fab{
+        contain: layout;
+    }
+
+    button[ion-fab] {
+        overflow: visible;
+        position: relative;
+        
+    
+        ion-label {
+          position: absolute;
+          top: -6px;
+          left: 50px;
+          color: white;
+          background-color: #002C31;
+          box-shadow: 0 3px 4px #6b6b6b;
+          line-height: 20px;
+          padding: 4px 8px;
+          border-radius: 4px;
+        }
+    }
 }
