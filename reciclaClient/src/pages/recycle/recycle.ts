@@ -1,7 +1,7 @@
 import { Component, ViewChild, Inject } from '@angular/core';
 import { NavController, LoadingController, ActionSheetController, Platform, Loading, Slides } from 'ionic-angular';
 
-import { Camera } from '@ionic-native/camera';
+import { Camera, CameraOptions } from '@ionic-native/camera';
 import { File } from '@ionic-native/file';
 import { Transfer, TransferObject } from '@ionic-native/transfer';
 import { FilePath } from '@ionic-native/file-path';
@@ -16,9 +16,10 @@ import 'rxjs/add/operator/map'
 
 import { Position } from '../../models/position';
 import { MapPage } from './recycle_map/recycleMap';
-import { ToastProvider } from '../../providers/toast';
-
-
+import { NotificationProvider } from '../../providers/notifications';
+import { GoogleCloudVisionServiceProvider } from '../../providers/google-cloud-vision-service';
+import { SessionProvider } from '../../providers/session';
+import { User } from '../../models/user';
 
 declare var cordova: any;
 
@@ -28,7 +29,6 @@ declare var cordova: any;
 })
 export class RecyclePage {
 
-    image: string = null;
     lastImage: string = null;
     loading: Loading;
     errorMsg: string = "";
@@ -50,7 +50,9 @@ export class RecyclePage {
         private geolocation: Geolocation,
         private locationAccuracy: LocationAccuracy,
         private http: Http,
-        private toastProvider: ToastProvider,
+        private notificationProvider: NotificationProvider,
+        private vision: GoogleCloudVisionServiceProvider,
+        private sessionProvider: SessionProvider
     ) {
 
     }
@@ -96,48 +98,38 @@ export class RecyclePage {
                                 })
                             }
                             else {
-                                this.toastProvider.presentToast('No hay ningún punto de reciclaje cercano.');
+                                this.notificationProvider.presentTopToast('No hay ningún punto de reciclaje cercano.');
                             }
                         },
                         error => {
-                            this.toastProvider.presentToast('Parece que ha habido algún problema, prueba en unos minutos.')
+                            this.notificationProvider.presentTopToast(this.config.defaultTimeoutMsg)
                         })
                 })
             }).catch((error) => {
-                this.toastProvider.presentToast('Error en la obtención de los permisos necesarios.');
+                this.notificationProvider.presentTopToast('Error en la obtención de los permisos necesarios.');
             })
     }
 
 
-
     public takePicture(sourceType) {
 
-        var options = {
-            quality: 100,
+        var options: CameraOptions = {
+            quality: 20,
+            targetWidth: 600,
+            targetHeight: 600,
             sourceType: sourceType,
             saveToPhotoAlbum: false,
-            correctOrientation: true
+            correctOrientation: true,
+            encodingType: this.camera.EncodingType.PNG,
+            mediaType: this.camera.MediaType.PICTURE
         };
 
-        // Get the data of an image
+        // Get the data of an image 
         this.camera.getPicture(options).then((imagePath) => {
-            //this.image = `data:image/jpeg;base64,${imagePath}`;
-            // Special handling for Android library
-            if (this.platform.is('android') && sourceType === this.camera.PictureSourceType.PHOTOLIBRARY) {
-                this.filePath.resolveNativePath(imagePath)
-                    .then(filePath => {
-                        let correctPath = filePath.substr(0, filePath.lastIndexOf('/') + 1);
-                        let currentName = imagePath.substring(imagePath.lastIndexOf('/') + 1, imagePath.lastIndexOf('?'));
-                        this.copyFileToLocalDir(correctPath, currentName, this.createFileName());
-                    });
-            } else {
-                var currentName = imagePath.substr(imagePath.lastIndexOf('/') + 1);
-                var correctPath = imagePath.substr(0, imagePath.lastIndexOf('/') + 1);
-                this.copyFileToLocalDir(correctPath, currentName, this.createFileName());
-            }
-            this.slideNext();
-        }, (err) => {
-            this.toastProvider.presentToast('Error en la selección de la imagen.');
+            //var image = `data:image/png;base64,${imagePath}`;
+            this.uploadImage(imagePath)
+        }, (err) => { //camera.GetPicture
+            this.notificationProvider.presentTopToast('Error en la selección de la imagen.');
         });
     }
 
@@ -146,7 +138,6 @@ export class RecyclePage {
         let actionSheet = this.actionSheetCtrl.create({
             title: 'Elige un tipo de material',
             buttons: [
-                /*
                 {
                     text: 'Cargar de la librería',
                     handler: () => {
@@ -158,7 +149,7 @@ export class RecyclePage {
                     handler: () => {
                         this.takePicture(this.camera.PictureSourceType.CAMERA);
                     }
-                },*/
+                },
                 {
                     text: 'Orgánico',
                     handler: () => {
@@ -210,64 +201,50 @@ export class RecyclePage {
         this.slides.lockSwipes(true);
     }
 
-    private createFileName() {
-        var d = new Date(),
-            n = d.getTime(),
-            newFileName = n + ".png";
-        return newFileName;
-    }
+    public uploadImage(targetPath) {
 
-    // Copy the image to a local folder
-    private copyFileToLocalDir(namePath, currentName, newFileName) {
-        this.file.copyFile(namePath, currentName, cordova.file.dataDirectory, newFileName).then(success => {
-            this.lastImage = newFileName;
-        }, error => {
-            this.errorMsg = error;
-            this.toastProvider.presentToast('Error en el almacenamiento de la imagen.');
-        });
-    }
+        this.sessionProvider.getSession().then((user: User) => {
 
-    // Always get the accurate path to your apps folder
-    public pathForImage(img) {
-        if (img === null) {
-            return '';
-        } else {
-            return cordova.file.dataDirectory + img;
-        }
-    }
+            var date = new Date()
+            var filename = user.id + "_" + date.getTime() + ".png";
 
-    public uploadImage() {
-        // Destination URL
-        var url = "https://reciclaweb.000webhostapp.com/upload.php";
+            var url = "https://reciclaweb.000webhostapp.com"
+            var urlUpload = url + "/upload.php"
+            var urlUploadedFiles = url + '/uploads/' + filename
 
-        // File for Upload
-        var targetPath = this.pathForImage(this.lastImage);
+            var options = {
+                fileKey: "file",
+                fileName: filename,
+                chunkedMode: false,
+                mimeType: "multipart/form-data",
+                params: { 'fileName': filename }
+            };
 
-        // File name only
-        var filename = this.lastImage;
+            const fileTransfer: TransferObject = this.transfer.create();
 
-        var options = {
-            fileKey: "file",
-            fileName: filename,
-            chunkedMode: false,
-            mimeType: "multipart/form-data",
-            params: { 'fileName': filename }
-        };
+            this.loading = this.loadingCtrl.create({
+                content: 'Subiendo imagen...'
+            });
+            this.loading.present()
 
-        const fileTransfer: TransferObject = this.transfer.create();
+            // Use the FileTransfer to upload the image
+            fileTransfer.upload(targetPath, urlUpload, options).then(data => {
 
-        this.loading = this.loadingCtrl.create({
-            content: 'Uploading...',
-        });
-        this.loading.present();
+                this.vision.getLabels(urlUploadedFiles).subscribe((result: any) => {
+                    this.loading.dismissAll()
+                    this.notificationProvider.presentAlertOk(urlUploadedFiles + " @@ " + JSON.stringify(result))
+                    this.slideNext()
+                }, err => { //Vision.getLabels
+                    this.notificationProvider.presentAlertError("Error a la hora de utilizar la imagen.")
+                })
 
-        // Use the FileTransfer to upload the image
-        fileTransfer.upload(targetPath, url, options).then(data => {
-            this.loading.dismissAll()
-            this.toastProvider.presentToast('Image succesful uploaded.');
+            }, err => {
+                this.loading.dismissAll()
+                this.notificationProvider.presentTopToast('Error while uploading file.')
+            });
         }, err => {
             this.loading.dismissAll()
-            this.toastProvider.presentToast('Error while uploading file.');
+            this.notificationProvider.presentTopToast('Error obteniendo los datos necesarios.')
         });
     }
 
@@ -297,14 +274,14 @@ export class RecyclePage {
 
     /*
 
-                                    var mapWindow;
-                                if (this.platform.is('ios')) {
-                                    mapWindow = window.open('maps://?q=Yo&saddr=' + myPosition.latitude + ',' + myPosition.longitude + '&daddr=' + storagePoint.position.latitude + ',' + storagePoint.position.longitude, '_system');
-                                }
-                                // android
-                                else if (this.platform.is('android')) {
-                                    mapWindow = window.open('geo://' + storagePoint.position.latitude + ',' + storagePoint.position.longitude + 'q=' + myPosition.latitude + ',' + myPosition.longitude + '(Yo)', '_system');
-                                }
-                                if (mapWindow) {*/
+        var mapWindow;
+    if (this.platform.is('ios')) {
+        mapWindow = window.open('maps://?q=Yo&saddr=' + myPosition.latitude + ',' + myPosition.longitude + '&daddr=' + storagePoint.position.latitude + ',' + storagePoint.position.longitude, '_system');
+    }
+    // android
+    else if (this.platform.is('android')) {
+        mapWindow = window.open('geo://' + storagePoint.position.latitude + ',' + storagePoint.position.longitude + 'q=' + myPosition.latitude + ',' + myPosition.longitude + '(Yo)', '_system');
+    }
+    if (mapWindow) {*/
 
 }

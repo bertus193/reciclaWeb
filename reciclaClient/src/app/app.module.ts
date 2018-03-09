@@ -23,7 +23,8 @@ import { Camera } from '@ionic-native/camera';
 import { Geolocation } from '@ionic-native/geolocation';
 import { LocationAccuracy } from '@ionic-native/location-accuracy';
 import { GoogleMaps } from '@ionic-native/google-maps'
-import { ToastProvider } from '../providers/toast';
+import { NotificationProvider } from '../providers/notifications';
+import { GoogleCloudVisionServiceProvider } from '../providers/google-cloud-vision-service';
 
 @NgModule({
     declarations: [
@@ -47,7 +48,8 @@ import { ToastProvider } from '../providers/toast';
         Facebook,
         { provide: ErrorHandler, useClass: IonicErrorHandler },
         SessionProvider,
-        ToastProvider,
+        NotificationProvider,
+        GoogleCloudVisionServiceProvider,
         { provide: APP_CONFIG_TOKEN, useValue: APP_CONFIG },
         File,
         Transfer,
@@ -55,7 +57,8 @@ import { ToastProvider } from '../providers/toast';
         FilePath,
         Geolocation,
         LocationAccuracy,
-        GoogleMaps
+        GoogleMaps,
+        GoogleCloudVisionServiceProvider
     ]
 })
 export class AppModule { }

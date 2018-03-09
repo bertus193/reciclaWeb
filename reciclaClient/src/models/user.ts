@@ -1,6 +1,6 @@
 import { RecycleItem } from "./recycleItem";
 
-export interface User {
+export class User {
     id: number;
     email: string;
     name: string;

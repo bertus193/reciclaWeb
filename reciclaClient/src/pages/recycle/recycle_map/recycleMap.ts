@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { NavParams, NavController, AlertController } from 'ionic-angular';
+import { NavParams, NavController } from 'ionic-angular';
 
 import {
     GoogleMaps,
@@ -11,7 +11,7 @@ import {
     GoogleMap,
 } from '@ionic-native/google-maps';
 import { Position } from '../../../models/position';
-import { ToastProvider } from '../../../providers/toast';
+import { NotificationProvider } from '../../../providers/notifications';
 import { StoragePoint } from '../../../models/storagePoint';
 import { SessionProvider } from '../../../providers/session';
 import { Http, RequestOptions, Headers } from '@angular/http';
@@ -35,10 +35,9 @@ export class MapPage {
     constructor(
         private navParams: NavParams,
         private navCtrl: NavController,
-        private toastProvider: ToastProvider,
+        private notificationProvider: NotificationProvider,
         private sessionProvider: SessionProvider,
         private http: Http,
-        private alertCtrl: AlertController,
         @Inject(APP_CONFIG_TOKEN) private config: ApplicationConfig) {
 
         this.typeRecycle = this.navParams.get("recycleItemType");
@@ -78,7 +77,7 @@ export class MapPage {
 
             })
             .catch(error => {
-                this.toastProvider.presentToast("Parece que ha habido algún problema")
+                this.notificationProvider.presentTopToast("Parece que ha habido algún problema")
             });
 
     }
@@ -109,29 +108,26 @@ export class MapPage {
             recycleItem = {
                 id: null,
                 name: TypeRecycle[this.typeRecycle],
-                image: "",
+                image: this.config.defaultImageDirectory,
                 recycleUser: user.id,
                 storage: this.storagePoint.id,
                 itemType: this.typeRecycle,
-                createdDate: null
+                createdDate: new Date()
             }
-            return this.http.post(this.config.apiEndpoint + "/recycleItems", JSON.stringify(recycleItem), options).subscribe(res => {
+            return this.http.post(this.config.apiEndpoint + "/recycleItems", JSON.stringify(recycleItem), options).timeout(this.config.defaultTimeoutTime).subscribe(res => {
                 var status = res.status;
                 if (status === 201) {
                     this.recycledAlready = true
-                    let alert = this.alertCtrl.create({
-                        title: '¡Ya está!',
-                        subTitle: 'Se ha guardadado correctamente este reciclado!',
-                        buttons: ['OK']
-                    });
-                    alert.present();
+                    this.notificationProvider.presentAlertOk('Se ha guardadado correctamente este reciclado!')
                 }
                 else {
-                    this.toastProvider.presentToast("Los datos insertados son incorrectos.")
+                    this.notificationProvider.presentTopToast("Los datos insertados son incorrectos.")
                 }
+            }, error => {
+                this.notificationProvider.presentTopToast(this.config.defaultTimeoutMsg + error)
             })
         }).catch(error => {
-            this.toastProvider.presentToast("Error encontrado, por favor contacte con el administrador." + error)
+            this.notificationProvider.presentTopToast("Error encontrado, por favor contacte con el administrador." + error)
         })
     }
 

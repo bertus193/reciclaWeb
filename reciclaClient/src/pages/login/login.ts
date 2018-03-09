@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core'
 import { SessionProvider } from '../../providers/session'
-import { ToastProvider } from '../../providers/toast';
+import { NotificationProvider } from '../../providers/notifications';
 import { TabsPage } from '../tabs/tabs'
 import { App } from 'ionic-angular/components/app/app'
 
@@ -25,7 +25,7 @@ export class LoginPage {
         private app: App,
         private http: Http,
         private fb: Facebook,
-        private toastProvider: ToastProvider
+        private notificationProvider: NotificationProvider
     ) { }
 
     doFbLogin() {
@@ -36,10 +36,10 @@ export class LoginPage {
                     this.app.getRootNavs()[0].setRoot(TabsPage)
                 }
             }, error => {
-                this.toastProvider.presentToast('Ups! Hay algún problema, prueba en unos minutos.');
+                this.notificationProvider.presentTopToast(this.config.defaultTimeoutMsg);
             })
         }).catch(error => {
-            this.toastProvider.presentToast('Ups! Hay algún problema, prueba en unos minutos.');
+            this.notificationProvider.presentTopToast(this.config.defaultTimeoutMsg);
         })
 
     }
@@ -61,7 +61,7 @@ export class LoginPage {
                         recycleItems: [],
                         createdDate: null
                     }
-                    return this.findOrCreateUser(user).timeout(5000).map((res: any) => {
+                    return this.findOrCreateUser(user).timeout(this.config.defaultTimeoutTime).map((res: any) => {
                         if (res.value != null) {
                             user = res.value
                         } else {
@@ -87,7 +87,7 @@ export class LoginPage {
                             createdDate: new Date()
                         }
 
-                        return this.findOrCreateUser(user).timeout(5000).map((res: any) => {
+                        return this.findOrCreateUser(user).timeout(this.config.defaultTimeoutTime).map((res: any) => {
                             if (res.value != null) {
                                 user = res.value
                             } else {

@@ -54,7 +54,7 @@ export class myRecycledItemsPage {
             for (let item in res.recycleItems) {
 
             }
-            this.http.get(this.config.apiEndpoint + "/users/" + res.id + "/recycleItems").timeout(5000).subscribe(res => {
+            this.http.get(this.config.apiEndpoint + "/users/" + res.id + "/recycleItems").timeout(this.config.defaultTimeoutTime).subscribe(res => {
                 status = res.status
                 if (status === 200) {
                     var recycleItemTempList = res.json();
