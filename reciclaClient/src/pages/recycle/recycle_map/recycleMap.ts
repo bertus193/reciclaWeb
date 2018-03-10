@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { NavParams, NavController } from 'ionic-angular';
+import { NavParams, NavController, AlertController } from 'ionic-angular';
 
 import {
     GoogleMaps,
@@ -12,12 +12,9 @@ import {
 } from '@ionic-native/google-maps';
 import { Position } from '../../../models/position';
 import { NotificationProvider } from '../../../providers/notifications';
-import { StoragePoint } from '../../../models/storagePoint';
-import { SessionProvider } from '../../../providers/session';
 import { Http, RequestOptions, Headers } from '@angular/http';
 import { ApplicationConfig, APP_CONFIG_TOKEN } from '../../../app/app-config';
 import { RecycleItem } from '../../../models/recycleItem';
-import { TypeRecycle } from '../../../models/typeRecicle';
 
 @Component({
     selector: 'page-recycleMap',
@@ -27,22 +24,19 @@ export class MapPage {
 
     map: GoogleMap;
 
-    typeRecycle: number;
-    myPosition: Position;
-    storagePoint: StoragePoint
     recycledAlready: boolean = false
+    recycleItem: RecycleItem
+    myPosition: Position;
 
     constructor(
         private navParams: NavParams,
-        private navCtrl: NavController,
         private notificationProvider: NotificationProvider,
-        private sessionProvider: SessionProvider,
+        private alertCtrl: AlertController,
         private http: Http,
         @Inject(APP_CONFIG_TOKEN) private config: ApplicationConfig) {
 
-        this.typeRecycle = this.navParams.get("recycleItemType");
+        this.recycleItem = this.navParams.get("recycleItem");
         this.myPosition = this.navParams.get("myPosition");
-        this.storagePoint = this.navParams.get("storagePoint");
     }
 
     ionViewDidLoad() {
@@ -71,7 +65,7 @@ export class MapPage {
                     marker.showInfoWindow();
                 })
 
-                this.createMarker(this.storagePoint.position, "Punto más cercano", 'green').then((marker: Marker) => {
+                this.createMarker(this.recycleItem.storage.position, "Punto más cercano", 'green').then((marker: Marker) => {
                     marker.showInfoWindow();
                 })
 
@@ -102,33 +96,50 @@ export class MapPage {
                 'Content-Type': 'application/json'
             })
         });
-
-        this.sessionProvider.getSession().then(user => {
-            var recycleItem: RecycleItem
-            recycleItem = {
-                id: null,
-                name: TypeRecycle[this.typeRecycle],
-                image: this.config.defaultImageDirectory,
-                recycleUser: user.id,
-                storage: this.storagePoint.id,
-                itemType: this.typeRecycle,
-                createdDate: new Date()
+        this.recycleItem.storage = this.recycleItem.storage.id
+        this.http.post(this.config.apiEndpoint + "/recycleItems", JSON.stringify(this.recycleItem), options).subscribe(res => {
+            var status = res.status;
+            if (status === 201) {
+                this.recycledAlready = true
+                this.notificationProvider.presentAlertOk('Se ha guardadado correctamente este reciclado!')
             }
-            return this.http.post(this.config.apiEndpoint + "/recycleItems", JSON.stringify(recycleItem), options).timeout(this.config.defaultTimeoutTime).subscribe(res => {
-                var status = res.status;
-                if (status === 201) {
-                    this.recycledAlready = true
-                    this.notificationProvider.presentAlertOk('Se ha guardadado correctamente este reciclado!')
-                }
-                else {
-                    this.notificationProvider.presentTopToast("Los datos insertados son incorrectos.")
-                }
-            }, error => {
-                this.notificationProvider.presentTopToast(this.config.defaultTimeoutMsg + error)
-            })
-        }).catch(error => {
-            this.notificationProvider.presentTopToast("Error encontrado, por favor contacte con el administrador." + error)
+            else {
+                this.notificationProvider.presentTopToast("Los datos insertados son incorrectos.")
+            }
+        }, error => {
+            this.notificationProvider.presentTopToast(this.config.defaultTimeoutMsg)
         })
+    }
+
+    public modifyRecycleName() {
+        var name: string
+        let prompt = this.alertCtrl.create({
+            title: 'Modificar nombre',
+            message: "Puedes añadirle un nombre personalizado al reciclado.",
+            inputs: [
+                {
+                    name: 'name',
+                    placeholder: this.recycleItem.name
+                },
+            ],
+            buttons: [
+                {
+                    text: 'Cancelar',
+                    handler: data => {
+                        return null
+                    }
+                },
+                {
+                    text: 'Save',
+                    handler: data => {
+                        if (data.name.length > 0) {
+                            this.recycleItem.name = data.name
+                        }
+                    }
+                }
+            ]
+        });
+        prompt.present()
     }
 
 

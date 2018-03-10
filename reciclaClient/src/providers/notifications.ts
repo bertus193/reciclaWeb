@@ -1,12 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Storage } from '@ionic/storage';
 
-import { User } from '../models/user'
 import { ToastController, AlertController } from 'ionic-angular';
 
 @Injectable()
 export class NotificationProvider {
-    private user: User
 
     constructor(
         private toastCtrl: ToastController,
@@ -51,4 +48,5 @@ export class NotificationProvider {
         });
         alert.present();
     }
+
 }

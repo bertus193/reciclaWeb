@@ -2,9 +2,7 @@ import { Component, ViewChild, Inject } from '@angular/core';
 import { NavController, LoadingController, ActionSheetController, Platform, Loading, Slides } from 'ionic-angular';
 
 import { Camera, CameraOptions } from '@ionic-native/camera';
-import { File } from '@ionic-native/file';
-import { Transfer, TransferObject } from '@ionic-native/transfer';
-import { FilePath } from '@ionic-native/file-path';
+import { Transfer, TransferObject, FileUploadOptions } from '@ionic-native/transfer';
 import { Geolocation } from '@ionic-native/geolocation';
 import { LocationAccuracy } from '@ionic-native/location-accuracy';
 import { ApplicationConfig, APP_CONFIG_TOKEN } from '../../app/app-config';
@@ -17,11 +15,12 @@ import 'rxjs/add/operator/map'
 import { Position } from '../../models/position';
 import { MapPage } from './recycle_map/recycleMap';
 import { NotificationProvider } from '../../providers/notifications';
-import { GoogleCloudVisionServiceProvider } from '../../providers/google-cloud-vision-service';
+import { GoogleCloudServiceProvider } from '../../providers/google';
 import { SessionProvider } from '../../providers/session';
 import { User } from '../../models/user';
-
-declare var cordova: any;
+import { LabelResponse } from '../../models/labelResponse';
+import { RecycleItem } from '../../models/recycleItem';
+import { TypeRecycle } from '../../models/typeRecicle';
 
 @Component({
     selector: 'page-recycle',
@@ -29,11 +28,11 @@ declare var cordova: any;
 })
 export class RecyclePage {
 
+    recycleItem: RecycleItem
     lastImage: string = null;
     loading: Loading;
     errorMsg: string = "";
-
-    recycleItemType: number;
+    user: User
 
     @ViewChild(Slides) slides: Slides;
 
@@ -42,8 +41,6 @@ export class RecyclePage {
         public navCtrl: NavController,
         private camera: Camera,
         private transfer: Transfer,
-        private file: File,
-        private filePath: FilePath,
         public actionSheetCtrl: ActionSheetController,
         public platform: Platform,
         public loadingCtrl: LoadingController,
@@ -51,10 +48,10 @@ export class RecyclePage {
         private locationAccuracy: LocationAccuracy,
         private http: Http,
         private notificationProvider: NotificationProvider,
-        private vision: GoogleCloudVisionServiceProvider,
+        private googleCloudServiceProvider: GoogleCloudServiceProvider,
         private sessionProvider: SessionProvider
     ) {
-
+        this.recycleItem = new RecycleItem();
     }
 
     ionViewDidLoad() {
@@ -63,51 +60,59 @@ export class RecyclePage {
         }
     }
 
-    public test() {
-        this.navCtrl.push(MapPage, {
-            recycleItemType: this.recycleItemType,
-            myPosition: null,
-            storagePoint: null
-        })
+    public loadPositionSlide(recycleItemType: number) {
+        this.sessionProvider.getSession
+        this.recycleItem.id = null
+        this.recycleItem.image = this.config.defaultImageDirectory
+        this.recycleItem.itemType = recycleItemType
+        this.recycleItem.name = TypeRecycle[this.recycleItem.itemType]
+        this.recycleItem.recycleUser = this.user.id
+        this.recycleItem.createdDate = new Date()
+
+        this.recycleItem.itemType = recycleItemType
+        this.slideNext();
     }
 
-    public loadPositionSlide(recycleItemType: number) {
-        this.recycleItemType = recycleItemType
-        this.slideNext();
+    public getUserPositionButton() {
+        this.loading = this.loadingCtrl.create({
+            content: 'Obteniendo la ubicación del usuario...'
+        });
+        this.loading.present()
+        this.getUserPosition()
     }
 
     public getUserPosition() {
 
+
         let myPosition: Position
+        let GPSoptions = { timeout: this.config.defaultTimeoutTime, enableHighAccuracy: true, maximumAge: 0 };
+        this.geolocation.getCurrentPosition(GPSoptions).then(position => {
+            myPosition = new Position(position.coords.latitude, position.coords.longitude)
 
-        this.locationAccuracy.request(this.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY).then(
-            (resp) => {
-                this.geolocation.getCurrentPosition().then(position => {
+            this.getNearestStoragePoint(myPosition).timeout(this.config.defaultTimeoutTime).subscribe(
+                result => {
+                    this.loading.dismissAll()
+                    this.recycleItem.storage = result.storagePoint
+                    if (result.status == 200) {
 
-                    myPosition = new Position(position.coords.latitude, position.coords.longitude)
-
-                    this.getNearestStoragePoint(myPosition).timeout(this.config.defaultTimeoutTime).subscribe(
-                        result => {
-                            var storagePoint: StoragePoint = result.storagePoint
-                            if (result.status == 200) {
-
-                                this.navCtrl.push(MapPage, {
-                                    recycleItemType: this.recycleItemType,
-                                    myPosition: myPosition,
-                                    storagePoint: storagePoint
-                                })
-                            }
-                            else {
-                                this.notificationProvider.presentTopToast('No hay ningún punto de reciclaje cercano.');
-                            }
-                        },
-                        error => {
-                            this.notificationProvider.presentTopToast(this.config.defaultTimeoutMsg)
+                        this.navCtrl.push(MapPage, {
+                            recycleItem: this.recycleItem,
+                            myPosition: myPosition,
                         })
+                    }
+                    else {
+                        this.loading.dismissAll()
+                        this.notificationProvider.presentTopToast('No hay ningún punto de reciclaje cercano.');
+                    }
+                },
+                error => {
+                    this.loading.dismissAll()
+                    this.notificationProvider.presentTopToast(this.config.defaultTimeoutMsg)
                 })
-            }).catch((error) => {
-                this.notificationProvider.presentTopToast('Error en la obtención de los permisos necesarios.');
-            })
+        }).catch(error => {
+            this.loading.dismissAll()
+            this.notificationProvider.presentTopToast("Error obteniendo la ubicación")
+        })
     }
 
 
@@ -115,8 +120,8 @@ export class RecyclePage {
 
         var options: CameraOptions = {
             quality: 20,
-            targetWidth: 600,
-            targetHeight: 600,
+            targetWidth: 350,
+            targetHeight: 350,
             sourceType: sourceType,
             saveToPhotoAlbum: false,
             correctOrientation: true,
@@ -133,51 +138,86 @@ export class RecyclePage {
         });
     }
 
-    public presentActionSheet() {
+    public presentActionSheetActions() {
+        this.sessionProvider.getSession().then((user: User) => {
+            this.user = user
+            this.locationAccuracy.request(this.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY).then(
+                (resp) => {
+                    let actionSheet = this.actionSheetCtrl.create({
+                        title: 'Sube una foto de lo que desees reciclar',
+                        buttons: [
+                            {
+                                text: 'Cargar de la librería',
+                                handler: () => {
+                                    this.takePicture(this.camera.PictureSourceType.PHOTOLIBRARY);
+                                }
+                            },
+                            {
+                                text: 'Tomar una foto',
+                                handler: () => {
+                                    this.takePicture(this.camera.PictureSourceType.CAMERA);
+                                }
+                            },
+                            {
+                                text: 'Reciclar por tipo de objeto',
+                                handler: () => {
+                                    this.presentActionSheetTypeRecycle()
+                                }
+                            },
+                            {
+                                text: 'Cancelar',
+                                role: 'cancel'
+                            }
+                        ]
+                    });
+                    actionSheet.present();
+                }).catch((error) => {
+                    this.notificationProvider.presentTopToast('Error en la obtención de los permisos necesarios.');
+                })
+        }, err => {
+            this.loading.dismissAll()
+            this.notificationProvider.presentTopToast('Error obteniendo los datos necesarios.')
+        });
+    }
+    public presentActionSheetTypeRecycle() {
+        var typeRecycle: number;
 
         let actionSheet = this.actionSheetCtrl.create({
-            title: 'Elige un tipo de material',
+            title: '¿Qué deseas reciclar?',
             buttons: [
-                {
-                    text: 'Cargar de la librería',
-                    handler: () => {
-                        this.takePicture(this.camera.PictureSourceType.PHOTOLIBRARY);
-                    }
-                },
-                {
-                    text: 'Usar Cámara',
-                    handler: () => {
-                        this.takePicture(this.camera.PictureSourceType.CAMERA);
-                    }
-                },
                 {
                     text: 'Orgánico',
                     handler: () => {
-                        this.loadPositionSlide(1);
+                        typeRecycle = 1
+                        this.loadPositionSlide(typeRecycle);
                     }
                 },
                 {
                     text: 'Plástico',
                     handler: () => {
-                        this.loadPositionSlide(2);
+                        typeRecycle = 2
+                        this.loadPositionSlide(typeRecycle);
                     }
                 },
                 {
                     text: 'Cristal',
                     handler: () => {
-                        this.loadPositionSlide(3);
+                        typeRecycle = 3
+                        this.loadPositionSlide(typeRecycle);
                     }
                 },
                 {
                     text: 'Papel',
                     handler: () => {
-                        this.loadPositionSlide(4);
+                        typeRecycle = 4
+                        this.loadPositionSlide(typeRecycle);
                     }
                 },
                 {
                     text: 'Material de oficina',
                     handler: () => {
-                        this.loadPositionSlide(5);
+                        typeRecycle = 5
+                        this.loadPositionSlide(typeRecycle);
                     }
                 },
                 {
@@ -187,7 +227,9 @@ export class RecyclePage {
             ]
         });
         actionSheet.present();
+
     }
+
 
     private slideNext() {
         this.slides.lockSwipes(false);
@@ -202,50 +244,63 @@ export class RecyclePage {
     }
 
     public uploadImage(targetPath) {
+        var date = new Date()
+        var filename = this.user.id + "_" + date.getTime() + ".png";
 
-        this.sessionProvider.getSession().then((user: User) => {
+        var url = this.config.uploadFilesUrl
+        var urlUpload = url + "/upload.php"
+        var urlUploadedFiles = url + '/uploads/' + filename
 
-            var date = new Date()
-            var filename = user.id + "_" + date.getTime() + ".png";
+        this.recycleItem.id = null
+        this.recycleItem.image = urlUploadedFiles
+        this.recycleItem.name = TypeRecycle[this.recycleItem.itemType]
+        this.recycleItem.recycleUser = this.user.id
+        this.recycleItem.itemType = Math.floor(Math.random() * (5 - 1)) + 1; //TODO
+        this.recycleItem.createdDate = new Date()
 
-            var url = "https://reciclaweb.000webhostapp.com"
-            var urlUpload = url + "/upload.php"
-            var urlUploadedFiles = url + '/uploads/' + filename
 
-            var options = {
-                fileKey: "file",
-                fileName: filename,
-                chunkedMode: false,
-                mimeType: "multipart/form-data",
-                params: { 'fileName': filename }
-            };
+        var options: FileUploadOptions = {
+            fileKey: "file",
+            fileName: filename,
+            chunkedMode: false,
+            mimeType: "multipart/form-data",
+            params: { 'fileName': filename }
+        };
 
-            const fileTransfer: TransferObject = this.transfer.create();
+        const fileTransfer: TransferObject = this.transfer.create();
 
-            this.loading = this.loadingCtrl.create({
-                content: 'Subiendo imagen...'
-            });
-            this.loading.present()
-
-            // Use the FileTransfer to upload the image
-            fileTransfer.upload(targetPath, urlUpload, options).then(data => {
-
-                this.vision.getLabels(urlUploadedFiles).subscribe((result: any) => {
-                    this.loading.dismissAll()
-                    this.notificationProvider.presentAlertOk(urlUploadedFiles + " @@ " + JSON.stringify(result))
-                    this.slideNext()
-                }, err => { //Vision.getLabels
-                    this.notificationProvider.presentAlertError("Error a la hora de utilizar la imagen.")
-                })
-
-            }, err => {
-                this.loading.dismissAll()
-                this.notificationProvider.presentTopToast('Error while uploading file.')
-            });
-        }, err => {
-            this.loading.dismissAll()
-            this.notificationProvider.presentTopToast('Error obteniendo los datos necesarios.')
+        this.loading = this.loadingCtrl.create({
+            content: 'Subiendo la imagen...'
         });
+        this.loading.present()
+
+        // Use the FileTransfer to upload the image
+        fileTransfer.upload(targetPath, urlUpload, options).then(data => {
+            this.googleCloudServiceProvider.getLabels(urlUploadedFiles).timeout(this.config.defaultTimeoutTime).subscribe((result: any) => {
+                var labelResponseList: LabelResponse[];
+                labelResponseList = result.json().responses[0].labelAnnotations;
+                if (labelResponseList.length > 0) {
+                    //TODO FIND BY NAME labelResponseList[0].description
+                    this.googleCloudServiceProvider.translateToSpanish(labelResponseList[0].description).subscribe(res => {
+                        this.recycleItem.name = res.json().data.translations[0].translatedText
+                        this.loading.setContent("Obteniendo la ubicación del usuario...")
+                        this.getUserPosition()
+                    }, err => { // translate
+                        this.loading.dismissAll()
+                        this.notificationProvider.presentTopToast("Error interno en la obtención del nombre.")
+                    })
+                }
+
+            }, err => { // Vision
+                this.loading.dismissAll()
+                this.notificationProvider.presentTopToast("Error a la hora de utilizar la imagen.")
+            })
+
+        }, err => { // uploadFile
+            this.loading.dismissAll()
+            this.notificationProvider.presentTopToast('Error while uploading file.')
+        });
+
     }
 
     public getNearestStoragePoint(currentPosition: Position): Observable<{ storagePoint: StoragePoint, status: number }> {

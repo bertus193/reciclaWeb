@@ -11,6 +11,7 @@ import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
 
 import 'rxjs/add/operator/map'
 import { APP_CONFIG_TOKEN, ApplicationConfig } from '../../app/app-config';
+import { LoadingController, Loading } from 'ionic-angular';
 
 
 @Component({
@@ -19,32 +20,43 @@ import { APP_CONFIG_TOKEN, ApplicationConfig } from '../../app/app-config';
 })
 export class LoginPage {
 
+    loading: Loading;
+
     constructor(
         @Inject(APP_CONFIG_TOKEN) private config: ApplicationConfig,
         private sessionProvider: SessionProvider,
         private app: App,
         private http: Http,
         private fb: Facebook,
+        private loadingCtrl: LoadingController,
         private notificationProvider: NotificationProvider
     ) { }
 
     doFbLogin() {
+        this.loading = this.loadingCtrl.create({
+            content: 'Iniciando sesión...'
+        });
+        this.loading.present()
         this.login().then(res => {
             res.subscribe(user => {
+                this.loading.dismissAll()
                 if (user != null) {
                     this.sessionProvider.updateSession(user)
                     this.app.getRootNavs()[0].setRoot(TabsPage)
                 }
             }, error => {
+                this.loading.dismissAll()
                 this.notificationProvider.presentTopToast(this.config.defaultTimeoutMsg);
             })
         }).catch(error => {
+            this.loading.dismissAll()
             this.notificationProvider.presentTopToast(this.config.defaultTimeoutMsg);
         })
 
     }
 
     login(): Promise<Observable<User>> {
+
         var user: User
 
         return this.fb.login(['public_profile', 'email'])

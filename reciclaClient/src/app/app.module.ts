@@ -24,7 +24,7 @@ import { Geolocation } from '@ionic-native/geolocation';
 import { LocationAccuracy } from '@ionic-native/location-accuracy';
 import { GoogleMaps } from '@ionic-native/google-maps'
 import { NotificationProvider } from '../providers/notifications';
-import { GoogleCloudVisionServiceProvider } from '../providers/google-cloud-vision-service';
+import { GoogleCloudServiceProvider } from '../providers/google';
 
 @NgModule({
     declarations: [
@@ -49,7 +49,7 @@ import { GoogleCloudVisionServiceProvider } from '../providers/google-cloud-visi
         { provide: ErrorHandler, useClass: IonicErrorHandler },
         SessionProvider,
         NotificationProvider,
-        GoogleCloudVisionServiceProvider,
+        GoogleCloudServiceProvider,
         { provide: APP_CONFIG_TOKEN, useValue: APP_CONFIG },
         File,
         Transfer,
@@ -57,8 +57,7 @@ import { GoogleCloudVisionServiceProvider } from '../providers/google-cloud-visi
         FilePath,
         Geolocation,
         LocationAccuracy,
-        GoogleMaps,
-        GoogleCloudVisionServiceProvider
+        GoogleMaps
     ]
 })
 export class AppModule { }

@@ -1,5 +1,3 @@
-import { ItemType } from "./itemType";
-
 export class RecycleItem {
     id: number;
     name: string;
