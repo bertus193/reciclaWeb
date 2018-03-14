@@ -6,6 +6,7 @@ import { Http } from '@angular/http';
 import { APP_CONFIG_TOKEN, ApplicationConfig } from '../../../app/app-config';
 import { SessionProvider } from '../../../providers/session';
 import 'rxjs/add/operator/map'
+import { User } from '../../../models/user';
 
 @Component({
     selector: 'page-myRecycledItems',
@@ -49,12 +50,12 @@ export class myRecycledItemsPage {
     getRecycleItems() {
         var status: number
 
-        this.sessionProvider.getSession().then(res => {
+        this.sessionProvider.getSession().then((user: User) => {
 
-            for (let item in res.recycleItems) {
+            for (let item in user.recycleItems) {
 
             }
-            this.http.get(this.config.apiEndpoint + "/users/" + res.id + "/recycleItems").timeout(this.config.defaultTimeoutTime).subscribe(res => {
+            this.http.get(this.config.apiEndpoint + "/users/" + user.id + "/recycleItems?token=" + user.accessToken).timeout(this.config.defaultTimeoutTime).subscribe(res => {
                 status = res.status
                 if (status === 200) {
                     var recycleItemTempList = res.json();
@@ -81,11 +82,9 @@ export class myRecycledItemsPage {
                 itemTypeItems.push(recycleItemList[item].itemType)
             }
             else {
-                console.log("prueba")
                 recycleItemList[item].itemType = itemTypeItems.filter(x => x.id == recycleItemList[item].itemType)[0]
             }
         }
-        console.log(recycleItemList)
         return recycleItemList;
     }
 

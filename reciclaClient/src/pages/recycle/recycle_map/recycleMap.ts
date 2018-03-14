@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { NavParams, NavController, AlertController } from 'ionic-angular';
+import { NavParams, AlertController } from 'ionic-angular';
 
 import {
     GoogleMaps,
@@ -15,6 +15,8 @@ import { NotificationProvider } from '../../../providers/notifications';
 import { Http, RequestOptions, Headers } from '@angular/http';
 import { ApplicationConfig, APP_CONFIG_TOKEN } from '../../../app/app-config';
 import { RecycleItem } from '../../../models/recycleItem';
+import { User } from '../../../models/user';
+import { SessionProvider } from '../../../providers/session';
 
 @Component({
     selector: 'page-recycleMap',
@@ -33,6 +35,7 @@ export class MapPage {
         private notificationProvider: NotificationProvider,
         private alertCtrl: AlertController,
         private http: Http,
+        private sessionProvider: SessionProvider,
         @Inject(APP_CONFIG_TOKEN) private config: ApplicationConfig) {
 
         this.recycleItem = this.navParams.get("recycleItem");
@@ -91,28 +94,33 @@ export class MapPage {
     }
 
     public recycleFinish() {
-        var options = new RequestOptions({
-            headers: new Headers({
-                'Content-Type': 'application/json'
+
+        this.sessionProvider.getSession().then((user: User) => {
+            var options = new RequestOptions({
+                headers: new Headers({
+                    'Content-Type': 'application/json'
+                })
+            });
+            this.recycleItem.storage = this.recycleItem.storage.id
+            this.http.post(this.config.apiEndpoint + "/recycleItems?token=" + user.accessToken, JSON.stringify(this.recycleItem), options).subscribe(res => {
+                var status = res.status;
+                if (status === 201) {
+                    this.recycledAlready = true
+                    this.notificationProvider.presentAlertOk('Se ha guardadado correctamente este reciclado!')
+                }
+                else {
+                    this.notificationProvider.presentTopToast("Los datos insertados son incorrectos.")
+                }
+            }, error => {
+                this.notificationProvider.presentTopToast(this.config.defaultTimeoutMsg)
             })
+
+        }, err => {
+            this.notificationProvider.presentTopToast('Error obteniendo los datos necesarios.')
         });
-        this.recycleItem.storage = this.recycleItem.storage.id
-        this.http.post(this.config.apiEndpoint + "/recycleItems", JSON.stringify(this.recycleItem), options).subscribe(res => {
-            var status = res.status;
-            if (status === 201) {
-                this.recycledAlready = true
-                this.notificationProvider.presentAlertOk('Se ha guardadado correctamente este reciclado!')
-            }
-            else {
-                this.notificationProvider.presentTopToast("Los datos insertados son incorrectos.")
-            }
-        }, error => {
-            this.notificationProvider.presentTopToast(this.config.defaultTimeoutMsg)
-        })
     }
 
     public modifyRecycleName() {
-        var name: string
         let prompt = this.alertCtrl.create({
             title: 'Modificar nombre',
             message: "Puedes añadirle un nombre personalizado al reciclado.",
@@ -143,5 +151,14 @@ export class MapPage {
     }
 
 
-
+    /*
+        var mapWindow;
+    if (this.platform.is('ios')) {
+        mapWindow = window.open('maps://?q=Yo&saddr=' + myPosition.latitude + ',' + myPosition.longitude + '&daddr=' + storagePoint.position.latitude + ',' + storagePoint.position.longitude, '_system');
+    }
+    // android
+    else if (this.platform.is('android')) {
+        mapWindow = window.open('geo://' + storagePoint.position.latitude + ',' + storagePoint.position.longitude + 'q=' + myPosition.latitude + ',' + myPosition.longitude + '(Yo)', '_system');
+    }
+    if (mapWindow) {*/
 }

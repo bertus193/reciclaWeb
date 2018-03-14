@@ -8,5 +8,6 @@ export class User {
     profilePicture: string;
     accessToken: string;
     recycleItems: RecycleItem[];
-    createdDate: Date
+    createdDate: Date;
+    lastPosition: any
 }

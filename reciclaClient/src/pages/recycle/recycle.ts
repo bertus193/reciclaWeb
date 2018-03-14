@@ -85,33 +85,32 @@ export class RecyclePage {
 
 
         let myPosition: Position
-        let GPSoptions = { timeout: this.config.defaultTimeoutTime, enableHighAccuracy: true, maximumAge: 0 };
+        let GPSoptions = { timeout: this.config.defaultTimeoutTime, enableHighAccuracy: true, maximumAge: 100 };
         this.geolocation.getCurrentPosition(GPSoptions).then(position => {
+
             myPosition = new Position(position.coords.latitude, position.coords.longitude)
 
-            this.getNearestStoragePoint(myPosition).timeout(this.config.defaultTimeoutTime).subscribe(
-                result => {
-                    this.loading.dismissAll()
-                    this.recycleItem.storage = result.storagePoint
-                    if (result.status == 200) {
+            this.saveUserPosition(this.user, myPosition).subscribe(res => {
+                this.goToMapPage(this.user.lastPosition)
+            }, err => { //saveUserPosition
+                this.notificationProvider.presentTopToast('Error guardando el usuario.');
+            })
 
-                        this.navCtrl.push(MapPage, {
-                            recycleItem: this.recycleItem,
-                            myPosition: myPosition,
-                        })
-                    }
-                    else {
-                        this.loading.dismissAll()
-                        this.notificationProvider.presentTopToast('No hay ningún punto de reciclaje cercano.');
-                    }
-                },
-                error => {
-                    this.loading.dismissAll()
-                    this.notificationProvider.presentTopToast(this.config.defaultTimeoutMsg)
-                })
-        }).catch(error => {
+        }, (error: PositionError) => {
             this.loading.dismissAll()
-            this.notificationProvider.presentTopToast("Error obteniendo la ubicación")
+            if (error.code == 3) { //Timeout
+                if (this.user.lastPosition != null) {
+                    this.goToMapPage(this.user.lastPosition)
+                }
+                else {
+                    this.notificationProvider.presentTopToast("Error: " + error.message)
+                }
+
+            }
+            else {
+                this.notificationProvider.presentTopToast("Error obteniendo la ubicación")
+            }
+
         })
     }
 
@@ -327,16 +326,34 @@ export class RecyclePage {
         });
     }
 
-    /*
+    goToMapPage(myPosition: Position) {
+        this.getNearestStoragePoint(myPosition).timeout(this.config.defaultTimeoutTime).subscribe(
+            result => {
+                this.loading.dismissAll()
+                this.recycleItem.storage = result.storagePoint
+                if (result.status == 200) {
 
-        var mapWindow;
-    if (this.platform.is('ios')) {
-        mapWindow = window.open('maps://?q=Yo&saddr=' + myPosition.latitude + ',' + myPosition.longitude + '&daddr=' + storagePoint.position.latitude + ',' + storagePoint.position.longitude, '_system');
+                    this.navCtrl.push(MapPage, {
+                        recycleItem: this.recycleItem,
+                        myPosition: myPosition,
+                    })
+                }
+                else {
+                    this.loading.dismissAll()
+                    this.notificationProvider.presentTopToast('No hay ningún punto de reciclaje cercano.');
+                }
+            },
+            error => {
+                this.loading.dismissAll()
+                this.notificationProvider.presentTopToast(this.config.defaultTimeoutMsg)
+            })
     }
-    // android
-    else if (this.platform.is('android')) {
-        mapWindow = window.open('geo://' + storagePoint.position.latitude + ',' + storagePoint.position.longitude + 'q=' + myPosition.latitude + ',' + myPosition.longitude + '(Yo)', '_system');
+
+    public saveUserPosition(user: User, position: Position) {
+        user.recycleItems = null
+        user.lastPosition = position
+
+        return this.http.put(this.config.apiEndpoint + "/users/" + user.id, JSON.stringify(user)).timeout(this.config.defaultTimeoutTime);
     }
-    if (mapWindow) {*/
 
 }

@@ -71,7 +71,8 @@ export class LoginPage {
                         profilePicture: profile['picture_large']['data']['url'],
                         accessToken: fbUser.authResponse.accessToken,
                         recycleItems: [],
-                        createdDate: null
+                        createdDate: null,
+                        lastPosition: null
                     }
                     return this.findOrCreateUser(user).timeout(this.config.defaultTimeoutTime).map((res: any) => {
                         if (res.value != null) {
@@ -96,7 +97,8 @@ export class LoginPage {
                             profilePicture: 'https://keluro.com/images/Blog/Debug.jpg',
                             accessToken: 'DEBUG_MODE',
                             recycleItems: [],
-                            createdDate: new Date()
+                            createdDate: new Date(),
+                            lastPosition: null
                         }
 
                         return this.findOrCreateUser(user).timeout(this.config.defaultTimeoutTime).map((res: any) => {
@@ -151,7 +153,7 @@ export class LoginPage {
         var user: User
         var status: number
 
-        return this.http.get(this.config.apiEndpoint + "/users?email=" + email).map(res => {
+        return this.http.get(this.config.apiEndpoint + "/users/email/" + email).map(res => {
             status = res.status
 
             if (status === 200) {

@@ -38,6 +38,10 @@ public class User {
 
     private Timestamp createdDate;
 
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "last_position")
+    private Position lastPosition;
+
     @OneToMany(mappedBy = "recycleUser")
     @JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
     @JsonIdentityReference(alwaysAsId=true)
@@ -109,5 +113,13 @@ public class User {
 
     public List<RecycleItem> getRecycleItems() {
         return recycleItems;
+    }
+
+    public Position getLastPosition() {
+        return lastPosition;
+    }
+
+    public void setLastPosition(Position lastPosition) {
+        this.lastPosition = lastPosition;
     }
 }
