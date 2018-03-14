@@ -22,11 +22,6 @@ public class UserService{
     }
 
 
-    public List<User> findAll(){
-        List<User> users = userDAO.findAll();
-        return users;
-    }
-
     public User findByEmail(String email){
         return userDAO.findFirstByEmail(email);
     }
@@ -37,5 +32,9 @@ public class UserService{
 
     public User findById(long id) {
         return userDAO.findFirstById(id);
+    }
+
+    public User findByAccessToken(String token) {
+        return userDAO.findFirstByAccessToken(token);
     }
 }

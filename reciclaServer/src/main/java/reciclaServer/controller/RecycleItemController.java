@@ -10,6 +10,8 @@ import reciclaServer.models.exceptions.StorageNotFoundException;
 import reciclaServer.models.exceptions.UserNotFoundException;
 import reciclaServer.services.RecycleItemService;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 @CrossOrigin(origins = "*")
 public class RecycleItemController {
@@ -23,16 +25,25 @@ public class RecycleItemController {
     }
 
     @RequestMapping(value = "/recycleItems", method = RequestMethod.POST)
-    public ResponseEntity<?> createRecycleItem(@RequestBody RecycleItem recycleItem){
-        System.out.println("Creating RecycleItem " + recycleItem.getName());
+    public ResponseEntity<?> createRecycleItem(HttpServletRequest request, @RequestBody RecycleItem recycleItem){
 
-        try {
-            recycleItemService.saveRecycleItem(recycleItem);
-        } catch (UserNotFoundException | StorageNotFoundException | ItemTypeNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        long userId = (long)request.getAttribute("userId");
+
+        if(userId == recycleItem.getRecycleUser().getId()){
+
+            try {
+                recycleItemService.saveRecycleItem(recycleItem);
+            } catch (UserNotFoundException | StorageNotFoundException | ItemTypeNotFoundException e) {
+                return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            }
+
+            return new ResponseEntity<>(recycleItem, HttpStatus.CREATED);
+        }
+        else{
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        return new ResponseEntity<>(recycleItem, HttpStatus.CREATED);
+
     }
 
 }

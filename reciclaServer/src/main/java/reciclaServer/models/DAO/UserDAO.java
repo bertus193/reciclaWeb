@@ -18,4 +18,6 @@ public interface UserDAO extends CrudRepository<User, Long>{
     User save(User user);
 
     User findFirstById(long id);
+
+    User findFirstByAccessToken(String token);
 }
