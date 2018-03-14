@@ -4,8 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reciclaServer.models.Position;
 import reciclaServer.models.RecycleItem;
 import reciclaServer.models.User;
+import reciclaServer.services.PositionService;
 import reciclaServer.services.UserService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,10 +18,14 @@ public class UserController {
 
 
     private UserService userService;
+    private PositionService positionService;
 
     @Autowired
-    public UserController(UserService userService){
+    public UserController(
+            UserService userService,
+            PositionService positionService){
         this.userService = userService;
+        this.positionService = positionService;
     }
 
     @RequestMapping(value = "/users/email/{email:.+}", method = RequestMethod.GET)
@@ -56,10 +62,12 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        user.setId(currentUser.getId());
+        Position position = new Position(user.getLastPosition().getLatitude(), user.getLastPosition().getLongitude());
+
+        user.setLastPosition(positionService.savePosition(position));
 
         userService.saveUser(user);
-        return new ResponseEntity<>(currentUser, HttpStatus.OK);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/users/{id}/recycleItems", method = RequestMethod.GET)
