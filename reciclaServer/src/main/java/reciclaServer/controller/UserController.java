@@ -50,24 +50,39 @@ public class UserController {
         }
 
         userService.saveUser(user);
-        return new ResponseEntity<User>(user, HttpStatus.CREATED);
+        return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/users/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<User> updateUser(@PathVariable("id") long id, @RequestBody User user) {
+    public ResponseEntity<User> updateUser(HttpServletRequest request, @PathVariable("id") long id, @RequestBody User user) {
 
-        User currentUser = userService.findById(id);
+        long userId = (long)request.getAttribute("userId");
 
-        if (currentUser == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if(userId == id){
+            User currentUser = userService.findById(id);
+
+            if (currentUser == null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+
+            user.setId(id);
+
+            Position position = user.getLastPosition();
+
+            if(user.getLastPosition().getId() == -1){
+                position = new Position(user.getLastPosition().getLatitude(), user.getLastPosition().getLongitude());
+            }
+
+            user.setLastPosition(positionService.savePosition(position));
+
+            userService.saveUser(user);
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        Position position = new Position(user.getLastPosition().getLatitude(), user.getLastPosition().getLongitude());
 
-        user.setLastPosition(positionService.savePosition(position));
-
-        userService.saveUser(user);
-        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/users/{id}/recycleItems", method = RequestMethod.GET)

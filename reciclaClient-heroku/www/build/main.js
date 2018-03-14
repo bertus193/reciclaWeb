@@ -369,11 +369,15 @@ var RecyclePage = (function () {
         var myPosition;
         var GPSoptions = { timeout: this.config.defaultTimeoutTime, enableHighAccuracy: true, maximumAge: 100 };
         this.geolocation.getCurrentPosition(GPSoptions).then(function (position) {
-            myPosition = new __WEBPACK_IMPORTED_MODULE_10__models_position__["a" /* Position */](position.coords.latitude, position.coords.longitude);
+            myPosition = new __WEBPACK_IMPORTED_MODULE_10__models_position__["a" /* Position */](-1, position.coords.latitude, position.coords.longitude);
+            if (_this.user.lastPosition != null) {
+                myPosition.id = _this.user.lastPosition.id;
+            }
             _this.saveUserPosition(_this.user, myPosition).subscribe(function (res) {
-                _this.goToMapPage(_this.user.lastPosition);
-            }, function (err) {
-                _this.notificationProvider.presentTopToast('Error guardando el usuario.');
+                _this.goToMapPage(myPosition);
+            }, function (error) {
+                _this.loading.dismissAll();
+                _this.notificationProvider.presentAlertOk(error);
             });
         }, function (error) {
             _this.loading.dismissAll();
@@ -607,7 +611,12 @@ var RecyclePage = (function () {
     RecyclePage.prototype.saveUserPosition = function (user, position) {
         user.recycleItems = null;
         user.lastPosition = position;
-        return this.http.put(this.config.apiEndpoint + "/users/" + user.id, JSON.stringify(user)).timeout(this.config.defaultTimeoutTime);
+        var options = new __WEBPACK_IMPORTED_MODULE_7__angular_http__["d" /* RequestOptions */]({
+            headers: new __WEBPACK_IMPORTED_MODULE_7__angular_http__["a" /* Headers */]({
+                'Content-Type': 'application/json'
+            })
+        });
+        return this.http.put(this.config.apiEndpoint + "/users/" + user.id, JSON.stringify(user), options).timeout(this.config.defaultTimeoutTime);
     };
     __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_8" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["l" /* Slides */]),
@@ -670,12 +679,13 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 
 
 var MapPage = (function () {
-    function MapPage(navParams, notificationProvider, alertCtrl, http, sessionProvider, config) {
+    function MapPage(navParams, notificationProvider, alertCtrl, http, sessionProvider, platform, config) {
         this.navParams = navParams;
         this.notificationProvider = notificationProvider;
         this.alertCtrl = alertCtrl;
         this.http = http;
         this.sessionProvider = sessionProvider;
+        this.platform = platform;
         this.config = config;
         this.recycledAlready = false;
         this.recycleItem = this.navParams.get("recycleItem");
@@ -776,16 +786,25 @@ var MapPage = (function () {
         });
         prompt.present();
     };
+    MapPage.prototype.viewOnExtenalMap = function () {
+        if (this.platform.is('ios')) {
+            window.open('maps://?q=Yo&saddr=' + this.myPosition.latitude + ',' + this.myPosition.longitude + '&daddr=' + this.recycleItem.storage.position.latitude + ',' + this.recycleItem.storage.position.longitude, '_system');
+        }
+        else if (this.platform.is('android')) {
+            window.open('geo://' + this.recycleItem.storage.position.latitude + ',' + this.recycleItem.storage.position.longitude + 'q=' + this.myPosition.latitude + ',' + this.myPosition.longitude + '(Yo)', '_system');
+        }
+    };
     MapPage = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
-            selector: 'page-recycleMap',template:/*ion-inline-start:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/recycle/recycle_map/recycleMap.html"*/'<ion-header>\n	<ion-navbar>\n		<ion-title>\n			Reciclar: {{recycleItem.name}}\n		</ion-title>\n	</ion-navbar>\n</ion-header>\n\n<ion-content>\n	<div #map id="map_canvas">\n		<ion-fab left bottom>\n			<button ion-fab color="dark">\n				<ion-icon name="menu"></ion-icon>\n			</button>\n			<ion-fab-list side="top">\n				<div *ngIf="recycledAlready == false;">\n					<button ion-fab (click)="modifyRecycleName()">\n						<ion-icon name="md-create"></ion-icon>\n						<ion-label>Modificar el nombre</ion-label>\n					</button>\n					<button ion-fab (click)="recycleFinish()">\n						<ion-icon name="checkmark"></ion-icon>\n						<ion-label>Finalizar reciclaje</ion-label>\n					</button>\n				</div>\n			</ion-fab-list>\n		</ion-fab>\n	</div>\n</ion-content>'/*ion-inline-end:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/recycle/recycle_map/recycleMap.html"*/
+            selector: 'page-recycleMap',template:/*ion-inline-start:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/recycle/recycle_map/recycleMap.html"*/'<ion-header>\n    <ion-navbar>\n        <ion-title>\n            Reciclar: {{recycleItem.name}}\n        </ion-title>\n    </ion-navbar>\n</ion-header>\n\n<ion-content>\n    <div #map id="map_canvas">\n        <ion-fab left bottom>\n            <button ion-fab color="dark">\n                <ion-icon name="menu"></ion-icon>\n            </button>\n            <ion-fab-list side="top">\n                <div *ngIf="recycledAlready == false;">\n                    <button ion-fab (click)="viewOnExtenalMap()">\n                        <ion-icon name="md-map"></ion-icon>\n                        <ion-label>Abrir en Mapas</ion-label>\n                    </button>\n                    <button ion-fab (click)="modifyRecycleName()">\n                        <ion-icon name="md-create"></ion-icon>\n                        <ion-label>Modificar el nombre</ion-label>\n                    </button>\n                    <button ion-fab (click)="recycleFinish()">\n                        <ion-icon name="checkmark"></ion-icon>\n                        <ion-label>Finalizar reciclaje</ion-label>\n                    </button>\n                </div>\n            </ion-fab-list>\n        </ion-fab>\n    </div>\n</ion-content>'/*ion-inline-end:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/recycle/recycle_map/recycleMap.html"*/
         }),
-        __param(5, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["z" /* Inject */])(__WEBPACK_IMPORTED_MODULE_5__app_app_config__["b" /* APP_CONFIG_TOKEN */])),
+        __param(6, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["z" /* Inject */])(__WEBPACK_IMPORTED_MODULE_5__app_app_config__["b" /* APP_CONFIG_TOKEN */])),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavParams */],
             __WEBPACK_IMPORTED_MODULE_3__providers_notifications__["a" /* NotificationProvider */],
             __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["b" /* AlertController */],
             __WEBPACK_IMPORTED_MODULE_4__angular_http__["b" /* Http */],
-            __WEBPACK_IMPORTED_MODULE_6__providers_session__["a" /* SessionProvider */], Object])
+            __WEBPACK_IMPORTED_MODULE_6__providers_session__["a" /* SessionProvider */],
+            __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["k" /* Platform */], Object])
     ], MapPage);
     return MapPage;
 }());
@@ -1290,7 +1309,8 @@ var SessionProvider = (function () {
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Position; });
 var Position = (function () {
-    function Position(latitude, longitude) {
+    function Position(id, latitude, longitude) {
+        this.id = id;
         this.latitude = latitude;
         this.longitude = longitude;
     }

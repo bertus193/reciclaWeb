@@ -8,7 +8,7 @@ import { LocationAccuracy } from '@ionic-native/location-accuracy';
 import { ApplicationConfig, APP_CONFIG_TOKEN } from '../../app/app-config';
 import { StoragePoint } from '../../models/storagePoint'
 
-import { Http } from '@angular/http';
+import { Http, RequestOptions, Headers } from '@angular/http';
 import { Observable } from 'rxjs/Rx'
 import 'rxjs/add/operator/map'
 
@@ -88,12 +88,15 @@ export class RecyclePage {
         let GPSoptions = { timeout: this.config.defaultTimeoutTime, enableHighAccuracy: true, maximumAge: 100 };
         this.geolocation.getCurrentPosition(GPSoptions).then(position => {
 
-            myPosition = new Position(position.coords.latitude, position.coords.longitude)
-
+            myPosition = new Position(-1, position.coords.latitude, position.coords.longitude)
+            if (this.user.lastPosition != null) {
+                myPosition.id = this.user.lastPosition.id
+            }
             this.saveUserPosition(this.user, myPosition).subscribe(res => {
-                this.goToMapPage(this.user.lastPosition)
-            }, err => { //saveUserPosition
-                this.notificationProvider.presentTopToast('Error guardando el usuario.');
+                this.goToMapPage(myPosition)
+            }, error => { //saveUserPosition
+                this.loading.dismissAll()
+                this.notificationProvider.presentTopToast("Error guardando el usuario.");
             })
 
         }, (error: PositionError) => {
@@ -352,8 +355,12 @@ export class RecyclePage {
     public saveUserPosition(user: User, position: Position) {
         user.recycleItems = null
         user.lastPosition = position
-
-        return this.http.put(this.config.apiEndpoint + "/users/" + user.id, JSON.stringify(user)).timeout(this.config.defaultTimeoutTime);
+        var options = new RequestOptions({
+            headers: new Headers({
+                'Content-Type': 'application/json'
+            })
+        });
+        return this.http.put(this.config.apiEndpoint + "/users/" + user.id, JSON.stringify(user), options).timeout(this.config.defaultTimeoutTime);
     }
 
 }

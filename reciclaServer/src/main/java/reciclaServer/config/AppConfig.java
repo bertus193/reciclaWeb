@@ -19,7 +19,8 @@ public class AppConfig extends WebMvcConfigurerAdapter {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(this.appInterceptor()).addPathPatterns(
                 "/users/{id}/recycleItems",
-                "/recycleItems"
+                "/recycleItems",
+                "/users/{id}"
         );
     }
 }

@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { NavParams, AlertController } from 'ionic-angular';
+import { NavParams, AlertController, Platform } from 'ionic-angular';
 
 import {
     GoogleMaps,
@@ -36,6 +36,7 @@ export class MapPage {
         private alertCtrl: AlertController,
         private http: Http,
         private sessionProvider: SessionProvider,
+        private platform: Platform,
         @Inject(APP_CONFIG_TOKEN) private config: ApplicationConfig) {
 
         this.recycleItem = this.navParams.get("recycleItem");
@@ -150,15 +151,13 @@ export class MapPage {
         prompt.present()
     }
 
-
-    /*
-        var mapWindow;
-    if (this.platform.is('ios')) {
-        mapWindow = window.open('maps://?q=Yo&saddr=' + myPosition.latitude + ',' + myPosition.longitude + '&daddr=' + storagePoint.position.latitude + ',' + storagePoint.position.longitude, '_system');
+    viewOnExtenalMap() {
+        if (this.platform.is('ios')) {
+            window.open('maps://?q=Yo&saddr=' + this.myPosition.latitude + ',' + this.myPosition.longitude + '&daddr=' + this.recycleItem.storage.position.latitude + ',' + this.recycleItem.storage.position.longitude, '_system');
+        }
+        // android
+        else if (this.platform.is('android')) {
+            window.open('geo://' + this.recycleItem.storage.position.latitude + ',' + this.recycleItem.storage.position.longitude + 'q=' + this.myPosition.latitude + ',' + this.myPosition.longitude + '(Yo)', '_system');
+        }
     }
-    // android
-    else if (this.platform.is('android')) {
-        mapWindow = window.open('geo://' + storagePoint.position.latitude + ',' + storagePoint.position.longitude + 'q=' + myPosition.latitude + ',' + myPosition.longitude + '(Yo)', '_system');
-    }
-    if (mapWindow) {*/
 }

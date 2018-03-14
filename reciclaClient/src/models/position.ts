@@ -3,7 +3,8 @@ export class Position {
     latitude: number;
     longitude: number;
 
-    public constructor(latitude, longitude) {
+    public constructor(id, latitude, longitude) {
+        this.id = id
         this.latitude = latitude
         this.longitude = longitude
     }
