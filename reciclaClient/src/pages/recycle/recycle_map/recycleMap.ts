@@ -17,6 +17,7 @@ import { ApplicationConfig, APP_CONFIG_TOKEN } from '../../../app/app-config';
 import { RecycleItem } from '../../../models/recycleItem';
 import { User } from '../../../models/user';
 import { SessionProvider } from '../../../providers/session';
+import { TypeRecycle } from '../../../models/typeRecicle';
 
 @Component({
     selector: 'page-recycleMap',
@@ -159,5 +160,48 @@ export class MapPage {
         else if (this.platform.is('android')) {
             window.open('geo://' + this.recycleItem.storage.position.latitude + ',' + this.recycleItem.storage.position.longitude + 'q=' + this.myPosition.latitude + ',' + this.myPosition.longitude + '(Yo)', '_system');
         }
+    }
+
+    showRadioModifyItemType() {
+        let alert = this.alertCtrl.create();
+        alert.setTitle('Selecciona un tipo');
+
+        for (let type in TypeRecycle) {
+            if (isNaN(Number(type))) {
+                if (this.getItemType(this.recycleItem.itemType) == type) {
+                    alert.addInput({
+                        type: 'radio',
+                        label: type,
+                        value: type,
+                        checked: true
+                    });
+                }
+                else {
+                    alert.addInput({
+                        type: 'radio',
+                        value: type,
+                        label: type,
+                    });
+                }
+            }
+        }
+
+
+        alert.addButton('Cancelar');
+        alert.addButton({
+            text: 'Cambiar tipo',
+            handler: data => {
+                this.recycleItem.itemType = this.getItemType(data)
+            }
+        });
+        alert.present();
+    }
+
+    public getItemType(itemTypeId: (number | string)): (number | string) {
+        var out: string = "Desconocido"
+        if (TypeRecycle[itemTypeId]) {
+            out = TypeRecycle[itemTypeId]
+        }
+        return out
     }
 }

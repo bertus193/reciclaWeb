@@ -1,5 +1,5 @@
 import { Component, ViewChild, Inject } from '@angular/core';
-import { NavController, LoadingController, ActionSheetController, Platform, Loading, Slides } from 'ionic-angular';
+import { NavController, LoadingController, ActionSheetController, Platform, Loading, Slides, AlertController } from 'ionic-angular';
 
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { Transfer, TransferObject, FileUploadOptions } from '@ionic-native/transfer';
@@ -21,6 +21,7 @@ import { User } from '../../models/user';
 import { LabelResponse } from '../../models/labelResponse';
 import { RecycleItem } from '../../models/recycleItem';
 import { TypeRecycle } from '../../models/typeRecicle';
+import { ItemType } from '../../models/itemType';
 
 @Component({
     selector: 'page-recycle',
@@ -47,6 +48,7 @@ export class RecyclePage {
         private geolocation: Geolocation,
         private locationAccuracy: LocationAccuracy,
         private http: Http,
+        private alertCtrl: AlertController,
         private notificationProvider: NotificationProvider,
         private googleCloudServiceProvider: GoogleCloudServiceProvider,
         private sessionProvider: SessionProvider
@@ -68,8 +70,6 @@ export class RecyclePage {
         this.recycleItem.name = TypeRecycle[this.recycleItem.itemType]
         this.recycleItem.recycleUser = this.user.id
         this.recycleItem.createdDate = new Date()
-
-        this.recycleItem.itemType = recycleItemType
         this.slideNext();
     }
 
@@ -82,7 +82,6 @@ export class RecyclePage {
     }
 
     public getUserPosition() {
-
 
         let myPosition: Position
         let GPSoptions = { timeout: this.config.defaultTimeoutTime, enableHighAccuracy: true, maximumAge: 100 };
@@ -122,8 +121,8 @@ export class RecyclePage {
 
         var options: CameraOptions = {
             quality: 20,
-            targetWidth: 350,
-            targetHeight: 350,
+            targetWidth: 300,
+            targetHeight: 300,
             sourceType: sourceType,
             saveToPhotoAlbum: false,
             correctOrientation: true,
@@ -257,7 +256,6 @@ export class RecyclePage {
         this.recycleItem.image = urlUploadedFiles
         this.recycleItem.name = TypeRecycle[this.recycleItem.itemType]
         this.recycleItem.recycleUser = this.user.id
-        this.recycleItem.itemType = Math.floor(Math.random() * (5 - 1)) + 1; //TODO
         this.recycleItem.createdDate = new Date()
 
 
@@ -276,6 +274,20 @@ export class RecyclePage {
         });
         this.loading.present()
 
+        this.upload(targetPath, urlUpload, options, fileTransfer, urlUploadedFiles)
+
+    }
+
+    public getTypeFromDB(): Observable<boolean> {
+        var itemType = this.recycleItem.itemType = Math.floor(Math.random() * (5 - 1)) + 1;
+        this.recycleItem.itemType = itemType
+        return Observable.fromPromise(this.showRadioModifyItemType()).flatMap(res => {
+            return Observable.of(res)
+        })
+
+    }
+
+    public upload(targetPath, urlUpload, options, fileTransfer, urlUploadedFiles) {
         // Use the FileTransfer to upload the image
         fileTransfer.upload(targetPath, urlUpload, options).then(data => {
             this.googleCloudServiceProvider.getLabels(urlUploadedFiles).timeout(this.config.defaultTimeoutTime).subscribe((result: any) => {
@@ -285,8 +297,14 @@ export class RecyclePage {
                     //TODO FIND BY NAME labelResponseList[0].description
                     this.googleCloudServiceProvider.translateToSpanish(labelResponseList[0].description).subscribe(res => {
                         this.recycleItem.name = res.json().data.translations[0].translatedText
-                        this.loading.setContent("Obteniendo la ubicación del usuario...")
-                        this.getUserPosition()
+                        this.recycleItem.name = this.recycleItem.name.charAt(0).toUpperCase() + this.recycleItem.name.substr(1).toLowerCase()
+
+                        this.getTypeFromDB().subscribe(_ => {
+                            this.loading.setContent("Obteniendo la ubicación del usuario...")
+                            this.getUserPosition()
+                        }, error => {
+                            this.notificationProvider.presentTopToast("Error obteniendo el tipo de objeto")
+                        })
                     }, err => { // translate
                         this.loading.dismissAll()
                         this.notificationProvider.presentTopToast("Error interno en la obtención del nombre.")
@@ -300,16 +318,66 @@ export class RecyclePage {
 
         }, err => { // uploadFile
             this.loading.dismissAll()
-            this.notificationProvider.presentTopToast('Error while uploading file.')
+            this.notificationProvider.presentTopToast('Error en el procesado de la imagen.')
         });
-
     }
 
-    public getNearestStoragePoint(currentPosition: Position): Observable<{ storagePoint: StoragePoint, status: number }> {
+    showRadioModifyItemType(): Promise<boolean> {
+        //let alert = this.alertCtrl.create();
+        //alert.setTitle();
+        /*alert.addButton({
+            text: 'Cambiar tipo',
+            handler: data => {
+                
+                return true
+            }
+        });*/
+
+        return new Promise((resolve, reject) => {
+            var alert = this.alertCtrl.create({
+                title: '<p style="font-size:14px">No se ha encontrado ningún tipo, por favor, selecciona uno</p>',
+                buttons: [
+                    {
+                        text: 'Cambiar tipo',
+                        handler: (data) => {
+                            this.recycleItem.itemType = this.getItemType(data)
+                            resolve(true)
+                        }
+                    }
+                ]
+            })
+            for (let type in TypeRecycle) {
+                if (isNaN(Number(type))) {
+                    if (this.getItemType(this.recycleItem.itemType) == type) {
+                        alert.addInput({
+                            type: 'radio',
+                            label: type,
+                            value: type,
+                            checked: true
+                        });
+                    }
+                    else {
+                        alert.addInput({
+                            type: 'radio',
+                            value: type,
+                            label: type,
+                        });
+                    }
+                }
+            }
+
+
+
+            alert.present();
+        })
+        //return new Promise(() => alert.present())
+    }
+
+    public getNearestStoragePointByItemType(currentPosition: Position, itemType: ItemType): Observable<{ storagePoint: StoragePoint, status: number }> {
         var status: number
         var storagePointList: StoragePoint[]
         var storagePoint: StoragePoint
-        return this.http.get(this.config.apiEndpoint + "/storagePoints").map(res => {
+        return this.http.get(this.config.apiEndpoint + "/storages/itemType/" + itemType + '/storagePoints').map(res => {
             status = res.status
             if (status === 200) {
                 storagePointList = res.json();
@@ -324,22 +392,21 @@ export class RecyclePage {
             }
             return { storagePoint, status }
         }).catch(error => {
-            console.log(error)
             return Observable.throw(error);
         });
     }
 
     goToMapPage(myPosition: Position) {
-        this.getNearestStoragePoint(myPosition).timeout(this.config.defaultTimeoutTime).subscribe(
+        this.getNearestStoragePointByItemType(myPosition, this.recycleItem.itemType).timeout(this.config.defaultTimeoutTime).subscribe(
             result => {
-                this.loading.dismissAll()
                 this.recycleItem.storage = result.storagePoint
                 if (result.status == 200) {
 
                     this.navCtrl.push(MapPage, {
                         recycleItem: this.recycleItem,
-                        myPosition: myPosition,
+                        myPosition: myPosition
                     })
+                    this.loading.dismissAll()
                 }
                 else {
                     this.loading.dismissAll()
@@ -355,12 +422,21 @@ export class RecyclePage {
     public saveUserPosition(user: User, position: Position) {
         user.recycleItems = null
         user.lastPosition = position
+        this.sessionProvider.updateSession(user)
         var options = new RequestOptions({
             headers: new Headers({
                 'Content-Type': 'application/json'
             })
         });
-        return this.http.put(this.config.apiEndpoint + "/users/" + user.id, JSON.stringify(user), options).timeout(this.config.defaultTimeoutTime);
+        return this.http.put(this.config.apiEndpoint + "/users/" + user.id + "?token=" + user.accessToken, JSON.stringify(user), options).timeout(this.config.defaultTimeoutTime);
+    }
+
+    public getItemType(itemTypeId: (number | string)): (number | string) {
+        var out: string = "Desconocido"
+        if (TypeRecycle[itemTypeId]) {
+            out = TypeRecycle[itemTypeId]
+        }
+        return out
     }
 
 }

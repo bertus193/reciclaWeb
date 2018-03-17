@@ -21,11 +21,4 @@ public class StoragePointController {
     public StoragePointController(StoragePointService storagePointService){
         this.storagePointService = storagePointService;
     }
-
-    @RequestMapping(value = "/storagePoints", method = RequestMethod.GET)
-    public ResponseEntity<?> findAll(){
-        List<StoragePoint> storagePointList = storagePointService.findAll();
-
-        return new ResponseEntity<>(storagePointList, HttpStatus.OK);
-    }
 }

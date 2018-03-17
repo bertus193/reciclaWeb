@@ -18,7 +18,4 @@ public class StoragePointService {
         this.storagePointDAO = storagePointDAO;
     }
 
-    public List<StoragePoint> findAll(){
-        return (List<StoragePoint>)this.storagePointDAO.findAll();
-    }
 }

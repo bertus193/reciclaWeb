@@ -25726,3 +25726,16 @@ page-recycleMap button[ion-fab] ion-label {
   padding: 4px 8px;
   border-radius: 4px;
 }
+
+page-recycleMap .title-navbar {
+  font-size: 2rem;
+  font-weight: 500;
+  color: #424242;
+  margin-left: -24px;
+  text-align: center;
+}
+
+page-recycleMap .sub-title {
+  font-size: 13.5px;
+  color: #7c7d7e;
+}

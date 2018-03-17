@@ -11,4 +11,6 @@ import java.util.List;
 public interface ItemTypeDAO extends CrudRepository<ItemType, Long> {
 
     List<ItemType> findAll();
+
+    ItemType getItemTypeById(long id);
 }

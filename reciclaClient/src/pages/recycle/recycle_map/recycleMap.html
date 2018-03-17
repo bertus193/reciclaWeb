@@ -1,22 +1,28 @@
 <ion-header>
     <ion-navbar>
+        <ion-navbar align="center" class="title-navbar">
+            <div class='main-title'> Reciclar: {{recycleItem.name}}</div>
+            <div class='sub-title'> Tipo: {{getItemType(recycleItem.itemType)}}</div>
+        </ion-navbar>
         <ion-title>
-            Reciclar: {{recycleItem.name}}
+
         </ion-title>
     </ion-navbar>
 </ion-header>
 
 <ion-content>
     <div #map id="map_canvas">
+
         <ion-fab left bottom>
             <button ion-fab color="dark">
                 <ion-icon name="menu"></ion-icon>
             </button>
             <ion-fab-list side="top">
-                <div *ngIf="recycledAlready == false;">
-                    <button ion-fab (click)="viewOnExtenalMap()">
-                        <ion-icon name="md-map"></ion-icon>
-                        <ion-label>Abrir en Mapas</ion-label>
+
+                <div *ngIf="!recycledAlready">
+                    <button ion-fab (click)="showRadioModifyItemType()">
+                        <ion-icon name="md-color-wand"></ion-icon>
+                        <ion-label>Modificar el tipo</ion-label>
                     </button>
                     <button ion-fab (click)="modifyRecycleName()">
                         <ion-icon name="md-create"></ion-icon>
@@ -27,6 +33,11 @@
                         <ion-label>Finalizar reciclaje</ion-label>
                     </button>
                 </div>
+
+                <button ion-fab (click)="viewOnExtenalMap()">
+                    <ion-icon name="md-map"></ion-icon>
+                    <ion-label>Abrir en Mapas</ion-label>
+                </button>
             </ion-fab-list>
         </ion-fab>
     </div>

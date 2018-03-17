@@ -1,22 +1,5 @@
 webpackJsonp([1],{
 
-/***/ 135:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return TypeRecycle; });
-var TypeRecycle;
-(function (TypeRecycle) {
-    TypeRecycle[TypeRecycle["Org\u00E1nico"] = 1] = "Org\u00E1nico";
-    TypeRecycle[TypeRecycle["Pl\u00E1stico"] = 2] = "Pl\u00E1stico";
-    TypeRecycle[TypeRecycle["Cristal"] = 3] = "Cristal";
-    TypeRecycle[TypeRecycle["Papel"] = 4] = "Papel";
-    TypeRecycle[TypeRecycle["Material de Oficina"] = 5] = "Material de Oficina";
-})(TypeRecycle || (TypeRecycle = {}));
-//# sourceMappingURL=typeRecicle.js.map
-
-/***/ }),
-
 /***/ 136:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -25,10 +8,10 @@ var TypeRecycle;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__providers_session__ = __webpack_require__(40);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_notifications__ = __webpack_require__(84);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__tabs_tabs__ = __webpack_require__(89);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__tabs_tabs__ = __webpack_require__(90);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_ionic_angular_components_app_app__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__angular_http__ = __webpack_require__(32);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_Rx__ = __webpack_require__(120);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_Rx__ = __webpack_require__(121);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_Rx___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_rxjs_Rx__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__ionic_native_facebook__ = __webpack_require__(318);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_rxjs_add_operator_map__ = __webpack_require__(48);
@@ -282,7 +265,7 @@ module.exports = webpackAsyncContext;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__ionic_native_location_accuracy__ = __webpack_require__(222);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__app_app_config__ = __webpack_require__(39);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__angular_http__ = __webpack_require__(32);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_rxjs_Rx__ = __webpack_require__(120);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_rxjs_Rx__ = __webpack_require__(121);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_rxjs_Rx___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8_rxjs_Rx__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_rxjs_add_operator_map__ = __webpack_require__(48);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_9_rxjs_add_operator_map__);
@@ -292,7 +275,7 @@ module.exports = webpackAsyncContext;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__providers_google__ = __webpack_require__(316);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__providers_session__ = __webpack_require__(40);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__models_recycleItem__ = __webpack_require__(676);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__models_typeRecicle__ = __webpack_require__(135);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__models_typeRecicle__ = __webpack_require__(85);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -323,7 +306,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 
 
 var RecyclePage = (function () {
-    function RecyclePage(config, navCtrl, camera, transfer, actionSheetCtrl, platform, loadingCtrl, geolocation, locationAccuracy, http, notificationProvider, googleCloudServiceProvider, sessionProvider) {
+    function RecyclePage(config, navCtrl, camera, transfer, actionSheetCtrl, platform, loadingCtrl, geolocation, locationAccuracy, http, alertCtrl, notificationProvider, googleCloudServiceProvider, sessionProvider) {
         this.config = config;
         this.navCtrl = navCtrl;
         this.camera = camera;
@@ -334,6 +317,7 @@ var RecyclePage = (function () {
         this.geolocation = geolocation;
         this.locationAccuracy = locationAccuracy;
         this.http = http;
+        this.alertCtrl = alertCtrl;
         this.notificationProvider = notificationProvider;
         this.googleCloudServiceProvider = googleCloudServiceProvider;
         this.sessionProvider = sessionProvider;
@@ -354,7 +338,6 @@ var RecyclePage = (function () {
         this.recycleItem.name = __WEBPACK_IMPORTED_MODULE_16__models_typeRecicle__["a" /* TypeRecycle */][this.recycleItem.itemType];
         this.recycleItem.recycleUser = this.user.id;
         this.recycleItem.createdDate = new Date();
-        this.recycleItem.itemType = recycleItemType;
         this.slideNext();
     };
     RecyclePage.prototype.getUserPositionButton = function () {
@@ -377,7 +360,7 @@ var RecyclePage = (function () {
                 _this.goToMapPage(myPosition);
             }, function (error) {
                 _this.loading.dismissAll();
-                _this.notificationProvider.presentAlertOk(error);
+                _this.notificationProvider.presentTopToast("Error guardando el usuario.");
             });
         }, function (error) {
             _this.loading.dismissAll();
@@ -398,8 +381,8 @@ var RecyclePage = (function () {
         var _this = this;
         var options = {
             quality: 20,
-            targetWidth: 350,
-            targetHeight: 350,
+            targetWidth: 300,
+            targetHeight: 300,
             sourceType: sourceType,
             saveToPhotoAlbum: false,
             correctOrientation: true,
@@ -515,7 +498,6 @@ var RecyclePage = (function () {
         this.slides.lockSwipes(true);
     };
     RecyclePage.prototype.uploadImage = function (targetPath) {
-        var _this = this;
         var date = new Date();
         var filename = this.user.id + "_" + date.getTime() + ".png";
         var url = this.config.uploadFilesUrl;
@@ -525,7 +507,6 @@ var RecyclePage = (function () {
         this.recycleItem.image = urlUploadedFiles;
         this.recycleItem.name = __WEBPACK_IMPORTED_MODULE_16__models_typeRecicle__["a" /* TypeRecycle */][this.recycleItem.itemType];
         this.recycleItem.recycleUser = this.user.id;
-        this.recycleItem.itemType = Math.floor(Math.random() * (5 - 1)) + 1; //TODO
         this.recycleItem.createdDate = new Date();
         var options = {
             fileKey: "file",
@@ -539,6 +520,17 @@ var RecyclePage = (function () {
             content: 'Subiendo la imagen...'
         });
         this.loading.present();
+        this.upload(targetPath, urlUpload, options, fileTransfer, urlUploadedFiles);
+    };
+    RecyclePage.prototype.getTypeFromDB = function () {
+        var itemType = this.recycleItem.itemType = Math.floor(Math.random() * (5 - 1)) + 1;
+        this.recycleItem.itemType = itemType;
+        return __WEBPACK_IMPORTED_MODULE_8_rxjs_Rx__["Observable"].fromPromise(this.showRadioModifyItemType()).flatMap(function (res) {
+            return __WEBPACK_IMPORTED_MODULE_8_rxjs_Rx__["Observable"].of(res);
+        });
+    };
+    RecyclePage.prototype.upload = function (targetPath, urlUpload, options, fileTransfer, urlUploadedFiles) {
+        var _this = this;
         // Use the FileTransfer to upload the image
         fileTransfer.upload(targetPath, urlUpload, options).then(function (data) {
             _this.googleCloudServiceProvider.getLabels(urlUploadedFiles).timeout(_this.config.defaultTimeoutTime).subscribe(function (result) {
@@ -548,8 +540,13 @@ var RecyclePage = (function () {
                     //TODO FIND BY NAME labelResponseList[0].description
                     _this.googleCloudServiceProvider.translateToSpanish(labelResponseList[0].description).subscribe(function (res) {
                         _this.recycleItem.name = res.json().data.translations[0].translatedText;
-                        _this.loading.setContent("Obteniendo la ubicación del usuario...");
-                        _this.getUserPosition();
+                        _this.recycleItem.name = _this.recycleItem.name.charAt(0).toUpperCase() + _this.recycleItem.name.substr(1).toLowerCase();
+                        _this.getTypeFromDB().subscribe(function (_) {
+                            _this.loading.setContent("Obteniendo la ubicación del usuario...");
+                            _this.getUserPosition();
+                        }, function (error) {
+                            _this.notificationProvider.presentTopToast("Error obteniendo el tipo de objeto");
+                        });
                     }, function (err) {
                         _this.loading.dismissAll();
                         _this.notificationProvider.presentTopToast("Error interno en la obtención del nombre.");
@@ -561,8 +558,55 @@ var RecyclePage = (function () {
             });
         }, function (err) {
             _this.loading.dismissAll();
-            _this.notificationProvider.presentTopToast('Error while uploading file.');
+            _this.notificationProvider.presentTopToast('Error en el procesado de la imagen.');
         });
+    };
+    RecyclePage.prototype.showRadioModifyItemType = function () {
+        //let alert = this.alertCtrl.create();
+        //alert.setTitle();
+        /*alert.addButton({
+            text: 'Cambiar tipo',
+            handler: data => {
+                
+                return true
+            }
+        });*/
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            var alert = _this.alertCtrl.create({
+                title: '<h5>No se ha encontrado ningún tipo, por favor, selecciona uno</h5>',
+                buttons: [
+                    {
+                        text: 'Cambiar tipo',
+                        handler: function (data) {
+                            _this.recycleItem.itemType = _this.getItemType(data);
+                            resolve(true);
+                        }
+                    }
+                ]
+            });
+            for (var type in __WEBPACK_IMPORTED_MODULE_16__models_typeRecicle__["a" /* TypeRecycle */]) {
+                if (isNaN(Number(type))) {
+                    if (_this.getItemType(_this.recycleItem.itemType) == type) {
+                        alert.addInput({
+                            type: 'radio',
+                            label: type,
+                            value: type,
+                            checked: true
+                        });
+                    }
+                    else {
+                        alert.addInput({
+                            type: 'radio',
+                            value: type,
+                            label: type,
+                        });
+                    }
+                }
+            }
+            alert.present();
+        });
+        //return new Promise(() => alert.present())
     };
     RecyclePage.prototype.getNearestStoragePoint = function (currentPosition) {
         var status;
@@ -584,20 +628,19 @@ var RecyclePage = (function () {
             }
             return { storagePoint: storagePoint, status: status };
         }).catch(function (error) {
-            console.log(error);
             return __WEBPACK_IMPORTED_MODULE_8_rxjs_Rx__["Observable"].throw(error);
         });
     };
     RecyclePage.prototype.goToMapPage = function (myPosition) {
         var _this = this;
         this.getNearestStoragePoint(myPosition).timeout(this.config.defaultTimeoutTime).subscribe(function (result) {
-            _this.loading.dismissAll();
             _this.recycleItem.storage = result.storagePoint;
             if (result.status == 200) {
                 _this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_11__recycle_map_recycleMap__["a" /* MapPage */], {
                     recycleItem: _this.recycleItem,
-                    myPosition: myPosition,
+                    myPosition: myPosition
                 });
+                _this.loading.dismissAll();
             }
             else {
                 _this.loading.dismissAll();
@@ -611,12 +654,20 @@ var RecyclePage = (function () {
     RecyclePage.prototype.saveUserPosition = function (user, position) {
         user.recycleItems = null;
         user.lastPosition = position;
+        this.sessionProvider.updateSession(user);
         var options = new __WEBPACK_IMPORTED_MODULE_7__angular_http__["d" /* RequestOptions */]({
             headers: new __WEBPACK_IMPORTED_MODULE_7__angular_http__["a" /* Headers */]({
                 'Content-Type': 'application/json'
             })
         });
-        return this.http.put(this.config.apiEndpoint + "/users/" + user.id, JSON.stringify(user), options).timeout(this.config.defaultTimeoutTime);
+        return this.http.put(this.config.apiEndpoint + "/users/" + user.id + "?token=" + user.accessToken, JSON.stringify(user), options).timeout(this.config.defaultTimeoutTime);
+    };
+    RecyclePage.prototype.getItemType = function (itemTypeId) {
+        var out = "Desconocido";
+        if (__WEBPACK_IMPORTED_MODULE_16__models_typeRecicle__["a" /* TypeRecycle */][itemTypeId]) {
+            out = __WEBPACK_IMPORTED_MODULE_16__models_typeRecicle__["a" /* TypeRecycle */][itemTypeId];
+        }
+        return out;
     };
     __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_8" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["l" /* Slides */]),
@@ -636,6 +687,7 @@ var RecyclePage = (function () {
             __WEBPACK_IMPORTED_MODULE_4__ionic_native_geolocation__["a" /* Geolocation */],
             __WEBPACK_IMPORTED_MODULE_5__ionic_native_location_accuracy__["a" /* LocationAccuracy */],
             __WEBPACK_IMPORTED_MODULE_7__angular_http__["b" /* Http */],
+            __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["b" /* AlertController */],
             __WEBPACK_IMPORTED_MODULE_12__providers_notifications__["a" /* NotificationProvider */],
             __WEBPACK_IMPORTED_MODULE_13__providers_google__["a" /* GoogleCloudServiceProvider */],
             __WEBPACK_IMPORTED_MODULE_14__providers_session__["a" /* SessionProvider */]])
@@ -659,6 +711,7 @@ var RecyclePage = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_http__ = __webpack_require__(32);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__app_app_config__ = __webpack_require__(39);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__providers_session__ = __webpack_require__(40);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__models_typeRecicle__ = __webpack_require__(85);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -671,6 +724,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+
 
 
 
@@ -794,9 +848,48 @@ var MapPage = (function () {
             window.open('geo://' + this.recycleItem.storage.position.latitude + ',' + this.recycleItem.storage.position.longitude + 'q=' + this.myPosition.latitude + ',' + this.myPosition.longitude + '(Yo)', '_system');
         }
     };
+    MapPage.prototype.showRadioModifyItemType = function () {
+        var _this = this;
+        var alert = this.alertCtrl.create();
+        alert.setTitle('Selecciona un tipo');
+        for (var type in __WEBPACK_IMPORTED_MODULE_7__models_typeRecicle__["a" /* TypeRecycle */]) {
+            if (isNaN(Number(type))) {
+                if (this.getItemType(this.recycleItem.itemType) == type) {
+                    alert.addInput({
+                        type: 'radio',
+                        label: type,
+                        value: type,
+                        checked: true
+                    });
+                }
+                else {
+                    alert.addInput({
+                        type: 'radio',
+                        value: type,
+                        label: type,
+                    });
+                }
+            }
+        }
+        alert.addButton('Cancelar');
+        alert.addButton({
+            text: 'Cambiar tipo',
+            handler: function (data) {
+                _this.recycleItem.itemType = _this.getItemType(data);
+            }
+        });
+        alert.present();
+    };
+    MapPage.prototype.getItemType = function (itemTypeId) {
+        var out = "Desconocido";
+        if (__WEBPACK_IMPORTED_MODULE_7__models_typeRecicle__["a" /* TypeRecycle */][itemTypeId]) {
+            out = __WEBPACK_IMPORTED_MODULE_7__models_typeRecicle__["a" /* TypeRecycle */][itemTypeId];
+        }
+        return out;
+    };
     MapPage = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
-            selector: 'page-recycleMap',template:/*ion-inline-start:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/recycle/recycle_map/recycleMap.html"*/'<ion-header>\n    <ion-navbar>\n        <ion-title>\n            Reciclar: {{recycleItem.name}}\n        </ion-title>\n    </ion-navbar>\n</ion-header>\n\n<ion-content>\n    <div #map id="map_canvas">\n        <ion-fab left bottom>\n            <button ion-fab color="dark">\n                <ion-icon name="menu"></ion-icon>\n            </button>\n            <ion-fab-list side="top">\n                <div *ngIf="recycledAlready == false;">\n                    <button ion-fab (click)="viewOnExtenalMap()">\n                        <ion-icon name="md-map"></ion-icon>\n                        <ion-label>Abrir en Mapas</ion-label>\n                    </button>\n                    <button ion-fab (click)="modifyRecycleName()">\n                        <ion-icon name="md-create"></ion-icon>\n                        <ion-label>Modificar el nombre</ion-label>\n                    </button>\n                    <button ion-fab (click)="recycleFinish()">\n                        <ion-icon name="checkmark"></ion-icon>\n                        <ion-label>Finalizar reciclaje</ion-label>\n                    </button>\n                </div>\n            </ion-fab-list>\n        </ion-fab>\n    </div>\n</ion-content>'/*ion-inline-end:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/recycle/recycle_map/recycleMap.html"*/
+            selector: 'page-recycleMap',template:/*ion-inline-start:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/recycle/recycle_map/recycleMap.html"*/'<ion-header>\n    <ion-navbar>\n        <ion-navbar align="center" class="title-navbar">\n            <div class=\'main-title\'> Reciclar: {{recycleItem.name}}</div>\n            <div class=\'sub-title\'> Tipo: {{getItemType(recycleItem.itemType)}}</div>\n        </ion-navbar>\n        <ion-title>\n\n        </ion-title>\n    </ion-navbar>\n</ion-header>\n\n<ion-content>\n    <div #map id="map_canvas">\n\n        <ion-fab left bottom>\n            <button ion-fab color="dark">\n                <ion-icon name="menu"></ion-icon>\n            </button>\n            <ion-fab-list side="top">\n\n                <div *ngIf="!recycledAlready">\n                    <button ion-fab (click)="showRadioModifyItemType()">\n                        <ion-icon name="md-color-wand"></ion-icon>\n                        <ion-label>Modificar el tipo</ion-label>\n                    </button>\n                    <button ion-fab (click)="modifyRecycleName()">\n                        <ion-icon name="md-create"></ion-icon>\n                        <ion-label>Modificar el nombre</ion-label>\n                    </button>\n                    <button ion-fab (click)="recycleFinish()">\n                        <ion-icon name="checkmark"></ion-icon>\n                        <ion-label>Finalizar reciclaje</ion-label>\n                    </button>\n                </div>\n\n                <button ion-fab (click)="viewOnExtenalMap()">\n                    <ion-icon name="md-map"></ion-icon>\n                    <ion-label>Abrir en Mapas</ion-label>\n                </button>\n            </ion-fab-list>\n        </ion-fab>\n    </div>\n</ion-content>'/*ion-inline-end:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/recycle/recycle_map/recycleMap.html"*/
         }),
         __param(6, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["z" /* Inject */])(__WEBPACK_IMPORTED_MODULE_5__app_app_config__["b" /* APP_CONFIG_TOKEN */])),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavParams */],
@@ -941,7 +1034,7 @@ var ProfilePage = (function () {
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return myRecycledItemsPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__models_typeRecicle__ = __webpack_require__(135);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__models_typeRecicle__ = __webpack_require__(85);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_http__ = __webpack_require__(32);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__app_app_config__ = __webpack_require__(39);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__providers_session__ = __webpack_require__(40);
@@ -1056,7 +1149,7 @@ var myRecycledItemsPage = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__(32);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map__ = __webpack_require__(48);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_Rx__ = __webpack_require__(120);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_Rx__ = __webpack_require__(121);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_Rx___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_Rx__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__app_app_config__ = __webpack_require__(39);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -1344,7 +1437,7 @@ var RecycleItem = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ionic_native_status_bar__ = __webpack_require__(360);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_native_splash_screen__ = __webpack_require__(361);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__pages_tabs_tabs__ = __webpack_require__(89);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__pages_tabs_tabs__ = __webpack_require__(90);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__providers_session__ = __webpack_require__(40);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__pages_login_login__ = __webpack_require__(136);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_ionic_angular_platform_platform__ = __webpack_require__(5);
@@ -1403,7 +1496,7 @@ var MyApp = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__recycle_recycle__ = __webpack_require__(216);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__profile_profile__ = __webpack_require__(317);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__home_home__ = __webpack_require__(320);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__tabs_tabs__ = __webpack_require__(89);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__tabs_tabs__ = __webpack_require__(90);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__login_login__ = __webpack_require__(136);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__recycle_recycle_finish_recycleFinish__ = __webpack_require__(696);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__profile_profile_recycledItems_myRecycledItems__ = __webpack_require__(319);
@@ -1437,7 +1530,7 @@ var APP_PAGES = [
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return recycleFinishPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(41);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__models_typeRecicle__ = __webpack_require__(135);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__models_typeRecicle__ = __webpack_require__(85);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__providers_session__ = __webpack_require__(40);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_http__ = __webpack_require__(32);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__app_app_config__ = __webpack_require__(39);
@@ -1597,7 +1690,24 @@ var NotificationProvider = (function () {
 
 /***/ }),
 
-/***/ 89:
+/***/ 85:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return TypeRecycle; });
+var TypeRecycle;
+(function (TypeRecycle) {
+    TypeRecycle[TypeRecycle["Org\u00E1nico"] = 1] = "Org\u00E1nico";
+    TypeRecycle[TypeRecycle["Pl\u00E1stico"] = 2] = "Pl\u00E1stico";
+    TypeRecycle[TypeRecycle["Cristal"] = 3] = "Cristal";
+    TypeRecycle[TypeRecycle["Papel"] = 4] = "Papel";
+    TypeRecycle[TypeRecycle["Material de Oficina"] = 5] = "Material de Oficina";
+})(TypeRecycle || (TypeRecycle = {}));
+//# sourceMappingURL=typeRecicle.js.map
+
+/***/ }),
+
+/***/ 90:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
