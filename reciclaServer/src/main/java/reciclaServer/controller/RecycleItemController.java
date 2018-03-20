@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reciclaServer.models.ItemType;
+import reciclaServer.models.LabelAnnotations;
 import reciclaServer.models.RecycleItem;
 import reciclaServer.models.exceptions.ItemTypeNotFoundException;
 import reciclaServer.models.exceptions.StorageNotFoundException;
@@ -42,8 +44,6 @@ public class RecycleItemController {
         else{
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-
-
     }
 
 }

@@ -35,11 +35,11 @@ public class StorageController {
         List<StoragePoint> storagePoints = new ArrayList();
 
         if(itemType != null){
-            List<Storage> storages = storageService.getStoragesByItemType(itemType);
-            for(int i = 0; i < storages.size(); i++){
-                storagePoints.add(storages.get(i).getStoragePoint());
+            List<Storage> storageList = storageService.getStoragesByItemType(itemType);
+            for(int i = 0; i < storageList.size(); i++){
+                storagePoints.add(storageList.get(i).getStoragePoint());
             }
-            if(storages != null){
+            if(storageList != null){
                 return new ResponseEntity<>(storagePoints, HttpStatus.OK);
             }
             else{
