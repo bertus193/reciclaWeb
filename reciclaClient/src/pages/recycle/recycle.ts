@@ -278,12 +278,23 @@ export class RecyclePage {
 
     }
 
-    public getTypeFromDB(): Observable<boolean> {
-        var itemType = this.recycleItem.itemType = Math.floor(Math.random() * (5 - 1)) + 1;
-        this.recycleItem.itemType = itemType
-        return Observable.fromPromise(this.showRadioModifyItemType()).flatMap(res => {
-            return Observable.of(res)
+    public getTypeFromDB(labelResponseList): Observable<boolean> {
+        var options = new RequestOptions({
+            headers: new Headers({
+                'Content-Type': 'application/json'
+            })
+        });
+        //labelResponseList[0].description  
+        return this.http.post(this.config.apiEndpoint + '/itemTypeName/labelAnnotations', JSON.stringify(labelResponseList), options).timeout(this.config.defaultTimeoutTime).map(res => {
+            this.recycleItem.itemType = res.json().type
+            return true
+        }).catch(error => {
+            return Observable.fromPromise(this.showRadioModifyItemType()).flatMap(res => {
+                return Observable.of(res)
+            })
         })
+        // /recycleItem/itemType/
+
 
     }
 
@@ -294,15 +305,15 @@ export class RecyclePage {
                 var labelResponseList: LabelResponse[];
                 labelResponseList = result.json().responses[0].labelAnnotations;
                 if (labelResponseList.length > 0) {
-                    //TODO FIND BY NAME labelResponseList[0].description
                     this.googleCloudServiceProvider.translateToSpanish(labelResponseList[0].description).subscribe(res => {
                         this.recycleItem.name = res.json().data.translations[0].translatedText
                         this.recycleItem.name = this.recycleItem.name.charAt(0).toUpperCase() + this.recycleItem.name.substr(1).toLowerCase()
 
-                        this.getTypeFromDB().subscribe(_ => {
+                        this.getTypeFromDB(labelResponseList).subscribe(_ => {
                             this.loading.setContent("Obteniendo la ubicación del usuario...")
                             this.getUserPosition()
                         }, error => {
+                            this.loading.dismissAll()
                             this.notificationProvider.presentTopToast("Error obteniendo el tipo de objeto")
                         })
                     }, err => { // translate
@@ -323,19 +334,9 @@ export class RecyclePage {
     }
 
     showRadioModifyItemType(): Promise<boolean> {
-        //let alert = this.alertCtrl.create();
-        //alert.setTitle();
-        /*alert.addButton({
-            text: 'Cambiar tipo',
-            handler: data => {
-                
-                return true
-            }
-        });*/
-
         return new Promise((resolve, reject) => {
             var alert = this.alertCtrl.create({
-                title: '<p style="font-size:14px">No se ha encontrado ningún tipo, por favor, selecciona uno</p>',
+                title: '<span style="font-size:10px">No se ha encontrado ningún tipo, por favor, selecciona uno</span>',
                 buttons: [
                     {
                         text: 'Cambiar tipo',

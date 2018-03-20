@@ -31,7 +31,8 @@ public class ItemTypeNameController {
 
         for(int i = 0; i < labelAnnotations.size(); i++){
             labelAnnotation = labelAnnotations.get(i);
-            if(labelAnnotation.getScore() > 50){
+            System.out.println(labelAnnotation.getScore());
+            if(labelAnnotation.getScore() > 0.5){
                 itemTypeName = this.itemTypeNameService.findFirstByDescription(labelAnnotation.getDescription());
 
                 if(itemTypeName != null){

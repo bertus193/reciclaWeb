@@ -2,7 +2,7 @@
     <ion-navbar>
         <ion-navbar align="center" class="title-navbar">
             <div class='main-title'> Reciclar: {{recycleItem.name}}</div>
-            <div class='sub-title'> Tipo: {{getItemType(recycleItem.itemType)}}</div>
+            <div class='sub-title'>{{getItemType(recycleItem.itemType)}}</div>
         </ion-navbar>
         <ion-title>
 
@@ -20,10 +20,6 @@
             <ion-fab-list side="top">
 
                 <div *ngIf="!recycledAlready">
-                    <button ion-fab (click)="showRadioModifyItemType()">
-                        <ion-icon name="md-color-wand"></ion-icon>
-                        <ion-label>Modificar el tipo</ion-label>
-                    </button>
                     <button ion-fab (click)="modifyRecycleName()">
                         <ion-icon name="md-create"></ion-icon>
                         <ion-label>Modificar el nombre</ion-label>

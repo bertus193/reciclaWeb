@@ -522,12 +522,24 @@ var RecyclePage = (function () {
         this.loading.present();
         this.upload(targetPath, urlUpload, options, fileTransfer, urlUploadedFiles);
     };
-    RecyclePage.prototype.getTypeFromDB = function () {
-        var itemType = this.recycleItem.itemType = Math.floor(Math.random() * (5 - 1)) + 1;
-        this.recycleItem.itemType = itemType;
-        return __WEBPACK_IMPORTED_MODULE_8_rxjs_Rx__["Observable"].fromPromise(this.showRadioModifyItemType()).flatMap(function (res) {
-            return __WEBPACK_IMPORTED_MODULE_8_rxjs_Rx__["Observable"].of(res);
+    RecyclePage.prototype.getTypeFromDB = function (labelResponseList) {
+        var _this = this;
+        var options = new __WEBPACK_IMPORTED_MODULE_7__angular_http__["d" /* RequestOptions */]({
+            headers: new __WEBPACK_IMPORTED_MODULE_7__angular_http__["a" /* Headers */]({
+                'Content-Type': 'application/json'
+            })
         });
+        //labelResponseList[0].description  
+        return this.http.post(this.config.apiEndpoint + '/itemTypeName/labelAnnotations', JSON.stringify(labelResponseList), options).timeout(this.config.defaultTimeoutTime).map(function (res) {
+            _this.recycleItem.itemType = res.json().type;
+            return true;
+        }).catch(function (error) {
+            _this.notificationProvider.presentAlertOk(JSON.stringify(labelResponseList));
+            return __WEBPACK_IMPORTED_MODULE_8_rxjs_Rx__["Observable"].fromPromise(_this.showRadioModifyItemType()).flatMap(function (res) {
+                return __WEBPACK_IMPORTED_MODULE_8_rxjs_Rx__["Observable"].of(res);
+            });
+        });
+        // /recycleItem/itemType/
     };
     RecyclePage.prototype.upload = function (targetPath, urlUpload, options, fileTransfer, urlUploadedFiles) {
         var _this = this;
@@ -537,14 +549,14 @@ var RecyclePage = (function () {
                 var labelResponseList;
                 labelResponseList = result.json().responses[0].labelAnnotations;
                 if (labelResponseList.length > 0) {
-                    //TODO FIND BY NAME labelResponseList[0].description
                     _this.googleCloudServiceProvider.translateToSpanish(labelResponseList[0].description).subscribe(function (res) {
                         _this.recycleItem.name = res.json().data.translations[0].translatedText;
                         _this.recycleItem.name = _this.recycleItem.name.charAt(0).toUpperCase() + _this.recycleItem.name.substr(1).toLowerCase();
-                        _this.getTypeFromDB().subscribe(function (_) {
+                        _this.getTypeFromDB(labelResponseList).subscribe(function (_) {
                             _this.loading.setContent("Obteniendo la ubicación del usuario...");
                             _this.getUserPosition();
                         }, function (error) {
+                            _this.loading.dismissAll();
                             _this.notificationProvider.presentTopToast("Error obteniendo el tipo de objeto");
                         });
                     }, function (err) {
@@ -562,19 +574,10 @@ var RecyclePage = (function () {
         });
     };
     RecyclePage.prototype.showRadioModifyItemType = function () {
-        //let alert = this.alertCtrl.create();
-        //alert.setTitle();
-        /*alert.addButton({
-            text: 'Cambiar tipo',
-            handler: data => {
-                
-                return true
-            }
-        });*/
         var _this = this;
         return new Promise(function (resolve, reject) {
             var alert = _this.alertCtrl.create({
-                title: '<h5>No se ha encontrado ningún tipo, por favor, selecciona uno</h5>',
+                title: '<span style="font-size:10px">No se ha encontrado ningún tipo, por favor, selecciona uno</span>',
                 buttons: [
                     {
                         text: 'Cambiar tipo',
@@ -608,11 +611,11 @@ var RecyclePage = (function () {
         });
         //return new Promise(() => alert.present())
     };
-    RecyclePage.prototype.getNearestStoragePoint = function (currentPosition) {
+    RecyclePage.prototype.getNearestStoragePointByItemType = function (currentPosition, itemType) {
         var status;
         var storagePointList;
         var storagePoint;
-        return this.http.get(this.config.apiEndpoint + "/storagePoints").map(function (res) {
+        return this.http.get(this.config.apiEndpoint + "/storages/itemType/" + itemType + '/storagePoints').map(function (res) {
             status = res.status;
             if (status === 200) {
                 storagePointList = res.json();
@@ -633,7 +636,7 @@ var RecyclePage = (function () {
     };
     RecyclePage.prototype.goToMapPage = function (myPosition) {
         var _this = this;
-        this.getNearestStoragePoint(myPosition).timeout(this.config.defaultTimeoutTime).subscribe(function (result) {
+        this.getNearestStoragePointByItemType(myPosition, this.recycleItem.itemType).timeout(this.config.defaultTimeoutTime).subscribe(function (result) {
             _this.recycleItem.storage = result.storagePoint;
             if (result.status == 200) {
                 _this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_11__recycle_map_recycleMap__["a" /* MapPage */], {
@@ -848,38 +851,6 @@ var MapPage = (function () {
             window.open('geo://' + this.recycleItem.storage.position.latitude + ',' + this.recycleItem.storage.position.longitude + 'q=' + this.myPosition.latitude + ',' + this.myPosition.longitude + '(Yo)', '_system');
         }
     };
-    MapPage.prototype.showRadioModifyItemType = function () {
-        var _this = this;
-        var alert = this.alertCtrl.create();
-        alert.setTitle('Selecciona un tipo');
-        for (var type in __WEBPACK_IMPORTED_MODULE_7__models_typeRecicle__["a" /* TypeRecycle */]) {
-            if (isNaN(Number(type))) {
-                if (this.getItemType(this.recycleItem.itemType) == type) {
-                    alert.addInput({
-                        type: 'radio',
-                        label: type,
-                        value: type,
-                        checked: true
-                    });
-                }
-                else {
-                    alert.addInput({
-                        type: 'radio',
-                        value: type,
-                        label: type,
-                    });
-                }
-            }
-        }
-        alert.addButton('Cancelar');
-        alert.addButton({
-            text: 'Cambiar tipo',
-            handler: function (data) {
-                _this.recycleItem.itemType = _this.getItemType(data);
-            }
-        });
-        alert.present();
-    };
     MapPage.prototype.getItemType = function (itemTypeId) {
         var out = "Desconocido";
         if (__WEBPACK_IMPORTED_MODULE_7__models_typeRecicle__["a" /* TypeRecycle */][itemTypeId]) {
@@ -889,7 +860,7 @@ var MapPage = (function () {
     };
     MapPage = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
-            selector: 'page-recycleMap',template:/*ion-inline-start:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/recycle/recycle_map/recycleMap.html"*/'<ion-header>\n    <ion-navbar>\n        <ion-navbar align="center" class="title-navbar">\n            <div class=\'main-title\'> Reciclar: {{recycleItem.name}}</div>\n            <div class=\'sub-title\'> Tipo: {{getItemType(recycleItem.itemType)}}</div>\n        </ion-navbar>\n        <ion-title>\n\n        </ion-title>\n    </ion-navbar>\n</ion-header>\n\n<ion-content>\n    <div #map id="map_canvas">\n\n        <ion-fab left bottom>\n            <button ion-fab color="dark">\n                <ion-icon name="menu"></ion-icon>\n            </button>\n            <ion-fab-list side="top">\n\n                <div *ngIf="!recycledAlready">\n                    <button ion-fab (click)="showRadioModifyItemType()">\n                        <ion-icon name="md-color-wand"></ion-icon>\n                        <ion-label>Modificar el tipo</ion-label>\n                    </button>\n                    <button ion-fab (click)="modifyRecycleName()">\n                        <ion-icon name="md-create"></ion-icon>\n                        <ion-label>Modificar el nombre</ion-label>\n                    </button>\n                    <button ion-fab (click)="recycleFinish()">\n                        <ion-icon name="checkmark"></ion-icon>\n                        <ion-label>Finalizar reciclaje</ion-label>\n                    </button>\n                </div>\n\n                <button ion-fab (click)="viewOnExtenalMap()">\n                    <ion-icon name="md-map"></ion-icon>\n                    <ion-label>Abrir en Mapas</ion-label>\n                </button>\n            </ion-fab-list>\n        </ion-fab>\n    </div>\n</ion-content>'/*ion-inline-end:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/recycle/recycle_map/recycleMap.html"*/
+            selector: 'page-recycleMap',template:/*ion-inline-start:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/recycle/recycle_map/recycleMap.html"*/'<ion-header>\n    <ion-navbar>\n        <ion-navbar align="center" class="title-navbar">\n            <div class=\'main-title\'> Reciclar: {{recycleItem.name}}</div>\n            <div class=\'sub-title\'>{{getItemType(recycleItem.itemType)}}</div>\n        </ion-navbar>\n        <ion-title>\n\n        </ion-title>\n    </ion-navbar>\n</ion-header>\n\n<ion-content>\n    <div #map id="map_canvas">\n\n        <ion-fab left bottom>\n            <button ion-fab color="dark">\n                <ion-icon name="menu"></ion-icon>\n            </button>\n            <ion-fab-list side="top">\n\n                <div *ngIf="!recycledAlready">\n                    <button ion-fab (click)="modifyRecycleName()">\n                        <ion-icon name="md-create"></ion-icon>\n                        <ion-label>Modificar el nombre</ion-label>\n                    </button>\n                    <button ion-fab (click)="recycleFinish()">\n                        <ion-icon name="checkmark"></ion-icon>\n                        <ion-label>Finalizar reciclaje</ion-label>\n                    </button>\n                </div>\n\n                <button ion-fab (click)="viewOnExtenalMap()">\n                    <ion-icon name="md-map"></ion-icon>\n                    <ion-label>Abrir en Mapas</ion-label>\n                </button>\n            </ion-fab-list>\n        </ion-fab>\n    </div>\n</ion-content>'/*ion-inline-end:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/recycle/recycle_map/recycleMap.html"*/
         }),
         __param(6, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["z" /* Inject */])(__WEBPACK_IMPORTED_MODULE_5__app_app_config__["b" /* APP_CONFIG_TOKEN */])),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavParams */],
