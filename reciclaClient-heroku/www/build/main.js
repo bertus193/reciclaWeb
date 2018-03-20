@@ -531,10 +531,10 @@ var RecyclePage = (function () {
         });
         //labelResponseList[0].description  
         return this.http.post(this.config.apiEndpoint + '/itemTypeName/labelAnnotations', JSON.stringify(labelResponseList), options).timeout(this.config.defaultTimeoutTime).map(function (res) {
-            _this.recycleItem.itemType = res.json().type;
+            _this.recycleItem.itemType = _this.getItemType(res.json().type, 'EN');
             return true;
         }).catch(function (error) {
-            _this.notificationProvider.presentAlertOk(JSON.stringify(labelResponseList));
+            _this.notificationProvider.presentAlertError(JSON.stringify(error));
             return __WEBPACK_IMPORTED_MODULE_8_rxjs_Rx__["Observable"].fromPromise(_this.showRadioModifyItemType()).flatMap(function (res) {
                 return __WEBPACK_IMPORTED_MODULE_8_rxjs_Rx__["Observable"].of(res);
             });
@@ -665,10 +665,18 @@ var RecyclePage = (function () {
         });
         return this.http.put(this.config.apiEndpoint + "/users/" + user.id + "?token=" + user.accessToken, JSON.stringify(user), options).timeout(this.config.defaultTimeoutTime);
     };
-    RecyclePage.prototype.getItemType = function (itemTypeId) {
+    RecyclePage.prototype.getItemType = function (itemTypeId, lang) {
+        if (lang === void 0) { lang = 'ES'; }
         var out = "Desconocido";
-        if (__WEBPACK_IMPORTED_MODULE_16__models_typeRecicle__["a" /* TypeRecycle */][itemTypeId]) {
-            out = __WEBPACK_IMPORTED_MODULE_16__models_typeRecicle__["a" /* TypeRecycle */][itemTypeId];
+        if (lang == 'ES') {
+            if (__WEBPACK_IMPORTED_MODULE_16__models_typeRecicle__["a" /* TypeRecycle */][itemTypeId]) {
+                out = __WEBPACK_IMPORTED_MODULE_16__models_typeRecicle__["a" /* TypeRecycle */][itemTypeId];
+            }
+        }
+        else if (lang == 'EN') {
+            if (__WEBPACK_IMPORTED_MODULE_16__models_typeRecicle__["b" /* TypeRecycle_EN */][itemTypeId]) {
+                out = __WEBPACK_IMPORTED_MODULE_16__models_typeRecicle__["a" /* TypeRecycle */][itemTypeId];
+            }
         }
         return out;
     };
@@ -1666,6 +1674,7 @@ var NotificationProvider = (function () {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return TypeRecycle; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return TypeRecycle_EN; });
 var TypeRecycle;
 (function (TypeRecycle) {
     TypeRecycle[TypeRecycle["Org\u00E1nico"] = 1] = "Org\u00E1nico";
@@ -1674,6 +1683,14 @@ var TypeRecycle;
     TypeRecycle[TypeRecycle["Papel"] = 4] = "Papel";
     TypeRecycle[TypeRecycle["Material de Oficina"] = 5] = "Material de Oficina";
 })(TypeRecycle || (TypeRecycle = {}));
+var TypeRecycle_EN;
+(function (TypeRecycle_EN) {
+    TypeRecycle_EN[TypeRecycle_EN["Organic"] = 1] = "Organic";
+    TypeRecycle_EN[TypeRecycle_EN["Plastic"] = 2] = "Plastic";
+    TypeRecycle_EN[TypeRecycle_EN["Glass"] = 3] = "Glass";
+    TypeRecycle_EN[TypeRecycle_EN["Paper"] = 4] = "Paper";
+    TypeRecycle_EN[TypeRecycle_EN["WritingMaterial"] = 5] = "WritingMaterial";
+})(TypeRecycle_EN || (TypeRecycle_EN = {}));
 //# sourceMappingURL=typeRecicle.js.map
 
 /***/ }),

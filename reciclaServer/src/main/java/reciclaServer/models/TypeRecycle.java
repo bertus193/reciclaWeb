@@ -4,6 +4,6 @@ public enum TypeRecycle {
     Organic,
     Plastic,
     Glass,
-    Papel,
+    Paper,
     WritingMaterial
 }

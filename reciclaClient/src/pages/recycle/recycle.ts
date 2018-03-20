@@ -20,7 +20,7 @@ import { SessionProvider } from '../../providers/session';
 import { User } from '../../models/user';
 import { LabelResponse } from '../../models/labelResponse';
 import { RecycleItem } from '../../models/recycleItem';
-import { TypeRecycle } from '../../models/typeRecicle';
+import { TypeRecycle, TypeRecycle_EN } from '../../models/typeRecicle';
 import { ItemType } from '../../models/itemType';
 
 @Component({
@@ -286,7 +286,7 @@ export class RecyclePage {
         });
         //labelResponseList[0].description  
         return this.http.post(this.config.apiEndpoint + '/itemTypeName/labelAnnotations', JSON.stringify(labelResponseList), options).timeout(this.config.defaultTimeoutTime).map(res => {
-            this.recycleItem.itemType = res.json().type
+            this.recycleItem.itemType = this.getItemType(res.json().type, 'EN')
             return true
         }).catch(error => {
             return Observable.fromPromise(this.showRadioModifyItemType()).flatMap(res => {
@@ -432,11 +432,19 @@ export class RecyclePage {
         return this.http.put(this.config.apiEndpoint + "/users/" + user.id + "?token=" + user.accessToken, JSON.stringify(user), options).timeout(this.config.defaultTimeoutTime);
     }
 
-    public getItemType(itemTypeId: (number | string)): (number | string) {
+    public getItemType(itemTypeId: (number | string), lang = 'ES'): (number | string) {
         var out: string = "Desconocido"
-        if (TypeRecycle[itemTypeId]) {
-            out = TypeRecycle[itemTypeId]
+        if (lang == 'ES') {
+            if (TypeRecycle[itemTypeId]) {
+                out = TypeRecycle[itemTypeId]
+            }
         }
+        else if (lang == 'EN') {
+            if (TypeRecycle_EN[itemTypeId]) {
+                out = TypeRecycle[itemTypeId]
+            }
+        }
+
         return out
     }
 
