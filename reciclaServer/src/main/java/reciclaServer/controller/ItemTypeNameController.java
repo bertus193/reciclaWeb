@@ -36,7 +36,7 @@ public class ItemTypeNameController {
                 itemTypeName = this.itemTypeNameService.findFirstByDescription(labelAnnotation.getDescription());
 
                 if(itemTypeName != null){
-                    return new ResponseEntity<>(itemTypeName.getItemType(), HttpStatus.OK);
+                    return new ResponseEntity<>(itemTypeName, HttpStatus.OK);
                 }
             }
         }
