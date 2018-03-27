@@ -6,6 +6,7 @@ import { LoginPage } from './login/login';
 import { recycleFinishPage } from './recycle/recycle_finish/recycleFinish';
 import { myRecycledItemsPage } from './profile/profile_recycledItems/myRecycledItems';
 import { MapPage } from './recycle/recycle_map/recycleMap';
+import { PopoverMap } from './recycle/recycle_map/popover_map/popoverMap';
 
 export const APP_PAGES = [
     RecyclePage,
@@ -15,5 +16,6 @@ export const APP_PAGES = [
     LoginPage,
     recycleFinishPage,
     myRecycledItemsPage,
-    MapPage
+    MapPage,
+    PopoverMap
 ];

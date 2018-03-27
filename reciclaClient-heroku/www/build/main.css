@@ -25701,41 +25701,20 @@ page-recycleMap #map_canvas {
   width: 100%;
 }
 
-page-recycleMap .ion-md-close {
-  padding-top: 19px;
-}
-
-page-recycleMap .fab {
-  contain: layout;
-}
-
-page-recycleMap button[ion-fab] {
-  overflow: visible;
-  position: relative;
-}
-
-page-recycleMap button[ion-fab] ion-label {
-  position: absolute;
-  top: -6px;
-  left: 50px;
-  color: white;
-  background-color: #002C31;
-  -webkit-box-shadow: 0 3px 4px #6b6b6b;
-  box-shadow: 0 3px 4px #6b6b6b;
-  line-height: 20px;
-  padding: 4px 8px;
-  border-radius: 4px;
-}
-
 page-recycleMap .title-navbar {
-  font-size: 2rem;
+  font-size: 17px;
   font-weight: 500;
   color: #424242;
-  margin-left: -24px;
   text-align: center;
+  margin-left: -85px;
 }
 
 page-recycleMap .sub-title {
-  font-size: 13.5px;
+  font-size: 14px;
   color: #7c7d7e;
+}
+
+page-recycleMap .iconsRight {
+  position: absolute;
+  right: 7.5px;
 }

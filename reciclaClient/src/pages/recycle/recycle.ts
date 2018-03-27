@@ -34,6 +34,7 @@ export class RecyclePage {
     loading: Loading;
     errorMsg: string = "";
     user: User
+    temporalName: string = ""
 
     @ViewChild(Slides) slides: Slides;
 
@@ -82,7 +83,6 @@ export class RecyclePage {
     }
 
     public getUserPosition() {
-
         let myPosition: Position
         let GPSoptions = { timeout: this.config.defaultTimeoutTime, enableHighAccuracy: true, maximumAge: 100 };
         this.geolocation.getCurrentPosition(GPSoptions).then(position => {
@@ -121,8 +121,8 @@ export class RecyclePage {
 
         var options: CameraOptions = {
             quality: 20,
-            targetWidth: 300,
-            targetHeight: 300,
+            targetWidth: 450,
+            targetHeight: 450,
             sourceType: sourceType,
             saveToPhotoAlbum: false,
             correctOrientation: true,
@@ -135,7 +135,10 @@ export class RecyclePage {
             //var image = `data:image/png;base64,${imagePath}`;
             this.uploadImage(imagePath)
         }, (err) => { //camera.GetPicture
-            this.notificationProvider.presentTopToast('Error en la selección de la imagen.');
+            if (err != 'No Image Selected') {
+                this.notificationProvider.presentTopToast('Error en la selección de la imagen.');
+            }
+
         });
     }
 
@@ -148,7 +151,7 @@ export class RecyclePage {
                         title: 'Sube una foto de lo que desees reciclar',
                         buttons: [
                             {
-                                text: 'Cargar de la librería',
+                                text: 'Cargar foto de la galería',
                                 handler: () => {
                                     this.takePicture(this.camera.PictureSourceType.PHOTOLIBRARY);
                                 }
@@ -284,18 +287,15 @@ export class RecyclePage {
                 'Content-Type': 'application/json'
             })
         });
-        //labelResponseList[0].description  
         return this.http.post(this.config.apiEndpoint + '/itemTypeName/labelAnnotations', JSON.stringify(labelResponseList), options).timeout(this.config.defaultTimeoutTime).map(res => {
-            this.recycleItem.itemType = this.getItemType(res.json().type, 'EN')
+            this.temporalName = res.json().description
+            this.recycleItem.itemType = this.getItemType(res.json().itemType.type, 'EN')
             return true
         }).catch(error => {
             return Observable.fromPromise(this.showRadioModifyItemType()).flatMap(res => {
                 return Observable.of(res)
             })
         })
-        // /recycleItem/itemType/
-
-
     }
 
     public upload(targetPath, urlUpload, options, fileTransfer, urlUploadedFiles) {
@@ -305,20 +305,26 @@ export class RecyclePage {
                 var labelResponseList: LabelResponse[];
                 labelResponseList = result.json().responses[0].labelAnnotations;
                 if (labelResponseList.length > 0) {
-                    this.googleCloudServiceProvider.translateToSpanish(labelResponseList[0].description).subscribe(res => {
-                        this.recycleItem.name = res.json().data.translations[0].translatedText
-                        this.recycleItem.name = this.recycleItem.name.charAt(0).toUpperCase() + this.recycleItem.name.substr(1).toLowerCase()
+                    this.temporalName = labelResponseList[0].description
 
-                        this.getTypeFromDB(labelResponseList).subscribe(_ => {
-                            this.loading.setContent("Obteniendo la ubicación del usuario...")
-                            this.getUserPosition()
-                        }, error => {
+                    this.getTypeFromDB(labelResponseList).subscribe((res: boolean) => {
+                        if (res == true) {
+                            this.googleCloudServiceProvider.translateToSpanish(this.temporalName).subscribe(res => {
+                                this.recycleItem.name = res.json().data.translations[0].translatedText
+                                this.recycleItem.name = this.recycleItem.name.charAt(0).toUpperCase() + this.recycleItem.name.substr(1).toLowerCase()
+                                this.loading.setContent("Obteniendo la ubicación del usuario...")
+                                this.getUserPosition()
+                            }, err => { // translate
+                                this.loading.dismissAll()
+                                this.notificationProvider.presentTopToast("Error interno en la obtención del nombre.")
+                            })
+                        }
+                        else {
                             this.loading.dismissAll()
-                            this.notificationProvider.presentTopToast("Error obteniendo el tipo de objeto")
-                        })
-                    }, err => { // translate
+                        }
+                    }, error => {
                         this.loading.dismissAll()
-                        this.notificationProvider.presentTopToast("Error interno en la obtención del nombre.")
+                        this.notificationProvider.presentTopToast("Error obteniendo el tipo de objeto")
                     })
                 }
 
@@ -414,7 +420,7 @@ export class RecyclePage {
                     this.notificationProvider.presentTopToast('No hay ningún punto de reciclaje cercano.');
                 }
             },
-            error => {
+            error => { // Error undefined desde cordova browser /itemType/undefined/storagePoints
                 this.loading.dismissAll()
                 this.notificationProvider.presentTopToast(this.config.defaultTimeoutMsg)
             })
@@ -441,7 +447,7 @@ export class RecyclePage {
         }
         else if (lang == 'EN') {
             if (TypeRecycle_EN[itemTypeId]) {
-                out = TypeRecycle[itemTypeId]
+                out = TypeRecycle_EN[itemTypeId]
             }
         }
 

@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { NavParams, AlertController, Platform } from 'ionic-angular';
-
+import { PopoverController } from 'ionic-angular';
 import {
     GoogleMaps,
     GoogleMapsEvent,
@@ -18,6 +18,7 @@ import { RecycleItem } from '../../../models/recycleItem';
 import { User } from '../../../models/user';
 import { SessionProvider } from '../../../providers/session';
 import { TypeRecycle } from '../../../models/typeRecicle';
+import { PopoverMap } from './popover_map/popoverMap';
 
 @Component({
     selector: 'page-recycleMap',
@@ -37,6 +38,7 @@ export class MapPage {
         private alertCtrl: AlertController,
         private http: Http,
         private sessionProvider: SessionProvider,
+        private popoverCtrl: PopoverController,
         private platform: Platform,
         @Inject(APP_CONFIG_TOKEN) private config: ApplicationConfig) {
 
@@ -168,5 +170,50 @@ export class MapPage {
             out = TypeRecycle[itemTypeId]
         }
         return out
+    }
+
+    showRadioModifyItemType() {
+        let alert = this.alertCtrl.create();
+        alert.setTitle('Selecciona un tipo');
+
+        for (let type in TypeRecycle) {
+            if (isNaN(Number(type))) {
+                if (this.getItemType(this.recycleItem.itemType) == type) {
+                    alert.addInput({
+                        type: 'radio',
+                        label: type,
+                        value: type,
+                        checked: true
+                    });
+                }
+                else {
+                    alert.addInput({
+                        type: 'radio',
+                        value: type,
+                        label: type,
+                    });
+                }
+            }
+        }
+
+
+        alert.addButton('Cancelar');
+        alert.addButton({
+            text: 'Cambiar tipo',
+            handler: data => {
+                this.recycleItem.itemType = this.getItemType(data)
+            }
+        });
+        alert.present();
+    }
+
+
+    presentPopover(myEvent) {
+        let popover = this.popoverCtrl.create(PopoverMap, {
+            mapPage: this
+        });
+        popover.present({
+            ev: myEvent
+        });
     }
 }

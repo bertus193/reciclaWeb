@@ -5,42 +5,21 @@ page-recycleMap {
         width: 100%;
     }
 
-    .ion-md-close{
-        padding-top: 19px;
-    }
-    
-    .fab{
-        contain: layout;
-    }
-
-    button[ion-fab] {
-        overflow: visible;
-        position: relative;
-        
-    
-        ion-label {
-          position: absolute;
-          top: -6px;
-          left: 50px;
-          color: white;
-          background-color: #002C31;
-          box-shadow: 0 3px 4px #6b6b6b;
-          line-height: 20px;
-          padding: 4px 8px;
-          border-radius: 4px;
-        }
-    }
-
     .title-navbar{
-        font-size: 2rem;
+        font-size: 17px;
         font-weight: 500;
         color: #424242;
-        margin-left: -24px;
         text-align:center;
+        margin-left:-85px;
     }
     
     .sub-title{
-        font-size: 13.5px;
+        font-size: 14px;
         color: rgb(124, 125, 126);
+    }
+
+    .iconsRight{
+        position: absolute;
+        right: 7.5px;
     }
 }
