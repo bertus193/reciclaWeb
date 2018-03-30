@@ -18,7 +18,6 @@ export class ProfilePage {
     ) {
         sessionProvider.getSession().then(res => {
             this.user = res
-            console.log(this.user.profilePicture)
             if (this.user.profilePicture == null) {
                 this.user.profilePicture = "assets/imgs/quieroReciclar.png"
             }
@@ -29,14 +28,6 @@ export class ProfilePage {
     goToLogout() {
         this.sessionProvider.destroySession()
         this.app.getRootNavs()[0].setRoot(LoginPage)
-    }
-
-    navigateTo1() {
-        console.log("1")
-    }
-
-    navigateTo2() {
-        console.log("2")
     }
 
 }

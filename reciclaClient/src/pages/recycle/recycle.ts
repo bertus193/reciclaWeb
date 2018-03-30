@@ -1,12 +1,11 @@
 import { Component, Inject } from '@angular/core';
-import { NavController, LoadingController, ActionSheetController, Platform, Loading, AlertController } from 'ionic-angular';
+import { NavController, LoadingController, ActionSheetController, Loading, AlertController } from 'ionic-angular';
 
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { Transfer, TransferObject, FileUploadOptions } from '@ionic-native/transfer';
 import { Geolocation } from '@ionic-native/geolocation';
 import { LocationAccuracy } from '@ionic-native/location-accuracy';
 import { ApplicationConfig, APP_CONFIG_TOKEN } from '../../app/app-config';
-import { StoragePoint } from '../../models/storagePoint'
 
 import { Http, RequestOptions, Headers } from '@angular/http';
 import { Observable } from 'rxjs/Rx'
@@ -21,7 +20,6 @@ import { User } from '../../models/user';
 import { LabelResponse } from '../../models/labelResponse';
 import { RecycleItem } from '../../models/recycleItem';
 import { TypeRecycle, TypeRecycle_EN } from '../../models/typeRecicle';
-import { ItemType } from '../../models/itemType';
 import { UtilsProvider } from '../../providers/utils';
 
 @Component({
@@ -43,7 +41,6 @@ export class RecyclePage {
         private camera: Camera,
         private transfer: Transfer,
         private actionSheetCtrl: ActionSheetController,
-        private platform: Platform,
         private loadingCtrl: LoadingController,
         private geolocation: Geolocation,
         private locationAccuracy: LocationAccuracy,

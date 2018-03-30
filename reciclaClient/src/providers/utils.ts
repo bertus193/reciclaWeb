@@ -6,6 +6,7 @@ import { StoragePoint } from '../models/storagePoint';
 import { Position } from '../models/position';
 import { ItemType } from '../models/itemType';
 import { Observable } from 'rxjs/Rx'
+import { TypeRecycle } from '../models/typeRecicle';
 
 
 @Injectable()
@@ -72,5 +73,13 @@ export class UtilsProvider {
         var distance = this.calculateDistance(userPosition, storagePosition)
         var zoomLevel = this.getZoomLevel(distance)
         return Observable.of(zoomLevel)
+    }
+
+    public getItemType(itemTypeId: (number | string)): (number | string) {
+        var out: string = "Desconocido"
+        if (TypeRecycle[itemTypeId]) {
+            out = TypeRecycle[itemTypeId]
+        }
+        return out
     }
 }

@@ -177,20 +177,13 @@ export class MapPage {
         if (this.platform.is('ios')) {
             window.open('maps://?q=Yo&saddr=' + this.myPosition.latitude + ',' + this.myPosition.longitude + '&daddr=' + this.recycleItem.storage.position.latitude + ',' + this.recycleItem.storage.position.longitude, '_system');
         }
-        // android
         else if (this.platform.is('android')) {
             var url = 'http://maps.google.com/?saddr=' + this.myPosition.latitude + ',' + this.myPosition.longitude + '&daddr=' + this.recycleItem.storage.position.latitude + ',' + this.recycleItem.storage.position.longitude
             window.open(url, '_system', 'location=yes'), !1;
         }
     }
 
-    public getItemType(itemTypeId: (number | string)): (number | string) {
-        var out: string = "Desconocido"
-        if (TypeRecycle[itemTypeId]) {
-            out = TypeRecycle[itemTypeId]
-        }
-        return out
-    }
+
 
     showRadioModifyItemType() {
         let alert = this.alertCtrl.create();
@@ -198,7 +191,7 @@ export class MapPage {
 
         for (let type in TypeRecycle) {
             if (isNaN(Number(type))) {
-                if (this.getItemType(this.recycleItem.itemType) == type) {
+                if (this.utilsProvider.getItemType(this.recycleItem.itemType) == type) {
                     alert.addInput({
                         type: 'radio',
                         label: type,
@@ -225,7 +218,7 @@ export class MapPage {
                     content: 'Buscando punto más cercano...'
                 });
                 this.loading.present()
-                this.recycleItem.itemType = this.getItemType(data)
+                this.recycleItem.itemType = this.utilsProvider.getItemType(data)
                 this.utilsProvider.getNearestStoragePointByItemType(this.myPosition, this.recycleItem.itemType).timeout(this.config.defaultTimeoutTime).subscribe(
                     result => {
                         if (result.status == 200) {

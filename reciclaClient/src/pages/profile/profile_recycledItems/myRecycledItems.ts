@@ -7,6 +7,8 @@ import { APP_CONFIG_TOKEN, ApplicationConfig } from '../../../app/app-config';
 import { SessionProvider } from '../../../providers/session';
 import 'rxjs/add/operator/map'
 import { User } from '../../../models/user';
+import { NavController } from 'ionic-angular';
+import { recycleItemInfoPage } from './profile_recycledItems_info/recycleItemInfo';
 
 @Component({
     selector: 'page-myRecycledItems',
@@ -21,6 +23,7 @@ export class myRecycledItemsPage {
     constructor(
         private http: Http,
         @Inject(APP_CONFIG_TOKEN) private config: ApplicationConfig,
+        private navCtrl: NavController,
         private sessionProvider: SessionProvider,
     ) {
         this.recycleItems = []
@@ -84,5 +87,9 @@ export class myRecycledItemsPage {
         return recycleItemList;
     }
 
-
+    showRecycleItemInfo(id: number) {
+        this.navCtrl.push(recycleItemInfoPage, {
+            recycleItemId: id
+        })
+    }
 }

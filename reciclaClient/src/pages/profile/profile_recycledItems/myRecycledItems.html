@@ -4,8 +4,7 @@
         <ion-row justify-content-center align-items-center style="height: 100%">
             <ion-col>
                 <div *ngFor="let recycleItem of recycleItems">
-
-                    <ion-card>
+                    <ion-card (click)="showRecycleItemInfo(recycleItem.id)">
                         <ion-item>
                             <ion-avatar item-start>
                                 <img src="{{recycleItem.image}}">
