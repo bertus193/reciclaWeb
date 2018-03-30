@@ -51,10 +51,6 @@ export class myRecycledItemsPage {
         var status: number
 
         this.sessionProvider.getSession().then((user: User) => {
-
-            for (let item in user.recycleItems) {
-
-            }
             this.http.get(this.config.apiEndpoint + "/users/" + user.id + "/recycleItems?token=" + user.accessToken).timeout(this.config.defaultTimeoutTime).subscribe(res => {
                 status = res.status
                 if (status === 200) {

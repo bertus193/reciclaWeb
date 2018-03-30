@@ -1,36 +1,26 @@
-<ion-header>
-    <ion-navbar>
-        <ion-title>Historial de reciclaje</ion-title>
-    </ion-navbar>
-</ion-header>
+<ion-grid style="height: 100%">
 
-<ion-content>
-    <ion-grid style="height: 100%">
+    <div *ngIf="recycleItems?.length > 0;else recycleItemsNotFound">
+        <ion-row justify-content-center align-items-center style="height: 100%">
+            <ion-col>
+                <div *ngFor="let recycleItem of recycleItems">
 
-        <div *ngIf="recycleItems?.length > 0;else recycleItemsNotFound">
-            <ion-row justify-content-center align-items-center style="height: 100%">
-                <ion-col>
-                    <div *ngFor="let recycleItem of recycleItems">
+                    <ion-card>
+                        <ion-item>
+                            <ion-avatar item-start>
+                                <img src="{{recycleItem.image}}">
+                            </ion-avatar>
+                            {{recycleItem.name}}
+                            <p>{{ getItemType(recycleItem.itemType.id) }} - {{ recycleItem.createdDate | date: 'dd/MM/yyyy H:mm'}}
+                            </p>
+                        </ion-item>
+                    </ion-card>
+                </div>
+            </ion-col>
+        </ion-row>
+    </div>
 
-                        <ion-card>
-                            <ion-item>
-                                <ion-avatar item-start>
-                                    <img src="{{recycleItem.image}}">
-                                </ion-avatar>
-                                {{recycleItem.name}}
-                                <p>{{ getItemType(recycleItem.itemType.id) }} - {{ recycleItem.createdDate | date: 'dd/MM/yyyy
-                                    H:mm'}}
-                                </p>
-                            </ion-item>
-                        </ion-card>
-                    </div>
-                </ion-col>
-            </ion-row>
-        </div>
-
-    </ion-grid>
-</ion-content>
-
+</ion-grid>
 
 
 <ng-template #recycleItemsNotFound>

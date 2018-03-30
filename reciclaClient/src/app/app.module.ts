@@ -25,6 +25,7 @@ import { LocationAccuracy } from '@ionic-native/location-accuracy';
 import { GoogleMaps } from '@ionic-native/google-maps'
 import { NotificationProvider } from '../providers/notifications';
 import { GoogleCloudServiceProvider } from '../providers/google';
+import { UtilsProvider } from '../providers/utils';
 
 @NgModule({
     declarations: [
@@ -50,6 +51,7 @@ import { GoogleCloudServiceProvider } from '../providers/google';
         SessionProvider,
         NotificationProvider,
         GoogleCloudServiceProvider,
+        UtilsProvider,
         { provide: APP_CONFIG_TOKEN, useValue: APP_CONFIG },
         File,
         Transfer,

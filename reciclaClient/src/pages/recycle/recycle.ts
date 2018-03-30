@@ -1,5 +1,5 @@
-import { Component, ViewChild, Inject } from '@angular/core';
-import { NavController, LoadingController, ActionSheetController, Platform, Loading, Slides, AlertController } from 'ionic-angular';
+import { Component, Inject } from '@angular/core';
+import { NavController, LoadingController, ActionSheetController, Platform, Loading, AlertController } from 'ionic-angular';
 
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { Transfer, TransferObject, FileUploadOptions } from '@ionic-native/transfer';
@@ -22,6 +22,7 @@ import { LabelResponse } from '../../models/labelResponse';
 import { RecycleItem } from '../../models/recycleItem';
 import { TypeRecycle, TypeRecycle_EN } from '../../models/typeRecicle';
 import { ItemType } from '../../models/itemType';
+import { UtilsProvider } from '../../providers/utils';
 
 @Component({
     selector: 'page-recycle',
@@ -36,31 +37,27 @@ export class RecyclePage {
     user: User
     temporalName: string = ""
 
-    @ViewChild(Slides) slides: Slides;
-
     constructor(
         @Inject(APP_CONFIG_TOKEN) private config: ApplicationConfig,
-        public navCtrl: NavController,
+        private navCtrl: NavController,
         private camera: Camera,
         private transfer: Transfer,
-        public actionSheetCtrl: ActionSheetController,
-        public platform: Platform,
-        public loadingCtrl: LoadingController,
+        private actionSheetCtrl: ActionSheetController,
+        private platform: Platform,
+        private loadingCtrl: LoadingController,
         private geolocation: Geolocation,
         private locationAccuracy: LocationAccuracy,
         private http: Http,
         private alertCtrl: AlertController,
         private notificationProvider: NotificationProvider,
         private googleCloudServiceProvider: GoogleCloudServiceProvider,
+        private utilsProvider: UtilsProvider,
         private sessionProvider: SessionProvider
     ) {
         this.recycleItem = new RecycleItem();
     }
 
     ionViewDidLoad() {
-        if (this.platform.is('cordova') && !this.config.DEBUG_MODE) {
-            this.slides.lockSwipes(true);
-        }
     }
 
     public loadPositionSlide(recycleItemType: number) {
@@ -71,7 +68,7 @@ export class RecyclePage {
         this.recycleItem.name = TypeRecycle[this.recycleItem.itemType]
         this.recycleItem.recycleUser = this.user.id
         this.recycleItem.createdDate = new Date()
-        this.slideNext();
+        this.getUserPositionButton(); //directly without new button step
     }
 
     public getUserPositionButton() {
@@ -95,7 +92,7 @@ export class RecyclePage {
                 this.goToMapPage(myPosition)
             }, error => { //saveUserPosition
                 this.loading.dismissAll()
-                this.notificationProvider.presentTopToast("Error guardando el usuario.");
+                this.notificationProvider.presentTopToast(this.config.defaultTimeoutMsg);
             })
 
         }, (error: PositionError) => {
@@ -234,19 +231,6 @@ export class RecyclePage {
 
     }
 
-
-    private slideNext() {
-        this.slides.lockSwipes(false);
-        this.slides.slideNext();
-        this.slides.lockSwipes(true);
-    }
-
-    private slidePrev() {
-        this.slides.lockSwipes(false);
-        this.slides.slidePrev();
-        this.slides.lockSwipes(true);
-    }
-
     public uploadImage(targetPath) {
         var date = new Date()
         var filename = this.user.id + "_" + date.getTime() + ".png";
@@ -372,39 +356,14 @@ export class RecyclePage {
                     }
                 }
             }
-
-
-
             alert.present();
         })
-        //return new Promise(() => alert.present())
     }
 
-    public getNearestStoragePointByItemType(currentPosition: Position, itemType: ItemType): Observable<{ storagePoint: StoragePoint, status: number }> {
-        var status: number
-        var storagePointList: StoragePoint[]
-        var storagePoint: StoragePoint
-        return this.http.get(this.config.apiEndpoint + "/storages/itemType/" + itemType + '/storagePoints').map(res => {
-            status = res.status
-            if (status === 200) {
-                storagePointList = res.json();
-                storagePoint = storagePointList[0];
-                for (let currentSPoint of storagePointList) {
-                    if ((currentPosition.latitude - currentSPoint.position.latitude) < (currentPosition.latitude - storagePoint.position.latitude)) {
-                        if ((currentPosition.longitude - currentSPoint.position.longitude) < (currentPosition.longitude - storagePoint.position.longitude)) {
-                            storagePoint = currentSPoint
-                        }
-                    }
-                }
-            }
-            return { storagePoint, status }
-        }).catch(error => {
-            return Observable.throw(error);
-        });
-    }
+
 
     goToMapPage(myPosition: Position) {
-        this.getNearestStoragePointByItemType(myPosition, this.recycleItem.itemType).timeout(this.config.defaultTimeoutTime).subscribe(
+        this.utilsProvider.getNearestStoragePointByItemType(myPosition, this.recycleItem.itemType).timeout(this.config.defaultTimeoutTime).subscribe(
             result => {
                 this.recycleItem.storage = result.storagePoint
                 if (result.status == 200) {

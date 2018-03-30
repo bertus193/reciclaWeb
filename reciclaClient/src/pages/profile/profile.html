@@ -1,28 +1,38 @@
 <ion-header>
-    <ion-navbar>
-        <ion-title>
-            Perfil
-        </ion-title>
-    </ion-navbar>
+    <ion-toolbar>
+        <ion-segment [(ngModel)]="profileSegment">
+            <ion-segment-button value="profile">
+                <div class="segmentName" (click)="navigateTo1()">Perfil</div>
+            </ion-segment-button>
+            <ion-segment-button value="history">
+                <div class="segmentName" (click)="navigateTo2()">Historial</div>
+            </ion-segment-button>
+        </ion-segment>
+    </ion-toolbar>
 </ion-header>
 
 <ion-content>
-    <ion-grid>
-        <ion-row>
-            <ion-col>
-                <button ion-button block (click)="goToMyRecycledItems()">Historial de reciclaje</button>
-                <button ion-button block (click)="goToLogout()">Cerrar sesión</button>
+    <div [ngSwitch]="profileSegment" style="height: 97%">
+        <ion-list *ngSwitchCase="'profile'" style="height: 100%;">
+            <ion-grid>
+                <ion-row>
+                    <ion-col>
+                        <ion-card *ngIf="user">
+                            <ion-card-header>{{ user.fullName }}</ion-card-header>
+                            <img [src]="user.profilePicture" onError="this.src = 'assets/imgs/quieroReciclar.png'" />
+                            <ion-card-content>
+                                <p>Email: {{ user.email }}</p>
+                                <p>Fecha registro: {{ user.createdDate | date: 'dd/MM/yyyy H:mm'}}</p>
+                            </ion-card-content>
+                        </ion-card>
+                        <button ion-button block (click)="goToLogout()">Cerrar sesión</button>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+        </ion-list>
+        <ion-list *ngSwitchCase="'history'" style="height: 100%">
+            <page-myRecycledItems></page-myRecycledItems>
+        </ion-list>
+    </div>
 
-                <ion-card *ngIf="user">
-                    <ion-card-header>{{ user.fullName }}</ion-card-header>
-                    <img [src]="user.profilePicture" />
-                    <ion-card-content>
-                        <p>Email: {{ user.email }}</p>
-                        <p>Nombre: {{ user.name }}</p>
-                        <p>Fecha registro: {{ user.createdDate | date: 'dd/MM/yyyy H:mm'}}</p>
-                    </ion-card-content>
-                </ion-card>
-            </ion-col>
-        </ion-row>
-    </ion-grid>
 </ion-content>

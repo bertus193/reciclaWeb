@@ -2,11 +2,11 @@
     <ion-navbar>
         <div style="display: flex;justify-content: center; align-items: center;">
             <div class="title-navbar" align="center">
-                <div class='main-title'>Reciclar {{getItemType(recycleItem.itemType)}}</div>
+                <div class='main-title'>Reciclar: {{getItemType(recycleItem.itemType)}}</div>
                 <div class='sub-title'>{{recycleItem.name}}</div>
             </div>
             <div class="iconsRight">
-                <div *ngIf="!recycledAlready; else onlymap">
+                <div *ngIf="!recycledAlready;">
                     <ion-buttons right>
                         <button ion-button icon-only color="royal" (tap)="recycleFinish()">
                             <ion-icon name="checkmark"></ion-icon>
@@ -17,14 +17,6 @@
                         </button>
                     </ion-buttons>
                 </div>
-
-                <ng-template #onlymap>
-                    <ion-buttons right>
-                        <button ion-button icon-only (click)="viewOnExtenalMap()">
-                            <ion-icon name="md-map"></ion-icon>
-                        </button>
-                    </ion-buttons>
-                </ng-template>
             </div>
         </div>
     </ion-navbar>

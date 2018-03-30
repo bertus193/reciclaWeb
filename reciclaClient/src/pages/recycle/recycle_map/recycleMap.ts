@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { NavParams, AlertController, Platform } from 'ionic-angular';
+import { NavParams, AlertController, Platform, LoadingController, Loading } from 'ionic-angular';
 import { PopoverController } from 'ionic-angular';
 import {
     GoogleMaps,
@@ -19,6 +19,7 @@ import { User } from '../../../models/user';
 import { SessionProvider } from '../../../providers/session';
 import { TypeRecycle } from '../../../models/typeRecicle';
 import { PopoverMap } from './popover_map/popoverMap';
+import { UtilsProvider } from '../../../providers/utils';
 
 @Component({
     selector: 'page-recycleMap',
@@ -31,6 +32,7 @@ export class MapPage {
     recycledAlready: boolean = false
     recycleItem: RecycleItem
     myPosition: Position;
+    loading: Loading;
 
     constructor(
         private navParams: NavParams,
@@ -40,6 +42,8 @@ export class MapPage {
         private sessionProvider: SessionProvider,
         private popoverCtrl: PopoverController,
         private platform: Platform,
+        private utilsProvider: UtilsProvider,
+        private loadingCtrl: LoadingController,
         @Inject(APP_CONFIG_TOKEN) private config: ApplicationConfig) {
 
         this.recycleItem = this.navParams.get("recycleItem");
@@ -57,7 +61,7 @@ export class MapPage {
                     lat: this.myPosition.latitude, // default location
                     lng: this.myPosition.longitude // default location
                 },
-                zoom: 12,
+                zoom: 8,
                 tilt: 30
             }
         };
@@ -67,19 +71,34 @@ export class MapPage {
         // Wait the MAP_READY before using any methods.
         this.map.one(GoogleMapsEvent.MAP_READY)
             .then(() => {
-
-                this.createMarker(this.myPosition, "Yo", 'blue').then((marker: Marker) => {
-                    marker.showInfoWindow();
-                })
-
-                this.createMarker(this.recycleItem.storage.position, "Punto más cercano", 'green').then((marker: Marker) => {
-                    marker.showInfoWindow();
-                })
-
+                this.initMarkers(this.recycleItem.storage.position, "Punto más cercano", 'green')
             })
             .catch(error => {
                 this.notificationProvider.presentTopToast("Parece que ha habido algún problema")
             });
+
+    }
+
+    initMarkers(storagePosition: Position, title: string, color: string) {
+        this.map.clear()
+
+        this.createMarker(this.myPosition, "Yo", 'blue').then((marker: Marker) => {
+
+        })
+
+        this.createMarker(storagePosition, title, color).then((marker: Marker) => {
+            marker.showInfoWindow();
+        })
+        this.utilsProvider.calculateZoom(this.myPosition, storagePosition).subscribe((zoomLevel: number) => {
+            var centerX = (storagePosition.latitude + this.myPosition.latitude) / 2;
+            var centerY = (storagePosition.longitude + this.myPosition.longitude) / 2;
+            var latLng = new LatLng(centerX, centerY)
+            this.map.setCameraZoom(zoomLevel)
+            this.map.setCameraTarget(latLng)
+        }, error => {
+            this.notificationProvider.presentTopToast("Error obteniendo la posición más cercana")
+        })
+
 
     }
 
@@ -160,7 +179,8 @@ export class MapPage {
         }
         // android
         else if (this.platform.is('android')) {
-            window.open('geo://' + this.recycleItem.storage.position.latitude + ',' + this.recycleItem.storage.position.longitude + 'q=' + this.myPosition.latitude + ',' + this.myPosition.longitude + '(Yo)', '_system');
+            var url = 'http://maps.google.com/?saddr=' + this.myPosition.latitude + ',' + this.myPosition.longitude + '&daddr=' + this.recycleItem.storage.position.latitude + ',' + this.recycleItem.storage.position.longitude
+            window.open(url, '_system', 'location=yes'), !1;
         }
     }
 
@@ -201,7 +221,26 @@ export class MapPage {
         alert.addButton({
             text: 'Cambiar tipo',
             handler: data => {
+                this.loading = this.loadingCtrl.create({
+                    content: 'Buscando punto más cercano...'
+                });
+                this.loading.present()
                 this.recycleItem.itemType = this.getItemType(data)
+                this.utilsProvider.getNearestStoragePointByItemType(this.myPosition, this.recycleItem.itemType).timeout(this.config.defaultTimeoutTime).subscribe(
+                    result => {
+                        if (result.status == 200) {
+                            this.loading.dismissAll()
+                            this.initMarkers(result.storagePoint.position, "Punto más cercano", 'green')
+                        }
+                        else {
+                            this.loading.dismissAll()
+                            this.notificationProvider.presentTopToast('No hay ningún punto de reciclaje cercano.');
+                        }
+                    },
+                    error => { // Error undefined desde cordova browser /itemType/undefined/storagePoints
+                        this.loading.dismissAll()
+                        this.notificationProvider.presentTopToast(this.config.defaultTimeoutMsg)
+                    })
             }
         });
         alert.present();

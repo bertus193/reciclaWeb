@@ -25695,6 +25695,10 @@ ion-icon[class*="reciclaUA-recyle"] {
   mask-image: url("../assets/imgs/icons/recycle.svg");
 }
 
+page-profile .segmentName {
+  font-size: 14px;
+}
+
 page-recycleMap #map_canvas {
   display: block;
   height: 100%;
