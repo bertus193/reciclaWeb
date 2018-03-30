@@ -46,4 +46,24 @@ public class RecycleItemController {
         }
     }
 
+    @RequestMapping(value = "/recycleItems/{id}", method = RequestMethod.GET)
+    public ResponseEntity<RecycleItem> updateUser(HttpServletRequest request, @PathVariable("id") long id) {
+
+        long userId = (long)request.getAttribute("userId");
+
+        RecycleItem recycleItem = recycleItemService.findById(id);
+
+         if (recycleItem == null) {
+             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+         }
+         else {
+             if(userId == recycleItem.getRecycleUser().getId()) {
+                 return new ResponseEntity<>(recycleItem, HttpStatus.OK);
+             }
+             else {
+                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+             }
+         }
+    }
+
 }

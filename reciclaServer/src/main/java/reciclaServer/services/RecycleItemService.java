@@ -22,9 +22,8 @@ public class RecycleItemService {
     }
 
 
-    public List<RecycleItem> findAll(){
-        List<RecycleItem> recycleItems = recycleItemDAO.findAll();
-        return recycleItems;
+    public RecycleItem findById(long id){
+        return recycleItemDAO.findFirstById(id);
     }
 
 

@@ -9,5 +9,5 @@ import java.util.List;
 @Transactional
 public interface RecycleItemDAO extends CrudRepository<RecycleItem, Long>{
 
-    List<RecycleItem> findAll();
+    RecycleItem findFirstById(long id);
 }
