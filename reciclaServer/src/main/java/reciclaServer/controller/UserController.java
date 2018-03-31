@@ -102,7 +102,7 @@ public class UserController {
                     return new ResponseEntity<>(HttpStatus.NOT_FOUND);
                 }
 
-                return new ResponseEntity<>(recycleItems.getContent(), HttpStatus.OK);
+                return new ResponseEntity<>(recycleItems, HttpStatus.OK);
             } catch (IllegalArgumentException ex) {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
