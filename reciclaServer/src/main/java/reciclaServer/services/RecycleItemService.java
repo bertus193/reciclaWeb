@@ -1,14 +1,16 @@
 package reciclaServer.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import reciclaServer.models.RecycleItem;
 import reciclaServer.models.DAO.RecycleItemDAO;
+import reciclaServer.models.RecycleItem;
 import reciclaServer.models.exceptions.ItemTypeNotFoundException;
 import reciclaServer.models.exceptions.StorageNotFoundException;
 import reciclaServer.models.exceptions.UserNotFoundException;
-
-import java.util.List;
 
 
 @Service("recycleItemService")
@@ -17,27 +19,40 @@ public class RecycleItemService {
     private final RecycleItemDAO recycleItemDAO;
 
     @Autowired
-    public RecycleItemService(RecycleItemDAO recycleItemDAO){
+    public RecycleItemService(RecycleItemDAO recycleItemDAO) {
         this.recycleItemDAO = recycleItemDAO;
     }
 
 
-    public RecycleItem findById(long id){
+    public RecycleItem findById(long id) {
         return recycleItemDAO.findFirstById(id);
+    }
+
+    public Page<RecycleItem> findByRecycleUser_Id(long id, int pageNumber, int pageSize) {
+
+        Sort sort = new Sort(new Sort.Order(Sort.Direction.DESC, "createdDate"));
+        Pageable request = new PageRequest(pageNumber, pageSize, sort);
+
+        return recycleItemDAO.findByRecycleUser_Id(id, request);
+    }
+
+    public Page<RecycleItem> findLatest(int pageNumber, int pageSize) {
+
+        Sort sort = new Sort(new Sort.Order(Sort.Direction.DESC, "createdDate"));
+        Pageable request = new PageRequest(pageNumber, pageSize, sort);
+
+        return recycleItemDAO.findAll(request);
     }
 
 
     public void saveRecycleItem(RecycleItem recycleItem) throws UserNotFoundException, StorageNotFoundException, ItemTypeNotFoundException {
-        if(recycleItem.getRecycleUser() == null){
+        if (recycleItem.getRecycleUser() == null) {
             throw new UserNotFoundException("recycleItem user not found");
-        }
-        else if(recycleItem.getStorage() == null){
+        } else if (recycleItem.getStorage() == null) {
             throw new StorageNotFoundException("recycleItem storage not found");
-        }
-        else if(recycleItem.getItemType() == null){
+        } else if (recycleItem.getItemType() == null) {
             throw new ItemTypeNotFoundException("recycleItem itemType not found");
-        }
-        else{
+        } else {
             recycleItemDAO.save(recycleItem);
         }
 
