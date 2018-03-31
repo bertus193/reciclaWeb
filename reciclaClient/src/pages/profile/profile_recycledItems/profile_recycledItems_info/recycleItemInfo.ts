@@ -32,7 +32,7 @@ export class recycleItemInfoPage {
         var status: number
 
         this.sessionProvider.getSession().then((user: User) => {
-            this.http.get(this.config.apiEndpoint + "/recycleItems/" + this.recycleItemId + "?token=" + user.accessToken).timeout(this.config.defaultTimeoutTime).subscribe(res => {
+            this.http.get(this.config.apiEndpoint + "/recycleItems/private/" + this.recycleItemId + "?token=" + user.accessToken).timeout(this.config.defaultTimeoutTime).subscribe(res => {
                 status = res.status
 
                 if (status === 200) {

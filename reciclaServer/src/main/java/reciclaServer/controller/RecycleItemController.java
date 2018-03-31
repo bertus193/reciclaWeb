@@ -25,7 +25,7 @@ public class RecycleItemController {
         this.recycleItemService = recycleItemService;
     }
 
-    @RequestMapping(value = "/recycleItems", method = RequestMethod.POST)
+    @RequestMapping(value = "/recycleItems/private", method = RequestMethod.POST)
     public ResponseEntity<?> createRecycleItem(HttpServletRequest request, @RequestBody RecycleItem recycleItem) {
 
         long userId = (long) request.getAttribute("userId");
@@ -44,23 +44,6 @@ public class RecycleItemController {
         }
     }
 
-    @RequestMapping(value = "/recycleItems/{id}/", method = RequestMethod.GET)
-    public ResponseEntity<RecycleItem> updateUser(HttpServletRequest request, @PathVariable("id") long id) {
-
-        long userId = (long) request.getAttribute("userId");
-
-        RecycleItem recycleItem = recycleItemService.findById(id);
-
-        if (recycleItem == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } else {
-            if (userId == recycleItem.getRecycleUser().getId()) {
-                return new ResponseEntity<>(recycleItem, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-            }
-        }
-    }
 
     @RequestMapping(value = "/recycleItems/latest/", method = RequestMethod.GET)
     public ResponseEntity<?> getLatestRecycleItems(@RequestParam("page") int page, @RequestParam("perPage") int perPage) {
@@ -77,6 +60,25 @@ public class RecycleItemController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
+    }
+
+
+    @RequestMapping(value = "/recycleItems/private/{id}/", method = RequestMethod.GET)
+    public ResponseEntity<RecycleItem> updateUser(HttpServletRequest request, @PathVariable("id") long id) {
+
+        long userId = (long) request.getAttribute("userId");
+
+        RecycleItem recycleItem = recycleItemService.findById(id);
+
+        if (recycleItem == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            if (userId == recycleItem.getRecycleUser().getId()) {
+                return new ResponseEntity<>(recycleItem, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            }
+        }
     }
 
 }

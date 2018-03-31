@@ -25699,6 +25699,10 @@ page-profile .segmentName {
   font-size: 14px;
 }
 
+page-myRecycledItems .recycleItemIonItem:hover {
+  background-color: #e7e7e7;
+}
+
 page-recycleMap #map_canvas {
   display: block;
   height: 100%;

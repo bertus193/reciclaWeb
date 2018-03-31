@@ -391,7 +391,7 @@ export class RecyclePage {
                 'Content-Type': 'application/json'
             })
         });
-        return this.http.put(this.config.apiEndpoint + "/users/" + user.id + "?token=" + user.accessToken, JSON.stringify(user), options).timeout(this.config.defaultTimeoutTime);
+        return this.http.put(this.config.apiEndpoint + "/users/private/" + user.id + "?token=" + user.accessToken, JSON.stringify(user), options).timeout(this.config.defaultTimeoutTime);
     }
 
     public getItemType(itemTypeId: (number | string), lang = 'ES'): (number | string) {

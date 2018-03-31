@@ -15,8 +15,9 @@ import { recycleItemInfoPage } from './profile_recycledItems_info/recycleItemInf
     templateUrl: 'myRecycledItems.html'
 })
 export class myRecycledItemsPage {
-    recycleItems: RecycleItem[]
-    recycleItemHTML: string
+
+    user: User
+    recycleItems: RecycleItem[] = []
     showLoadingMsg = true
     errorLoadingContent = false
 
@@ -26,20 +27,13 @@ export class myRecycledItemsPage {
         private navCtrl: NavController,
         private sessionProvider: SessionProvider,
     ) {
-        this.recycleItems = []
-        this.getRecycleItems();
-    }
-
-    ionViewDidLoad() {
-        this.recycleItemHTML =
-            "<ion-card><ion-item>" +
-            "<ion-avatar item-start>" +
-            "<img src='img / marty - avatar.png'>" +
-            "</ion-avatar>" +
-            "Item Name" +
-            "<p>itemType</p>" +
-            "<!--{{ user.createdDate | date: 'dd/MM/yyyy H:mm'}}-->" +
-            "</ion-item></ion-card>"
+        this.sessionProvider.getSession().then((user: User) => {
+            this.user = user
+            this.getRecycleItems();
+        }, error => {
+            this.showLoadingMsg = false
+            this.errorLoadingContent = true
+        })
     }
 
     public getItemType(itemTypeId: number): string {
@@ -53,25 +47,21 @@ export class myRecycledItemsPage {
     getRecycleItems() {
         var status: number
 
-        this.sessionProvider.getSession().then((user: User) => {
-            this.http.get(this.config.apiEndpoint + "/users/" + user.id + "/recycleItems?token=" + user.accessToken).timeout(this.config.defaultTimeoutTime).subscribe(res => {
-                status = res.status
-                if (status === 200) {
-                    var recycleItemTempList = res.json();
-                    this.recycleItems = this.readRecycleItems(recycleItemTempList)
+        this.http.get(this.config.apiEndpoint + "/users/private/" + this.user.id + "/recycleItems?page=0&perPage=2&token=" + this.user.accessToken).timeout(this.config.defaultTimeoutTime).subscribe(res => {
+            status = res.status
+            if (status === 200) {
+                var recycleItemTempList = res.json();
+                this.recycleItems = this.readRecycleItems(recycleItemTempList)
 
-                } else {
-                    this.errorLoadingContent = true
-                }
-                this.showLoadingMsg = false
-            }, error => {
-                this.showLoadingMsg = false
+            } else {
                 this.errorLoadingContent = true
-            })
-        }).catch(error => {
+            }
+            this.showLoadingMsg = false
+        }, error => {
             this.showLoadingMsg = false
             this.errorLoadingContent = true
         })
+
     }
 
     readRecycleItems(recycleItemList): RecycleItem[] {

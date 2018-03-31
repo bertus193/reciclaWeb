@@ -125,7 +125,7 @@ export class MapPage {
                 })
             });
             this.recycleItem.storage = this.recycleItem.storage.id
-            this.http.post(this.config.apiEndpoint + "/recycleItems?token=" + user.accessToken, JSON.stringify(this.recycleItem), options).subscribe(res => {
+            this.http.post(this.config.apiEndpoint + "/recycleItems/private/?token=" + user.accessToken, JSON.stringify(this.recycleItem), options).subscribe(res => {
                 var status = res.status;
                 if (status === 201) {
                     this.recycledAlready = true

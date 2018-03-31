@@ -635,7 +635,7 @@ var RecyclePage = (function () {
                 'Content-Type': 'application/json'
             })
         });
-        return this.http.put(this.config.apiEndpoint + "/users/" + user.id + "?token=" + user.accessToken, JSON.stringify(user), options).timeout(this.config.defaultTimeoutTime);
+        return this.http.put(this.config.apiEndpoint + "/users/private/" + user.id + "?token=" + user.accessToken, JSON.stringify(user), options).timeout(this.config.defaultTimeoutTime);
     };
     RecyclePage.prototype.getItemType = function (itemTypeId, lang) {
         if (lang === void 0) { lang = 'ES'; }
@@ -657,21 +657,10 @@ var RecyclePage = (function () {
             selector: 'page-recycle',template:/*ion-inline-start:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/recycle/recycle.html"*/'<ion-header>\n    <ion-navbar>\n        <ion-title>\n            Reciclar!\n        </ion-title>\n    </ion-navbar>\n</ion-header>\n\n<ion-content padding>\n    <ion-grid style="height: 100%">\n        <ion-row align-items-center text-center style="height: 100%">\n            <ion-col>\n                <img src="assets/imgs/quieroReciclar.png" />\n                <p>\n                    <button ion-button (click)="presentActionSheetActions()">\n                        Quiero reciclar\n                    </button>\n                </p>\n            </ion-col>\n        </ion-row>\n    </ion-grid>\n</ion-content>'/*ion-inline-end:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/recycle/recycle.html"*/
         }),
         __param(0, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["z" /* Inject */])(__WEBPACK_IMPORTED_MODULE_6__app_app_config__["b" /* APP_CONFIG_TOKEN */])),
-        __metadata("design:paramtypes", [Object, __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["i" /* NavController */],
-            __WEBPACK_IMPORTED_MODULE_2__ionic_native_camera__["a" /* Camera */],
-            __WEBPACK_IMPORTED_MODULE_3__ionic_native_transfer__["a" /* Transfer */],
-            __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["a" /* ActionSheetController */],
-            __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* LoadingController */],
-            __WEBPACK_IMPORTED_MODULE_4__ionic_native_geolocation__["a" /* Geolocation */],
-            __WEBPACK_IMPORTED_MODULE_5__ionic_native_location_accuracy__["a" /* LocationAccuracy */],
-            __WEBPACK_IMPORTED_MODULE_7__angular_http__["b" /* Http */],
-            __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["b" /* AlertController */],
-            __WEBPACK_IMPORTED_MODULE_12__providers_notifications__["a" /* NotificationProvider */],
-            __WEBPACK_IMPORTED_MODULE_13__providers_google__["a" /* GoogleCloudServiceProvider */],
-            __WEBPACK_IMPORTED_MODULE_17__providers_utils__["a" /* UtilsProvider */],
-            __WEBPACK_IMPORTED_MODULE_14__providers_session__["a" /* SessionProvider */]])
+        __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_6__app_app_config__["ApplicationConfig"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_6__app_app_config__["ApplicationConfig"]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["i" /* NavController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["i" /* NavController */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_2__ionic_native_camera__["a" /* Camera */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__ionic_native_camera__["a" /* Camera */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_3__ionic_native_transfer__["a" /* Transfer */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__ionic_native_transfer__["a" /* Transfer */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["a" /* ActionSheetController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["a" /* ActionSheetController */]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* LoadingController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* LoadingController */]) === "function" && _f || Object, typeof (_g = typeof __WEBPACK_IMPORTED_MODULE_4__ionic_native_geolocation__["a" /* Geolocation */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__ionic_native_geolocation__["a" /* Geolocation */]) === "function" && _g || Object, typeof (_h = typeof __WEBPACK_IMPORTED_MODULE_5__ionic_native_location_accuracy__["a" /* LocationAccuracy */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__ionic_native_location_accuracy__["a" /* LocationAccuracy */]) === "function" && _h || Object, typeof (_j = typeof __WEBPACK_IMPORTED_MODULE_7__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_7__angular_http__["b" /* Http */]) === "function" && _j || Object, typeof (_k = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["b" /* AlertController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["b" /* AlertController */]) === "function" && _k || Object, typeof (_l = typeof __WEBPACK_IMPORTED_MODULE_12__providers_notifications__["a" /* NotificationProvider */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_12__providers_notifications__["a" /* NotificationProvider */]) === "function" && _l || Object, typeof (_m = typeof __WEBPACK_IMPORTED_MODULE_13__providers_google__["a" /* GoogleCloudServiceProvider */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_13__providers_google__["a" /* GoogleCloudServiceProvider */]) === "function" && _m || Object, typeof (_o = typeof __WEBPACK_IMPORTED_MODULE_17__providers_utils__["a" /* UtilsProvider */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_17__providers_utils__["a" /* UtilsProvider */]) === "function" && _o || Object, typeof (_p = typeof __WEBPACK_IMPORTED_MODULE_14__providers_session__["a" /* SessionProvider */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_14__providers_session__["a" /* SessionProvider */]) === "function" && _p || Object])
     ], RecyclePage);
     return RecyclePage;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p;
 }());
 
 //# sourceMappingURL=recycle.js.map
@@ -794,7 +783,7 @@ var MapPage = (function () {
                 })
             });
             _this.recycleItem.storage = _this.recycleItem.storage.id;
-            _this.http.post(_this.config.apiEndpoint + "/recycleItems?token=" + user.accessToken, JSON.stringify(_this.recycleItem), options).subscribe(function (res) {
+            _this.http.post(_this.config.apiEndpoint + "/recycleItems/private/?token=" + user.accessToken, JSON.stringify(_this.recycleItem), options).subscribe(function (res) {
                 var status = res.status;
                 if (status === 201) {
                     _this.recycledAlready = true;
@@ -911,17 +900,10 @@ var MapPage = (function () {
             selector: 'page-recycleMap',template:/*ion-inline-start:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/recycle/recycle_map/recycleMap.html"*/'<ion-header>\n    <ion-navbar>\n        <div style="display: flex;justify-content: center; align-items: center;">\n            <div class="title-navbar" align="center">\n                <div class=\'main-title\'>Reciclar: {{getItemType(recycleItem.itemType)}}</div>\n                <div class=\'sub-title\'>{{recycleItem.name}}</div>\n            </div>\n            <div class="iconsRight">\n                <div *ngIf="!recycledAlready;">\n                    <ion-buttons right>\n                        <button ion-button icon-only color="royal" (tap)="recycleFinish()">\n                            <ion-icon name="checkmark"></ion-icon>\n                        </button>\n\n                        <button ion-button icon-only color="royal" (tap)="presentPopover($event)">\n                            <ion-icon name="more"></ion-icon>\n                        </button>\n                    </ion-buttons>\n                </div>\n            </div>\n        </div>\n    </ion-navbar>\n</ion-header>\n\n<ion-content>\n    <div #map id="map_canvas">\n    </div>\n</ion-content>'/*ion-inline-end:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/recycle/recycle_map/recycleMap.html"*/
         }),
         __param(9, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["z" /* Inject */])(__WEBPACK_IMPORTED_MODULE_5__app_app_config__["b" /* APP_CONFIG_TOKEN */])),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavParams */],
-            __WEBPACK_IMPORTED_MODULE_3__providers_notifications__["a" /* NotificationProvider */],
-            __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["b" /* AlertController */],
-            __WEBPACK_IMPORTED_MODULE_4__angular_http__["b" /* Http */],
-            __WEBPACK_IMPORTED_MODULE_6__providers_session__["a" /* SessionProvider */],
-            __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["l" /* PopoverController */],
-            __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["k" /* Platform */],
-            __WEBPACK_IMPORTED_MODULE_9__providers_utils__["a" /* UtilsProvider */],
-            __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* LoadingController */], Object])
+        __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavParams */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavParams */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3__providers_notifications__["a" /* NotificationProvider */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__providers_notifications__["a" /* NotificationProvider */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["b" /* AlertController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["b" /* AlertController */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_4__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__angular_http__["b" /* Http */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_6__providers_session__["a" /* SessionProvider */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_6__providers_session__["a" /* SessionProvider */]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["l" /* PopoverController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["l" /* PopoverController */]) === "function" && _f || Object, typeof (_g = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["k" /* Platform */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["k" /* Platform */]) === "function" && _g || Object, typeof (_h = typeof __WEBPACK_IMPORTED_MODULE_9__providers_utils__["a" /* UtilsProvider */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_9__providers_utils__["a" /* UtilsProvider */]) === "function" && _h || Object, typeof (_j = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* LoadingController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* LoadingController */]) === "function" && _j || Object, typeof (_k = typeof __WEBPACK_IMPORTED_MODULE_5__app_app_config__["ApplicationConfig"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__app_app_config__["ApplicationConfig"]) === "function" && _k || Object])
     ], MapPage);
     return MapPage;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
 }());
 
 //# sourceMappingURL=recycleMap.js.map
@@ -1088,7 +1070,7 @@ var ProfilePage = (function () {
     };
     ProfilePage = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
-            selector: 'page-profile',template:/*ion-inline-start:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/profile/profile.html"*/'<ion-header>\n    <ion-toolbar>\n        <ion-segment [(ngModel)]="profileSegment">\n            <ion-segment-button value="profile">\n                <div class="segmentName">Perfil</div>\n            </ion-segment-button>\n            <ion-segment-button value="history">\n                <div class="segmentName">Historial</div>\n            </ion-segment-button>\n        </ion-segment>\n    </ion-toolbar>\n</ion-header>\n\n<ion-content>\n    <div [ngSwitch]="profileSegment" style="height: 97%">\n        <ion-list *ngSwitchCase="\'profile\'" style="height: 100%;">\n            <ion-grid>\n                <ion-row>\n                    <ion-col>\n                        <ion-card *ngIf="user">\n                            <ion-card-header>{{ user.fullName }}</ion-card-header>\n                            <img [src]="user.profilePicture" onError="this.src = \'assets/imgs/quieroReciclar.png\'" />\n                            <ion-card-content>\n                                <p>Email: {{ user.email }}</p>\n                                <p>Fecha registro: {{ user.createdDate | date: \'dd/MM/yyyy H:mm\'}}</p>\n                            </ion-card-content>\n                        </ion-card>\n                        <button ion-button block (click)="goToLogout()">Cerrar sesión</button>\n                    </ion-col>\n                </ion-row>\n            </ion-grid>\n        </ion-list>\n        <ion-list *ngSwitchCase="\'history\'" style="height: 100%">\n            <page-myRecycledItems></page-myRecycledItems>\n        </ion-list>\n    </div>\n\n</ion-content>'/*ion-inline-end:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/profile/profile.html"*/
+            selector: 'page-profile',template:/*ion-inline-start:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/profile/profile.html"*/'<ion-header>\n    <ion-toolbar>\n        <ion-segment [(ngModel)]="profileSegment" style="margin-bottom: -15px">\n            <ion-segment-button value="profile">\n                <div class="segmentName">Perfil</div>\n            </ion-segment-button>\n            <ion-segment-button value="history">\n                <div class="segmentName">Historial</div>\n            </ion-segment-button>\n        </ion-segment>\n    </ion-toolbar>\n</ion-header>\n\n<ion-content>\n    <div [ngSwitch]="profileSegment" style="height: 97%">\n        <ion-list *ngSwitchCase="\'profile\'" style="height: 100%;">\n            <ion-grid>\n                <ion-row>\n                    <ion-col>\n                        <ion-card *ngIf="user">\n                            <ion-card-header>{{ user.fullName }}</ion-card-header>\n                            <img [src]="user.profilePicture" onError="this.src = \'assets/imgs/quieroReciclar.png\'" />\n                            <ion-card-content>\n                                <p>Email: {{ user.email }}</p>\n                                <p>Fecha registro: {{ user.createdDate | date: \'dd/MM/yyyy H:mm\'}}</p>\n                            </ion-card-content>\n                        </ion-card>\n                        <button ion-button block (click)="goToLogout()">Cerrar sesión</button>\n                    </ion-col>\n                </ion-row>\n            </ion-grid>\n        </ion-list>\n        <ion-list *ngSwitchCase="\'history\'" style="height: 100%">\n            <page-myRecycledItems></page-myRecycledItems>\n        </ion-list>\n    </div>\n\n</ion-content>'/*ion-inline-end:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/profile/profile.html"*/
         }),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2__providers_session__["a" /* SessionProvider */],
             __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["c" /* App */]])
@@ -1123,7 +1105,7 @@ var HomePage = (function () {
     };
     HomePage = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
-            selector: 'page-home',template:/*ion-inline-start:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/home/home.html"*/'<ion-header>\n    <ion-navbar>\n        <ion-title>Home</ion-title>\n    </ion-navbar>\n</ion-header>\n\n<ion-content>\n    <ion-grid style="height: 100%">\n        <ion-row align-items-center text-center style="height: 100%">\n            <ion-col>\n                <h5>ReciclaUA</h5>\n            </ion-col>\n        </ion-row>\n    </ion-grid>\n</ion-content>'/*ion-inline-end:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/home/home.html"*/
+            selector: 'page-home',template:/*ion-inline-start:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/home/home.html"*/'<ion-header>\n    <ion-navbar>\n        <ion-title>ReciclaUA</ion-title>\n    </ion-navbar>\n</ion-header>\n\n<ion-content>\n    <ion-grid style="height: 100%">\n        <ion-row align-items-center text-center style="height: 100%">\n            <ion-col>\n                <h5>ReciclaUA</h5>\n            </ion-col>\n        </ion-row>\n    </ion-grid>\n</ion-content>'/*ion-inline-end:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/home/home.html"*/
         }),
         __metadata("design:paramtypes", [])
     ], HomePage);
@@ -1249,7 +1231,7 @@ var recycleItemInfoPage = (function () {
         var _this = this;
         var status;
         this.sessionProvider.getSession().then(function (user) {
-            _this.http.get(_this.config.apiEndpoint + "/recycleItems/" + _this.recycleItemId + "?token=" + user.accessToken).timeout(_this.config.defaultTimeoutTime).subscribe(function (res) {
+            _this.http.get(_this.config.apiEndpoint + "/recycleItems/private/" + _this.recycleItemId + "?token=" + user.accessToken).timeout(_this.config.defaultTimeoutTime).subscribe(function (res) {
                 status = res.status;
                 if (status === 200) {
                     _this.recycleItem = res.json();
@@ -1267,15 +1249,13 @@ var recycleItemInfoPage = (function () {
     };
     recycleItemInfoPage = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
-            selector: 'page-recycleItemInfo',template:/*ion-inline-start:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/profile/profile_recycledItems/profile_recycledItems_info/recycleItemInfo.html"*/'<ion-header>\n    <ion-navbar>\n        <ion-title>Detalles del reciclaje</ion-title>\n    </ion-navbar>\n</ion-header>\n\n<ion-content>\n    <ion-grid>\n        <ion-row>\n            <ion-col>\n                <ion-card *ngIf="recycleItem">\n                    <ion-card-header>{{ recycleItem.name }}</ion-card-header>\n                    <img [src]="recycleItem.image" onError="this.src = \'assets/imgs/quieroReciclar.png\'" />\n                    <ion-card-content>\n                        <p>Tipo: {{ getItemType(recycleItem.itemType.id) }}</p>\n                        <p>Reciclado el: {{ recycleItem.createdDate | date: \'dd/MM/yyyy H:mm\'}}</p>\n                    </ion-card-content>\n                </ion-card>\n            </ion-col>\n        </ion-row>\n    </ion-grid>\n</ion-content>'/*ion-inline-end:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/profile/profile_recycledItems/profile_recycledItems_info/recycleItemInfo.html"*/
+            selector: 'page-recycleItemInfo',template:/*ion-inline-start:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/profile/profile_recycledItems/profile_recycledItems_info/recycleItemInfo.html"*/'<ion-header>\n    <ion-navbar>\n        <ion-title>Detalles del reciclaje</ion-title>\n    </ion-navbar>\n</ion-header>\n\n<ion-content>\n    <ion-grid style="height: 97%;">\n        <ion-row style="height: 100%;">\n            <ion-col style="height: 100%;">\n                <ion-card *ngIf="recycleItem" style="height: 100%;">\n                    <ion-card-header>{{ recycleItem.name }}</ion-card-header>\n                    <img [src]="recycleItem.image" onError="this.src = \'assets/imgs/quieroReciclar.png\'" style="max-height: 75%;" />\n                    <ion-card-content>\n                        <p>Tipo: {{ getItemType(recycleItem.itemType.id) }}</p>\n                        <p>Reciclado el: {{ recycleItem.createdDate | date: \'dd/MM/yyyy H:mm\'}}</p>\n                    </ion-card-content>\n                </ion-card>\n            </ion-col>\n        </ion-row>\n    </ion-grid>\n</ion-content>'/*ion-inline-end:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/profile/profile_recycledItems/profile_recycledItems_info/recycleItemInfo.html"*/
         }),
         __param(4, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["z" /* Inject */])(__WEBPACK_IMPORTED_MODULE_4__app_app_config__["b" /* APP_CONFIG_TOKEN */])),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavParams */],
-            __WEBPACK_IMPORTED_MODULE_2__angular_http__["b" /* Http */],
-            __WEBPACK_IMPORTED_MODULE_5__providers_session__["a" /* SessionProvider */],
-            __WEBPACK_IMPORTED_MODULE_6__providers_utils__["a" /* UtilsProvider */], Object, __WEBPACK_IMPORTED_MODULE_3__providers_notifications__["a" /* NotificationProvider */]])
+        __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavParams */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavParams */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_http__["b" /* Http */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_5__providers_session__["a" /* SessionProvider */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__providers_session__["a" /* SessionProvider */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_6__providers_utils__["a" /* UtilsProvider */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_6__providers_utils__["a" /* UtilsProvider */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_4__app_app_config__["ApplicationConfig"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__app_app_config__["ApplicationConfig"]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_3__providers_notifications__["a" /* NotificationProvider */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__providers_notifications__["a" /* NotificationProvider */]) === "function" && _f || Object])
     ], recycleItemInfoPage);
     return recycleItemInfoPage;
+    var _a, _b, _c, _d, _e, _f;
 }());
 
 //# sourceMappingURL=recycleItemInfo.js.map
@@ -1764,26 +1744,22 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 
 var myRecycledItemsPage = (function () {
     function myRecycledItemsPage(http, config, navCtrl, sessionProvider) {
+        var _this = this;
         this.http = http;
         this.config = config;
         this.navCtrl = navCtrl;
         this.sessionProvider = sessionProvider;
+        this.recycleItems = [];
         this.showLoadingMsg = true;
         this.errorLoadingContent = false;
-        this.recycleItems = [];
-        this.getRecycleItems();
+        this.sessionProvider.getSession().then(function (user) {
+            _this.user = user;
+            _this.getRecycleItems();
+        }, function (error) {
+            _this.showLoadingMsg = false;
+            _this.errorLoadingContent = true;
+        });
     }
-    myRecycledItemsPage.prototype.ionViewDidLoad = function () {
-        this.recycleItemHTML =
-            "<ion-card><ion-item>" +
-                "<ion-avatar item-start>" +
-                "<img src='img / marty - avatar.png'>" +
-                "</ion-avatar>" +
-                "Item Name" +
-                "<p>itemType</p>" +
-                "<!--{{ user.createdDate | date: 'dd/MM/yyyy H:mm'}}-->" +
-                "</ion-item></ion-card>";
-    };
     myRecycledItemsPage.prototype.getItemType = function (itemTypeId) {
         var out = "Desconocido";
         if (__WEBPACK_IMPORTED_MODULE_1__models_typeRecicle__["a" /* TypeRecycle */][itemTypeId]) {
@@ -1794,22 +1770,17 @@ var myRecycledItemsPage = (function () {
     myRecycledItemsPage.prototype.getRecycleItems = function () {
         var _this = this;
         var status;
-        this.sessionProvider.getSession().then(function (user) {
-            _this.http.get(_this.config.apiEndpoint + "/users/" + user.id + "/recycleItems?token=" + user.accessToken).timeout(_this.config.defaultTimeoutTime).subscribe(function (res) {
-                status = res.status;
-                if (status === 200) {
-                    var recycleItemTempList = res.json();
-                    _this.recycleItems = _this.readRecycleItems(recycleItemTempList);
-                }
-                else {
-                    _this.errorLoadingContent = true;
-                }
-                _this.showLoadingMsg = false;
-            }, function (error) {
-                _this.showLoadingMsg = false;
+        this.http.get(this.config.apiEndpoint + "/users/private/" + this.user.id + "/recycleItems?page=0&perPage=2&token=" + this.user.accessToken).timeout(this.config.defaultTimeoutTime).subscribe(function (res) {
+            status = res.status;
+            if (status === 200) {
+                var recycleItemTempList = res.json();
+                _this.recycleItems = _this.readRecycleItems(recycleItemTempList);
+            }
+            else {
                 _this.errorLoadingContent = true;
-            });
-        }).catch(function (error) {
+            }
+            _this.showLoadingMsg = false;
+        }, function (error) {
             _this.showLoadingMsg = false;
             _this.errorLoadingContent = true;
         });
@@ -1836,13 +1807,13 @@ var myRecycledItemsPage = (function () {
     };
     myRecycledItemsPage = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
-            selector: 'page-myRecycledItems',template:/*ion-inline-start:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/profile/profile_recycledItems/myRecycledItems.html"*/'<ion-grid style="height: 100%">\n\n    <div *ngIf="recycleItems?.length > 0;else recycleItemsNotFound">\n        <ion-row justify-content-center align-items-center style="height: 100%">\n            <ion-col>\n                <div *ngFor="let recycleItem of recycleItems">\n                    <ion-card (click)="showRecycleItemInfo(recycleItem.id)">\n                        <ion-item>\n                            <ion-avatar item-start>\n                                <img src="{{recycleItem.image}}">\n                            </ion-avatar>\n                            {{recycleItem.name}}\n                            <p>{{ getItemType(recycleItem.itemType.id) }} - {{ recycleItem.createdDate | date: \'dd/MM/yyyy H:mm\'}}\n                            </p>\n                        </ion-item>\n                    </ion-card>\n                </div>\n            </ion-col>\n        </ion-row>\n    </div>\n\n</ion-grid>\n\n\n<ng-template #recycleItemsNotFound>\n    <ion-row align-items-center text-center style="height: 100%">\n        <ion-col>\n            <div *ngIf="showLoadingMsg == true; else showLoadingResult">\n                <h5>Cargando...</h5>\n            </div>\n            <ng-template #showLoadingResult>\n                <div *ngIf="errorLoadingContent == true; else showNoRecycledItemsFound">\n                    <div>\n                        <p>Ha habido algún problema</p>\n                        <h5 style="font-weight: bold">Intentalo de nuevo en unos minutos</h5>\n                    </div>\n                </div>\n                <ng-template #showNoRecycledItemsFound>\n                    <div>\n                        <p>Todavía no has reciclado nada</p>\n                        <h5 style="font-weight: bold">¡A qué esperas!</h5>\n                    </div>\n                </ng-template>\n            </ng-template>\n        </ion-col>\n    </ion-row>\n</ng-template>'/*ion-inline-end:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/profile/profile_recycledItems/myRecycledItems.html"*/
+            selector: 'page-myRecycledItems',template:/*ion-inline-start:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/profile/profile_recycledItems/myRecycledItems.html"*/'<ion-grid style="height: 100%">\n\n    <div *ngIf="recycleItems?.length > 0;else recycleItemsNotFound">\n        <ion-row justify-content-center align-items-center style="height: 100%">\n            <ion-col>\n                <div *ngFor="let recycleItem of recycleItems">\n                    <ion-card (click)="showRecycleItemInfo(recycleItem.id)">\n                        <ion-item class="recycleItemIonItem">\n                            <ion-avatar item-start>\n                                <img src="{{recycleItem.image}}" onError="this.src = \'assets/imgs/quieroReciclar.png\'">\n                            </ion-avatar>\n                            {{recycleItem.name}}\n                            <p>{{ getItemType(recycleItem.itemType.id) }} - {{ recycleItem.createdDate | date: \'dd/MM/yyyy H:mm\'}}\n                            </p>\n                        </ion-item>\n                    </ion-card>\n                </div>\n            </ion-col>\n        </ion-row>\n    </div>\n\n</ion-grid>\n\n<ion-infinite-scroll (ionInfinite)="doInfinite($event)" *ngIf="page < totalPage">\n    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data..."></ion-infinite-scroll-content>\n</ion-infinite-scroll>\n\n<ng-template #recycleItemsNotFound>\n    <ion-row align-items-center text-center style="height: 100%">\n        <ion-col>\n            <div *ngIf="showLoadingMsg == true; else showLoadingResult">\n                <h5>Cargando...</h5>\n            </div>\n            <ng-template #showLoadingResult>\n                <div *ngIf="errorLoadingContent == true; else showNoRecycledItemsFound">\n                    <div>\n                        <p>Ha habido algún problema</p>\n                        <h5 style="font-weight: bold">Intentalo de nuevo en unos minutos</h5>\n                    </div>\n                </div>\n                <ng-template #showNoRecycledItemsFound>\n                    <div>\n                        <p>Todavía no has reciclado nada</p>\n                        <h5 style="font-weight: bold">¡A qué esperas!</h5>\n                    </div>\n                </ng-template>\n            </ng-template>\n        </ion-col>\n    </ion-row>\n</ng-template>'/*ion-inline-end:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/profile/profile_recycledItems/myRecycledItems.html"*/
         }),
         __param(1, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["z" /* Inject */])(__WEBPACK_IMPORTED_MODULE_3__app_app_config__["b" /* APP_CONFIG_TOKEN */])),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2__angular_http__["b" /* Http */], Object, __WEBPACK_IMPORTED_MODULE_6_ionic_angular__["i" /* NavController */],
-            __WEBPACK_IMPORTED_MODULE_4__providers_session__["a" /* SessionProvider */]])
+        __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_http__["b" /* Http */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3__app_app_config__["ApplicationConfig"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__app_app_config__["ApplicationConfig"]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_6_ionic_angular__["i" /* NavController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_6_ionic_angular__["i" /* NavController */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_4__providers_session__["a" /* SessionProvider */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__providers_session__["a" /* SessionProvider */]) === "function" && _d || Object])
     ], myRecycledItemsPage);
     return myRecycledItemsPage;
+    var _a, _b, _c, _d;
 }());
 
 //# sourceMappingURL=myRecycledItems.js.map
