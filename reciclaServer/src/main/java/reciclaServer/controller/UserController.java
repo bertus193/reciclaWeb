@@ -70,12 +70,14 @@ public class UserController {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
 
-            user.setId(id);
 
-            Position position = user.getLastPosition();
+            Position position = currentUser.getLastPosition();
 
-            if (user.getLastPosition().getId() == -1) {
+            if (currentUser.getLastPosition() == null) {
                 position = new Position(user.getLastPosition().getLatitude(), user.getLastPosition().getLongitude());
+            } else {
+                position.setLatitude(user.getLastPosition().getLatitude());
+                position.setLongitude(user.getLastPosition().getLongitude());
             }
 
             user.setLastPosition(positionService.savePosition(position));
