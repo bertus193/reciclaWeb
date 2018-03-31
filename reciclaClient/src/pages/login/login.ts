@@ -88,37 +88,57 @@ export class LoginPage {
 
                     console.log('Error logging into Facebook', e)
                     if (this.config.DEBUG_MODE) {
-
-                        var user: User = {
-                            id: -1,
-                            email: 'debug@debug.com',
-                            name: 'Debug',
-                            fullName: 'Debug user',
-                            profilePicture: 'https://keluro.com/images/Blog/Debug.jpg',
-                            accessToken: 'DEBUG_MODE',
-                            recycleItems: [],
-                            createdDate: new Date(),
-                            lastPosition: null
-                        }
-
-                        return this.findOrCreateUser(user).timeout(this.config.defaultTimeoutTime).map((res: any) => {
-                            if (res.value != null) {
-                                user = res.value
-                            } else {
-                                user = res
-                            }
-                            return user
-                        }).catch(error => {
-                            return Observable.throw("[findOrCreateUser()] ->" + error)
-                        })
-
-
+                        return this.loginInDebugMode()
                     } else {
                         return null
                     }
                 }).catch(error => {
                     return Observable.throw("[login()] ->" + error)
                 });
+    }
+
+    loginInDebugMode() {
+        var user: User = {
+            id: -1,
+            email: 'debug@debug.com',
+            name: 'Debug',
+            fullName: 'Debug user',
+            profilePicture: 'https://keluro.com/images/Blog/Debug.jpg',
+            accessToken: 'DEBUG_MODE',
+            recycleItems: [],
+            createdDate: new Date(),
+            lastPosition: null
+        }
+
+        return this.findOrCreateUser(user).timeout(this.config.defaultTimeoutTime).map((res: any) => {
+            if (res.value != null) {
+                user = res.value
+            } else {
+                user = res
+            }
+            return user
+        }).catch(error => {
+            return Observable.throw("[findOrCreateUser()] ->" + error)
+        })
+    }
+
+    doFbLoginInDebugMode() {
+        if (this.config.DEBUG_MODE) {
+            this.loading = this.loadingCtrl.create({
+                content: 'Iniciando sesión...'
+            });
+            this.loading.present()
+            this.loginInDebugMode().subscribe(user => {
+                this.loading.dismissAll()
+                if (user != null) {
+                    this.sessionProvider.updateSession(user)
+                    this.app.getRootNavs()[0].setRoot(TabsPage)
+                }
+            }, error => {
+                this.loading.dismissAll()
+                this.notificationProvider.presentTopToast(this.config.defaultTimeoutMsg);
+            })
+        }
     }
 
     findOrCreateUser(user: User): Observable<User> {

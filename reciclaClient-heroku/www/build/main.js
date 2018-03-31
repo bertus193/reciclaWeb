@@ -105,28 +105,7 @@ var LoginPage = (function () {
         }).catch(function (e) {
             console.log('Error logging into Facebook', e);
             if (_this.config.DEBUG_MODE) {
-                var user = {
-                    id: -1,
-                    email: 'debug@debug.com',
-                    name: 'Debug',
-                    fullName: 'Debug user',
-                    profilePicture: 'https://keluro.com/images/Blog/Debug.jpg',
-                    accessToken: 'DEBUG_MODE',
-                    recycleItems: [],
-                    createdDate: new Date(),
-                    lastPosition: null
-                };
-                return _this.findOrCreateUser(user).timeout(_this.config.defaultTimeoutTime).map(function (res) {
-                    if (res.value != null) {
-                        user = res.value;
-                    }
-                    else {
-                        user = res;
-                    }
-                    return user;
-                }).catch(function (error) {
-                    return __WEBPACK_IMPORTED_MODULE_6_rxjs_Rx__["Observable"].throw("[findOrCreateUser()] ->" + error);
-                });
+                return _this.loginInDebugMode();
             }
             else {
                 return null;
@@ -134,6 +113,49 @@ var LoginPage = (function () {
         }).catch(function (error) {
             return __WEBPACK_IMPORTED_MODULE_6_rxjs_Rx__["Observable"].throw("[login()] ->" + error);
         });
+    };
+    LoginPage.prototype.loginInDebugMode = function () {
+        var user = {
+            id: -1,
+            email: 'debug@debug.com',
+            name: 'Debug',
+            fullName: 'Debug user',
+            profilePicture: 'https://keluro.com/images/Blog/Debug.jpg',
+            accessToken: 'DEBUG_MODE',
+            recycleItems: [],
+            createdDate: new Date(),
+            lastPosition: null
+        };
+        return this.findOrCreateUser(user).timeout(this.config.defaultTimeoutTime).map(function (res) {
+            if (res.value != null) {
+                user = res.value;
+            }
+            else {
+                user = res;
+            }
+            return user;
+        }).catch(function (error) {
+            return __WEBPACK_IMPORTED_MODULE_6_rxjs_Rx__["Observable"].throw("[findOrCreateUser()] ->" + error);
+        });
+    };
+    LoginPage.prototype.doFbLoginInDebugMode = function () {
+        var _this = this;
+        if (this.config.DEBUG_MODE) {
+            this.loading = this.loadingCtrl.create({
+                content: 'Iniciando sesión...'
+            });
+            this.loading.present();
+            this.loginInDebugMode().subscribe(function (user) {
+                _this.loading.dismissAll();
+                if (user != null) {
+                    _this.sessionProvider.updateSession(user);
+                    _this.app.getRootNavs()[0].setRoot(__WEBPACK_IMPORTED_MODULE_3__tabs_tabs__["a" /* TabsPage */]);
+                }
+            }, function (error) {
+                _this.loading.dismissAll();
+                _this.notificationProvider.presentTopToast(_this.config.defaultTimeoutMsg);
+            });
+        }
     };
     LoginPage.prototype.findOrCreateUser = function (user) {
         var _this = this;
@@ -193,7 +215,7 @@ var LoginPage = (function () {
     };
     LoginPage = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
-            selector: 'page-login',template:/*ion-inline-start:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/login/login.html"*/'<ion-content>\n    <ion-grid style="height: 100%">\n        <ion-row align-items-center text-center style="height: 100%">\n            <ion-col>\n                <h2>{{ config.appName }}</h2>\n                <p>\n                    Proyecto reciclaje TFG en la universidad de Alicante.\n                </p>\n\n                <ion-col class="login-button">\n                    <button ion-button block (click)="doFbLogin()">Facebook Login</button>\n                </ion-col>\n            </ion-col>\n        </ion-row>\n    </ion-grid>\n</ion-content>'/*ion-inline-end:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/login/login.html"*/,
+            selector: 'page-login',template:/*ion-inline-start:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/login/login.html"*/'<ion-content>\n    <ion-grid style="height: 100%">\n        <ion-row align-items-center text-center style="height: 100%">\n            <ion-col>\n                <h2>{{ config.appName }}</h2>\n                <p>\n                    Proyecto reciclaje TFG en la universidad de Alicante.\n                </p>\n\n                <ion-col class="login-button">\n                    <button ion-button block (click)="doFbLogin()">Facebook Login</button>\n                    <button ion-button block color="dark" (click)="doFbLoginInDebugMode()">Debug Login</button>\n                </ion-col>\n            </ion-col>\n        </ion-row>\n    </ion-grid>\n</ion-content>'/*ion-inline-end:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/login/login.html"*/,
         }),
         __param(0, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["z" /* Inject */])(__WEBPACK_IMPORTED_MODULE_9__app_app_config__["b" /* APP_CONFIG_TOKEN */])),
         __metadata("design:paramtypes", [Object, __WEBPACK_IMPORTED_MODULE_1__providers_session__["a" /* SessionProvider */],
