@@ -2,12 +2,10 @@ package reciclaServer.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 @Configuration
-@EnableWebMvc
 public class AppConfig extends WebMvcConfigurerAdapter {
 
     @Bean
@@ -21,7 +19,7 @@ public class AppConfig extends WebMvcConfigurerAdapter {
                 "/users/private/{id}/recycleItems",
                 "/recycleItems/private",
                 "/users/private/{id}",
-                "/recycleItems/private/{id}/"
+                "/recycleItems/private/{id}"
         );
     }
 }
