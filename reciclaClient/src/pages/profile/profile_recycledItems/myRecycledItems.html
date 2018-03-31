@@ -15,15 +15,14 @@
                         </ion-item>
                     </ion-card>
                 </div>
+                <ion-infinite-scroll (ionInfinite)="doInfinite($event)" *ngIf="page < totalPages">
+                    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Cargando más datos..."></ion-infinite-scroll-content>
+                </ion-infinite-scroll>
             </ion-col>
         </ion-row>
     </div>
 
 </ion-grid>
-
-<ion-infinite-scroll (ionInfinite)="doInfinite($event)" *ngIf="page < totalPage">
-    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data..."></ion-infinite-scroll-content>
-</ion-infinite-scroll>
 
 <ng-template #recycleItemsNotFound>
     <ion-row align-items-center text-center style="height: 100%">

@@ -80,7 +80,6 @@ export class RecyclePage {
         let myPosition: Position
         let GPSoptions = { timeout: this.config.defaultTimeoutTime, enableHighAccuracy: true, maximumAge: 100 };
         this.geolocation.getCurrentPosition(GPSoptions).then(position => {
-
             myPosition = new Position(-1, position.coords.latitude, position.coords.longitude)
             if (this.user.lastPosition != null) {
                 myPosition.id = this.user.lastPosition.id

@@ -125,7 +125,7 @@ export class MapPage {
                 })
             });
             this.recycleItem.storage = this.recycleItem.storage.id
-            this.http.post(this.config.apiEndpoint + "/recycleItems/private/?token=" + user.accessToken, JSON.stringify(this.recycleItem), options).subscribe(res => {
+            this.http.post(this.config.apiEndpoint + "/recycleItems/private?token=" + user.accessToken, JSON.stringify(this.recycleItem), options).subscribe(res => {
                 var status = res.status;
                 if (status === 201) {
                     this.recycledAlready = true
@@ -191,7 +191,7 @@ export class MapPage {
 
         for (let type in TypeRecycle) {
             if (isNaN(Number(type))) {
-                if (this.utilsProvider.getItemType(this.recycleItem.itemType) == type) {
+                if (this.getItemType(this.recycleItem.itemType) == type) {
                     alert.addInput({
                         type: 'radio',
                         label: type,
@@ -218,7 +218,7 @@ export class MapPage {
                     content: 'Buscando punto más cercano...'
                 });
                 this.loading.present()
-                this.recycleItem.itemType = this.utilsProvider.getItemType(data)
+                this.recycleItem.itemType = this.getItemType(data)
                 this.utilsProvider.getNearestStoragePointByItemType(this.myPosition, this.recycleItem.itemType).timeout(this.config.defaultTimeoutTime).subscribe(
                     result => {
                         if (result.status == 200) {
@@ -247,5 +247,9 @@ export class MapPage {
         popover.present({
             ev: myEvent
         });
+    }
+
+    getItemType(itemTypeId: (number | string)): (number | string) {
+        return this.utilsProvider.getItemType(itemTypeId)
     }
 }

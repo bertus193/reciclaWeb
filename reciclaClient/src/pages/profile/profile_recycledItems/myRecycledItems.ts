@@ -21,15 +21,27 @@ export class myRecycledItemsPage {
     showLoadingMsg = true
     errorLoadingContent = false
 
+    page: number = 0
+    perPage: number = 10
+    totalPages: number
+    totalElements: number
+
     constructor(
         private http: Http,
         @Inject(APP_CONFIG_TOKEN) private config: ApplicationConfig,
         private navCtrl: NavController,
         private sessionProvider: SessionProvider,
     ) {
+        this.perPage = this.config.itemsPerPage
+
         this.sessionProvider.getSession().then((user: User) => {
             this.user = user
-            this.getRecycleItems();
+            this.getRecycleItems().then((res: boolean) => {
+                this.showLoadingMsg = false
+                if (res == false) {
+                    this.errorLoadingContent = true
+                }
+            });
         }, error => {
             this.showLoadingMsg = false
             this.errorLoadingContent = true
@@ -47,19 +59,26 @@ export class myRecycledItemsPage {
     getRecycleItems() {
         var status: number
 
-        this.http.get(this.config.apiEndpoint + "/users/private/" + this.user.id + "/recycleItems?page=0&perPage=2&token=" + this.user.accessToken).timeout(this.config.defaultTimeoutTime).subscribe(res => {
-            status = res.status
-            if (status === 200) {
-                var recycleItemTempList = res.json();
-                this.recycleItems = this.readRecycleItems(recycleItemTempList)
+        return new Promise(resolve => {
+            this.http.get(this.config.apiEndpoint + "/users/private/" + this.user.id + "/recycleItems?page=" + this.page + "&perPage=" + this.perPage + "&token=" + this.user.accessToken).timeout(this.config.defaultTimeoutTime).subscribe(res => {
+                status = res.status
+                if (status === 200) {
+                    var resJson = res.json();
 
-            } else {
-                this.errorLoadingContent = true
-            }
-            this.showLoadingMsg = false
-        }, error => {
-            this.showLoadingMsg = false
-            this.errorLoadingContent = true
+                    var tempRecycleList = this.readRecycleItems(resJson.content)
+                    this.totalPages = resJson.totalPages
+                    this.totalElements = resJson.totalElements
+
+                    for (var i = 0; i < tempRecycleList.length; i++) {
+                        this.recycleItems.push(tempRecycleList[i])
+                    }
+                    resolve(true)
+                } else {
+                    resolve(false)
+                }
+            }, error => {
+                resolve(false)
+            })
         })
 
     }
@@ -75,6 +94,14 @@ export class myRecycledItemsPage {
             }
         }
         return recycleItemList;
+    }
+
+    doInfinite(infiniteScroll: any) {
+        this.page += 1;
+        this.getRecycleItems().then((res: boolean) => {
+            infiniteScroll.complete();
+        });
+
     }
 
     showRecycleItemInfo(id: number) {

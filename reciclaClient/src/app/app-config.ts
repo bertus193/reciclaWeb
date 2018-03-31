@@ -9,6 +9,7 @@ export interface ApplicationConfig {
     defaultTimeoutMsg: string
     defaultImageDirectory: string
     googleCloudVisionAPIKey: string
+    itemsPerPage: number //Pagination list limit
 }
 
 // Configuration values for our app
@@ -20,7 +21,8 @@ export const APP_CONFIG: ApplicationConfig = {
     defaultTimeoutTime: 10000,
     defaultTimeoutMsg: 'Parece que ha habido algún problema, prueba en unos minutos.',
     defaultImageDirectory: 'assets/imgs/icons/recycle.png',
-    googleCloudVisionAPIKey: 'AIzaSyCVl9Ien_9KOFEN197dPqklyIJ7ad1z44k'
+    googleCloudVisionAPIKey: 'AIzaSyCVl9Ien_9KOFEN197dPqklyIJ7ad1z44k',
+    itemsPerPage: 10
 
 };
 

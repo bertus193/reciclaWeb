@@ -65,7 +65,7 @@ export class UtilsProvider {
     public getZoomLevel(distance: number) {
         var radius = distance / 2;
         var scale = radius / 500;
-        var zoomLevel = Math.round(16 - Math.log(scale) / Math.log(2));
+        var zoomLevel = Math.floor(16 - Math.log(scale) / Math.log(2));
         return zoomLevel;
     }
 
