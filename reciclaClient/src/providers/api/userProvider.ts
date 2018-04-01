@@ -1,6 +1,5 @@
 import { Injectable, Inject } from '@angular/core';
 import { Http, RequestOptions, Headers } from '@angular/http';
-import 'rxjs/add/operator/map';
 import { ApplicationConfig, APP_CONFIG_TOKEN } from '../../app/app-config';
 import { SessionProvider } from '../session';
 import { User } from '../../models/user';
@@ -21,14 +20,10 @@ export class UserProvider {
         @Inject(APP_CONFIG_TOKEN) private config: ApplicationConfig) { }
 
 
-    public saveUser(user: User, token: string = '') {
+    public saveUser(user: User, token: string) {
         user.recycleItems = null
-        var saveUserToken = user.accessToken
-        if (token != '') {
-            saveUserToken = token
-        }
         this.sessionProvider.updateSession(user)
-        return this.http.put(this.config.apiEndpoint + "/users/private/" + user.id + "?token=" + saveUserToken, JSON.stringify(user), this.requestJsonOptions).timeout(this.config.defaultTimeoutTime)
+        return this.http.put(this.config.apiEndpoint + "/users/private/" + user.id + "?token=" + token, JSON.stringify(user), this.requestJsonOptions).timeout(this.config.defaultTimeoutTime)
     }
 
     public createUser(user: User) {

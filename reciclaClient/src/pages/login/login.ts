@@ -75,7 +75,7 @@ export class LoginPage {
                         createdDate: null,
                         lastPosition: null
                     }
-                    return this.findOrCreateUser(user).map((res: any) => {
+                    return this.findAndUpdateOrCreateUser(user).map((res: any) => {
                         if (res.value != null) {
                             user = res.value
                         } else {
@@ -105,7 +105,7 @@ export class LoginPage {
             lastPosition: null
         }
 
-        return this.findOrCreateUser(user).map((res: any) => {
+        return this.findAndUpdateOrCreateUser(user).map((res: any) => {
             if (res.value != null) {
                 user = res.value
             } else {
@@ -113,7 +113,7 @@ export class LoginPage {
             }
             return user
         }).catch(error => {
-            return Observable.throw("[findOrCreateUser()] ->" + error)
+            return Observable.throw("[findAndUpdateOrCreateUser()] ->" + error)
         })
     }
 
@@ -136,7 +136,7 @@ export class LoginPage {
         }
     }
 
-    findOrCreateUser(fbUser: User): Observable<User> {
+    findAndUpdateOrCreateUser(fbUser: User): Observable<User> {
         return this.findUserByEmail(fbUser.email).map(
             foundUser => {
                 if (foundUser.status == 200) {
@@ -170,7 +170,7 @@ export class LoginPage {
                             return Observable.of(null);
                         }
                     }).catch(error => {
-                        return Observable.throw("[findOrCreateUser] -> " + error)
+                        return Observable.throw("[findAndUpdateOrCreateUser] -> " + error)
                     })
                 }
                 else {

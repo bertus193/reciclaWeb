@@ -1,11 +1,10 @@
-import { Component, Inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { NavParams } from 'ionic-angular';
 import { RecycleItem } from '../../../../models/recycleItem';
-import { Http } from '@angular/http';
-import { APP_CONFIG_TOKEN, ApplicationConfig } from '../../../../app/app-config';
 import { SessionProvider } from '../../../../providers/session';
 import { User } from '../../../../models/user';
 import { UtilsProvider } from '../../../../providers/utils';
+import { RecycleItemsProvider } from '../../../../providers/api/recycleItemsProvider';
 
 @Component({
     selector: 'page-recycleItemInfo',
@@ -21,10 +20,9 @@ export class recycleItemInfoPage {
 
     constructor(
         private navParams: NavParams,
-        private http: Http,
         private sessionProvider: SessionProvider,
         private utilsProvider: UtilsProvider,
-        @Inject(APP_CONFIG_TOKEN) private config: ApplicationConfig
+        private recycleItemsProvider: RecycleItemsProvider
     ) {
         this.recycleItemId = this.navParams.get("recycleItemId");
     }
@@ -33,7 +31,7 @@ export class recycleItemInfoPage {
         var status: number
 
         this.sessionProvider.getSession().then((user: User) => {
-            this.http.get(this.config.apiEndpoint + "/recycleItems/private/" + this.recycleItemId + "?token=" + user.accessToken).timeout(this.config.defaultTimeoutTime).subscribe(res => {
+            this.recycleItemsProvider.getRecycleItemById(this.recycleItemId, user.accessToken).subscribe(res => {
                 status = res.status
 
                 if (status === 200) {

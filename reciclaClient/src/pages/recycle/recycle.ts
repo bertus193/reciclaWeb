@@ -8,7 +8,6 @@ import { Geolocation } from '@ionic-native/geolocation';
 import { LocationAccuracy } from '@ionic-native/location-accuracy';
 import { ApplicationConfig, APP_CONFIG_TOKEN } from '../../app/app-config';
 
-import { Http, RequestOptions, Headers } from '@angular/http';
 import { Observable } from 'rxjs/Rx'
 import 'rxjs/add/operator/map'
 
@@ -47,7 +46,6 @@ export class RecyclePage {
         private loadingCtrl: LoadingController,
         private geolocation: Geolocation,
         private locationAccuracy: LocationAccuracy,
-        private http: Http,
         private alertCtrl: AlertController,
         private notificationProvider: NotificationProvider,
         private googleCloudServiceProvider: GoogleCloudServiceProvider,
@@ -92,7 +90,7 @@ export class RecyclePage {
                 myPosition.id = this.user.lastPosition.id
             }
             this.user.lastPosition = position
-            this.userProvider.saveUser(this.user).subscribe(res => {
+            this.userProvider.saveUser(this.user, this.user.accessToken).subscribe(res => {
                 this.goToMapPage(myPosition)
             }, error => { //saveUserPosition
                 this.loading.dismiss()
@@ -290,12 +288,7 @@ export class RecyclePage {
     }
 
     public getTypeFromDB(labelResponseList): Observable<boolean> {
-        var options = new RequestOptions({
-            headers: new Headers({
-                'Content-Type': 'application/json'
-            })
-        });
-        return this.http.post(this.config.apiEndpoint + '/itemTypeName/labelAnnotations', JSON.stringify(labelResponseList), options).timeout(this.config.defaultTimeoutTime).map(res => {
+        return this.googleCloudServiceProvider.getLabelAnnotations(labelResponseList).map(res => {
             this.temporalName = res.json().description
             this.recycleItem.itemType = this.getItemType(res.json().itemType.type, 'EN')
             return true

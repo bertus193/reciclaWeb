@@ -12,7 +12,6 @@ import {
 } from '@ionic-native/google-maps';
 import { Position } from '../../../models/position';
 import { NotificationProvider } from '../../../providers/notifications';
-import { Http, RequestOptions, Headers } from '@angular/http';
 import { ApplicationConfig, APP_CONFIG_TOKEN } from '../../../app/app-config';
 import { RecycleItem } from '../../../models/recycleItem';
 import { User } from '../../../models/user';
@@ -20,6 +19,7 @@ import { SessionProvider } from '../../../providers/session';
 import { TypeRecycle, TypeRecycle_Color_EN } from '../../../models/typeRecicle';
 import { PopoverMap } from './popover_map/popoverMap';
 import { UtilsProvider } from '../../../providers/utils';
+import { RecycleItemsProvider } from '../../../providers/api/recycleItemsProvider';
 
 @Component({
     selector: 'page-recycleMap',
@@ -42,12 +42,12 @@ export class MapPage {
         private navParams: NavParams,
         private notificationProvider: NotificationProvider,
         private alertCtrl: AlertController,
-        private http: Http,
         private sessionProvider: SessionProvider,
         private popoverCtrl: PopoverController,
         private platform: Platform,
         private utilsProvider: UtilsProvider,
         private loadingCtrl: LoadingController,
+        private recycleItemsProvider: RecycleItemsProvider,
         @Inject(APP_CONFIG_TOKEN) private config: ApplicationConfig) {
 
         this.recycleItem = this.navParams.get("recycleItem");
@@ -126,13 +126,8 @@ export class MapPage {
         var savedStorage: Storage = this.recycleItem.storage
 
         this.sessionProvider.getSession().then((user: User) => {
-            var options = new RequestOptions({
-                headers: new Headers({
-                    'Content-Type': 'application/json'
-                })
-            });
             this.recycleItem.storage = this.recycleItem.storage.id
-            this.http.post(this.config.apiEndpoint + "/recycleItems/private?token=" + user.accessToken, JSON.stringify(this.recycleItem), options).subscribe(res => {
+            this.recycleItemsProvider.saveRecycleItem(this.recycleItem, user.accessToken).subscribe(res => {
                 var status = res.status;
                 if (status === 201) {
                     this.recycledAlready = true

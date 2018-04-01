@@ -2,10 +2,9 @@ import { Component, Inject } from '@angular/core';
 import { RecycleItem } from '../../../models/recycleItem';
 import { TypeRecycle } from '../../../models/typeRecicle';
 
-import { Http } from '@angular/http';
 import { APP_CONFIG_TOKEN, ApplicationConfig } from '../../../app/app-config';
 import { SessionProvider } from '../../../providers/session';
-import 'rxjs/add/operator/map'
+
 import { User } from '../../../models/user';
 import { NavController } from 'ionic-angular';
 import { recycleItemInfoPage } from './profile_recycledItems_info/recycleItemInfo';
@@ -28,7 +27,6 @@ export class myRecycledItemsPage {
     totalElements: number
 
     constructor(
-        private http: Http,
         @Inject(APP_CONFIG_TOKEN) private config: ApplicationConfig,
         private navCtrl: NavController,
         private sessionProvider: SessionProvider,

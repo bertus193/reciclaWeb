@@ -1,11 +1,17 @@
 import { Injectable, Inject } from '@angular/core';
-import { Http } from '@angular/http';
+import { Http, RequestOptions, Headers } from '@angular/http';
 import 'rxjs/add/operator/map';
 import { ApplicationConfig, APP_CONFIG_TOKEN } from '../app/app-config';
 
 
 @Injectable()
 export class GoogleCloudServiceProvider {
+
+    requestJsonOptions = new RequestOptions({
+        headers: new Headers({
+            'Content-Type': 'application/json'
+        })
+    });
 
     constructor(
         public http: Http,
@@ -34,5 +40,9 @@ export class GoogleCloudServiceProvider {
 
     translateToSpanish(text: string) {
         return this.http.get('https://translation.googleapis.com/language/translate/v2?key=' + this.config.googleCloudVisionAPIKey + '&q=' + text + '&target=es').timeout(this.config.defaultTimeoutTime);
+    }
+
+    getLabelAnnotations(labelResponseList) {
+        return this.http.post(this.config.apiEndpoint + '/itemTypeName/labelAnnotations', JSON.stringify(labelResponseList), this.requestJsonOptions).timeout(this.config.defaultTimeoutTime)
     }
 }
