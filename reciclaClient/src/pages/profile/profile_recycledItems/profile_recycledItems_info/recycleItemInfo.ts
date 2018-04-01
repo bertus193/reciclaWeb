@@ -38,8 +38,6 @@ export class recycleItemInfoPage {
 
                 if (status === 200) {
                     this.recycleItem = res.json();
-                    console.log(this.recycleItem.name
-                    )
                 }
                 this.showLoadingMsg = false
             }, error => {

@@ -241,15 +241,15 @@ export class MapPage {
     callGetNearestStoragePointByItemType() {
         this.utilsProvider.getNearestStoragePointByItemType(this.myPosition, this.recycleItem.itemType).timeout(this.config.defaultTimeoutTime).subscribe(result => {
             if (result.status == 200) {
-                this.loading.dismissAll()
+                this.loading.dismiss()
                 this.initMarkers(result.storagePoint.position, "Punto más cercano", TypeRecycle_Color_EN[this.recycleItem.itemType])
             }
             else {
-                this.loading.dismissAll()
+                this.loading.dismiss()
                 this.notificationProvider.presentTopToast('No hay ningún punto de reciclaje cercano.');
             }
         }, error => { // Error undefined desde cordova browser /itemType/undefined/storagePoints
-            this.loading.dismissAll()
+            this.loading.dismiss()
             this.notificationProvider.presentTopToast(this.config.defaultTimeoutMsg)
         })
     }

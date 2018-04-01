@@ -9,6 +9,7 @@ import 'rxjs/add/operator/map'
 import { User } from '../../../models/user';
 import { NavController } from 'ionic-angular';
 import { recycleItemInfoPage } from './profile_recycledItems_info/recycleItemInfo';
+import { UserProvider } from '../../../providers/api/userProvider';
 
 @Component({
     selector: 'page-myRecycledItems',
@@ -31,6 +32,7 @@ export class myRecycledItemsPage {
         @Inject(APP_CONFIG_TOKEN) private config: ApplicationConfig,
         private navCtrl: NavController,
         private sessionProvider: SessionProvider,
+        private userProvider: UserProvider
     ) {
         this.perPage = this.config.itemsPerPage
 
@@ -60,7 +62,7 @@ export class myRecycledItemsPage {
         var status: number
 
         return new Promise(resolve => {
-            this.http.get(this.config.apiEndpoint + "/users/private/" + this.user.id + "/recycleItems?page=" + this.page + "&perPage=" + this.perPage + "&token=" + this.user.accessToken).timeout(this.config.defaultTimeoutTime).subscribe(res => {
+            this.userProvider.getUserRecycleItems(this.user.id, this.user.accessToken, this.page, this.perPage).subscribe(res => {
                 status = res.status
                 if (status === 200) {
                     var resJson = res.json();

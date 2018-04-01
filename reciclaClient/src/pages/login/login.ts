@@ -4,14 +4,14 @@ import { NotificationProvider } from '../../providers/notifications';
 import { TabsPage } from '../tabs/tabs'
 import { App } from 'ionic-angular/components/app/app'
 
-import { Http, RequestOptions, Headers } from '@angular/http'
-import { Observable } from 'rxjs/Rx'
 import { User } from '../../models/user'
 import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
 
+import { Observable } from 'rxjs/Rx'
 import 'rxjs/add/operator/map'
 import { APP_CONFIG_TOKEN, ApplicationConfig } from '../../app/app-config';
 import { LoadingController, Loading } from 'ionic-angular';
+import { UserProvider } from '../../providers/api/userProvider';
 
 
 @Component({
@@ -26,11 +26,12 @@ export class LoginPage {
         @Inject(APP_CONFIG_TOKEN) private config: ApplicationConfig,
         private sessionProvider: SessionProvider,
         private app: App,
-        private http: Http,
         private fb: Facebook,
         private loadingCtrl: LoadingController,
-        private notificationProvider: NotificationProvider
-    ) { }
+        private notificationProvider: NotificationProvider,
+        private userProvider: UserProvider
+    ) {
+    }
 
     doFbLogin() {
         this.loading = this.loadingCtrl.create({
@@ -39,17 +40,17 @@ export class LoginPage {
         this.loading.present()
         this.login().then(res => {
             res.subscribe(user => {
-                this.loading.dismissAll()
+                this.loading.dismiss()
                 if (user != null) {
                     this.sessionProvider.updateSession(user)
                     this.app.getRootNavs()[0].setRoot(TabsPage)
                 }
             }, error => {
-                this.loading.dismissAll()
+                this.loading.dismiss()
                 this.notificationProvider.presentTopToast(this.config.defaultTimeoutMsg);
             })
         }).catch(error => {
-            this.loading.dismissAll()
+            this.loading.dismiss()
             this.notificationProvider.presentTopToast(this.config.defaultTimeoutMsg);
         })
 
@@ -74,7 +75,7 @@ export class LoginPage {
                         createdDate: null,
                         lastPosition: null
                     }
-                    return this.findOrCreateUser(user).timeout(this.config.defaultTimeoutTime).map((res: any) => {
+                    return this.findOrCreateUser(user).map((res: any) => {
                         if (res.value != null) {
                             user = res.value
                         } else {
@@ -85,13 +86,7 @@ export class LoginPage {
                         return Observable.throw("[login()] ->" + error)
                     })
                 })).catch(e => {
-
-                    console.log('Error logging into Facebook', e)
-                    if (this.config.DEBUG_MODE) {
-                        return this.loginInDebugMode()
-                    } else {
-                        return null
-                    }
+                    return null
                 }).catch(error => {
                     return Observable.throw("[login()] ->" + error)
                 });
@@ -110,7 +105,7 @@ export class LoginPage {
             lastPosition: null
         }
 
-        return this.findOrCreateUser(user).timeout(this.config.defaultTimeoutTime).map((res: any) => {
+        return this.findOrCreateUser(user).map((res: any) => {
             if (res.value != null) {
                 user = res.value
             } else {
@@ -129,30 +124,45 @@ export class LoginPage {
             });
             this.loading.present()
             this.loginInDebugMode().subscribe(user => {
-                this.loading.dismissAll()
+                this.loading.dismiss()
                 if (user != null) {
                     this.sessionProvider.updateSession(user)
                     this.app.getRootNavs()[0].setRoot(TabsPage)
                 }
             }, error => {
-                this.loading.dismissAll()
+                this.loading.dismiss()
                 this.notificationProvider.presentTopToast(this.config.defaultTimeoutMsg);
             })
         }
     }
 
-    findOrCreateUser(user: User): Observable<User> {
-        return this.findUserByEmail(user.email).map(
+    findOrCreateUser(fbUser: User): Observable<User> {
+        return this.findUserByEmail(fbUser.email).map(
             foundUser => {
                 if (foundUser.status == 200) {
-                    return foundUser.user
+                    if (this.usersAreDifferent(fbUser, foundUser.user) == true) {
+                        var postToken = foundUser.user.accessToken
+                        foundUser.user.email = fbUser.email
+                        foundUser.user.name = fbUser.name
+                        foundUser.user.fullName = fbUser.fullName
+                        foundUser.user.profilePicture = fbUser.profilePicture
+                        foundUser.user.accessToken = fbUser.accessToken
+                        return this.userProvider.saveUser(foundUser.user, postToken).subscribe(res => {
+                            return foundUser.user
+                        }, error => {
+                            this.notificationProvider.presentTopToast("Error guardando el usuario.")
+                        })
+                    }
+                    else {
+                        return foundUser.user
+                    }
                 } else {
                     return null
                 }
             }).catch(err => {
                 if (err.status === 404) {
 
-                    return this.createUserByFBUser(user).map(res => {
+                    return this.createUserByFBUser(fbUser).map(res => {
                         if (res.status == 201) {
                             return Observable.of(res.user)
                         }
@@ -169,11 +179,21 @@ export class LoginPage {
             });
     }
 
+    usersAreDifferent(fbUser: User, foundUser: User): boolean {
+        var out = false
+        if (fbUser.email != foundUser.email || fbUser.name != foundUser.name ||
+            fbUser.fullName != foundUser.fullName || fbUser.profilePicture != foundUser.profilePicture ||
+            fbUser.accessToken != foundUser.accessToken) {
+            out = true
+        }
+        return out
+    }
+
     findUserByEmail(email: string): Observable<{ user: User, status: number }> {
         var user: User
         var status: number
 
-        return this.http.get(this.config.apiEndpoint + "/users/email/" + email).map(res => {
+        return this.userProvider.findUserByEmail(email).map(res => {
             status = res.status
 
             if (status === 200) {
@@ -189,12 +209,7 @@ export class LoginPage {
     createUserByFBUser(user: User): Observable<{ user: User, status: number }> {
         var user: User
         var status: number
-        let options = new RequestOptions({
-            headers: new Headers({
-                'Content-Type': 'application/json'
-            })
-        });
-        return this.http.post(this.config.apiEndpoint + "/users", JSON.stringify(user), options).map(res => {
+        return this.userProvider.createUser(user).map(res => {
             status = res.status
 
             if (status === 201) {

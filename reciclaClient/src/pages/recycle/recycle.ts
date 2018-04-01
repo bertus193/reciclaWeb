@@ -22,6 +22,7 @@ import { LabelResponse } from '../../models/labelResponse';
 import { RecycleItem } from '../../models/recycleItem';
 import { TypeRecycle, TypeRecycle_EN } from '../../models/typeRecicle';
 import { UtilsProvider } from '../../providers/utils';
+import { UserProvider } from '../../providers/api/userProvider';
 
 @Component({
     selector: 'page-recycle',
@@ -52,6 +53,7 @@ export class RecyclePage {
         private googleCloudServiceProvider: GoogleCloudServiceProvider,
         private utilsProvider: UtilsProvider,
         private sessionProvider: SessionProvider,
+        private userProvider: UserProvider,
         private crop: Crop
     ) {
         this.recycleItem = new RecycleItem();
@@ -89,15 +91,16 @@ export class RecyclePage {
             if (this.user.lastPosition != null) {
                 myPosition.id = this.user.lastPosition.id
             }
-            this.saveUserPosition(this.user, myPosition).subscribe(res => {
+            this.user.lastPosition = position
+            this.userProvider.saveUser(this.user).subscribe(res => {
                 this.goToMapPage(myPosition)
             }, error => { //saveUserPosition
-                this.loading.dismissAll()
+                this.loading.dismiss()
                 this.notificationProvider.presentTopToast(this.config.defaultTimeoutMsg);
             })
 
         }, (error: PositionError) => {
-            this.loading.dismissAll()
+            this.loading.dismiss()
             if (error.code == 3) { //Timeout
                 if (this.user.lastPosition != null) {
                     this.goToMapPage(this.user.lastPosition)
@@ -139,13 +142,13 @@ export class RecyclePage {
             this.crop.crop(fileUri, { quality: 100, targetWidth: 650, targetHeight: 650 }).then((image) => {
                 this.uploadImage(image)
             }, error => { //crop.crop
-                this.loading.dismissAll()
+                this.loading.dismiss()
                 if (error.message != "User cancelled") {
                     this.notificationProvider.presentTopToast('Error en la selección de la imagen.');
                 }
             })
         }).catch(error => { //camera.GetPicture
-            this.loading.dismissAll()
+            this.loading.dismiss()
             if (error != 'No Image Selected') {
                 this.notificationProvider.presentTopToast('Error en la selección de la imagen.');
             }
@@ -168,7 +171,7 @@ export class RecyclePage {
                     }
                 })
         }, err => {
-            this.loading.dismissAll()
+            this.loading.dismiss()
             this.notificationProvider.presentTopToast('Error obteniendo los datos necesarios.')
         });
     }
@@ -320,26 +323,26 @@ export class RecyclePage {
                                 this.loading.setContent("Obteniendo la ubicación del usuario...")
                                 this.getUserPosition()
                             }, err => { // translate
-                                this.loading.dismissAll()
+                                this.loading.dismiss()
                                 this.notificationProvider.presentTopToast("Error interno en la obtención del nombre.")
                             })
                         }
                         else {
-                            this.loading.dismissAll()
+                            this.loading.dismiss()
                         }
                     }, error => { // this.getTypeFromDB
-                        this.loading.dismissAll()
+                        this.loading.dismiss()
                         this.notificationProvider.presentTopToast("Error obteniendo el tipo de objeto")
                     })
                 }
 
             }, err => { // Vision
-                this.loading.dismissAll()
+                this.loading.dismiss()
                 this.notificationProvider.presentTopToast("Error a la hora de utilizar la imagen.")
             })
 
         }).catch(error => { // fileTransfer.upload
-            this.loading.dismissAll()
+            this.loading.dismiss()
             this.notificationProvider.presentTopToast('Error de conexión con el servidor de imágenes.')
         })
     }
@@ -395,30 +398,20 @@ export class RecyclePage {
                         recycleItem: this.recycleItem,
                         myPosition: myPosition
                     })
-                    this.loading.dismissAll()
+                    this.loading.dismiss()
                 }
                 else {
-                    this.loading.dismissAll()
+                    this.loading.dismiss()
                     this.notificationProvider.presentTopToast('No hay ningún punto de reciclaje cercano.');
                 }
             },
             error => { // Error undefined desde cordova browser /itemType/undefined/storagePoints
-                this.loading.dismissAll()
+                this.loading.dismiss()
                 this.notificationProvider.presentTopToast(this.config.defaultTimeoutMsg)
             })
     }
 
-    public saveUserPosition(user: User, position: Position) {
-        user.recycleItems = null
-        user.lastPosition = position
-        this.sessionProvider.updateSession(user)
-        var options = new RequestOptions({
-            headers: new Headers({
-                'Content-Type': 'application/json'
-            })
-        });
-        return this.http.put(this.config.apiEndpoint + "/users/private/" + user.id + "?token=" + user.accessToken, JSON.stringify(user), options).timeout(this.config.defaultTimeoutTime);
-    }
+
 
     public getItemType(itemTypeId: (number | string), lang = 'ES'): (number | string) {
         var out: string = "Desconocido"

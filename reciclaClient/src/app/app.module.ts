@@ -10,7 +10,6 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { Facebook } from '@ionic-native/facebook';
 import { IonicStorageModule } from "@ionic/storage";
-import { SessionProvider } from '../providers/session';
 
 import { HttpModule } from '@angular/http';
 import { Crop } from '@ionic-native/crop';
@@ -24,9 +23,8 @@ import { Camera } from '@ionic-native/camera';
 import { Geolocation } from '@ionic-native/geolocation';
 import { LocationAccuracy } from '@ionic-native/location-accuracy';
 import { GoogleMaps } from '@ionic-native/google-maps'
-import { NotificationProvider } from '../providers/notifications';
-import { GoogleCloudServiceProvider } from '../providers/google';
-import { UtilsProvider } from '../providers/utils';
+
+import { APP_PROVIDERS } from '../providers';
 
 @NgModule({
     declarations: [
@@ -45,14 +43,11 @@ import { UtilsProvider } from '../providers/utils';
         APP_PAGES
     ],
     providers: [
+        APP_PROVIDERS,
         StatusBar,
         SplashScreen,
         Facebook,
         { provide: ErrorHandler, useClass: IonicErrorHandler },
-        SessionProvider,
-        NotificationProvider,
-        GoogleCloudServiceProvider,
-        UtilsProvider,
         { provide: APP_CONFIG_TOKEN, useValue: APP_CONFIG },
         File,
         Transfer,
