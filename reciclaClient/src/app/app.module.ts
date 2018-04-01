@@ -13,6 +13,7 @@ import { IonicStorageModule } from "@ionic/storage";
 import { SessionProvider } from '../providers/session';
 
 import { HttpModule } from '@angular/http';
+import { Crop } from '@ionic-native/crop';
 import { APP_CONFIG, APP_CONFIG_TOKEN } from './app-config';
 
 import { File } from '@ionic-native/file';
@@ -59,7 +60,8 @@ import { UtilsProvider } from '../providers/utils';
         FilePath,
         Geolocation,
         LocationAccuracy,
-        GoogleMaps
+        GoogleMaps,
+        Crop
     ]
 })
 export class AppModule { }

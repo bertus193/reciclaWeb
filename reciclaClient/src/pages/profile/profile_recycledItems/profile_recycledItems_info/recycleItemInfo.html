@@ -5,18 +5,44 @@
 </ion-header>
 
 <ion-content>
-    <ion-grid style="height: 97%;">
-        <ion-row style="height: 100%;">
-            <ion-col style="height: 100%;">
-                <ion-card *ngIf="recycleItem" style="height: 100%;">
-                    <ion-card-header>{{ recycleItem.name }}</ion-card-header>
-                    <img [src]="recycleItem.image" onError="this.src = 'assets/imgs/quieroReciclar.png'" style="max-height: 75%;" />
-                    <ion-card-content>
-                        <p>Tipo: {{ getItemType(recycleItem.itemType.id) }}</p>
-                        <p>Reciclado el: {{ recycleItem.createdDate | date: 'dd/MM/yyyy H:mm'}}</p>
-                    </ion-card-content>
-                </ion-card>
-            </ion-col>
-        </ion-row>
-    </ion-grid>
+    <div *ngIf="recycleItem != null;else recycleItemsNotFound">
+        <ion-grid style="height: 97%;">
+            <ion-row style="height: 100%;">
+                <ion-col style="height: 100%;">
+                    <ion-card *ngIf="recycleItem" style="height: 100%;">
+                        <ion-card-header>{{ recycleItem.name }}</ion-card-header>
+                        <img [src]="recycleItem.image" onError="this.src = 'assets/imgs/quieroReciclar.png'" style="max-height: 75%;" />
+                        <ion-card-content>
+                            <p>Tipo: {{ getItemType(recycleItem.itemType.id) }}</p>
+                            <p>Reciclado el: {{ recycleItem.createdDate | date: 'dd/MM/yyyy H:mm'}}</p>
+                        </ion-card-content>
+                    </ion-card>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+    </div>
 </ion-content>
+
+<ng-template #recycleItemsNotFound>
+    <ion-row align-items-center text-center style="height: 100%">
+        <ion-col>
+            <div *ngIf="showLoadingMsg == true; else showLoadingResult">
+                <h5>Cargando...</h5>
+            </div>
+            <ng-template #showLoadingResult>
+                <div *ngIf="errorLoadingContent == true; else showNoRecycledItemFound">
+                    <div>
+                        <p>Ha habido algún problema</p>
+                        <h5 style="font-weight: bold">Intentalo de nuevo en unos minutos</h5>
+                    </div>
+                </div>
+                <ng-template #showNoRecycledItemFound>
+                    <div>
+                        <p>Todavía no has reciclado nada</p>
+                        <h5 style="font-weight: bold">¡A qué esperas!</h5>
+                    </div>
+                </ng-template>
+            </ng-template>
+        </ion-col>
+    </ion-row>
+</ng-template>

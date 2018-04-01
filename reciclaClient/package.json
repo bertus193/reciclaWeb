@@ -22,6 +22,7 @@
     "@angular/platform-browser-dynamic": "5.0.1",
     "@ionic-native/camera": "4.5.3",
     "@ionic-native/core": "^4.5.3",
+    "@ionic-native/crop": "^4.6.0",
     "@ionic-native/diagnostic": "^4.5.3",
     "@ionic-native/facebook": "4.5.3",
     "@ionic-native/file": "4.5.3",
@@ -43,6 +44,7 @@
     "cordova-browser": "5.0.3",
     "cordova-plugin-actionsheet": "^2.3.3",
     "cordova-plugin-camera": "^4.0.2",
+    "cordova-plugin-crop": "^0.4.0",
     "cordova-plugin-device": "^1.1.4",
     "cordova-plugin-dialogs": "^2.0.1",
     "cordova-plugin-facebook4": "^1.9.1",
@@ -97,7 +99,8 @@
       },
       "cordova-plugin-request-location-accuracy": {},
       "uk.co.workingedge.phonegap.plugin.launchnavigator": {},
-      "com-badrit-base64": {}
+      "com-badrit-base64": {},
+      "cordova-plugin-crop": {}
     },
     "platforms": [
       "android",

@@ -13,3 +13,11 @@ export enum TypeRecycle_EN {
     'Paper' = 4,
     'WritingMaterial' = 5
 }
+
+export enum TypeRecycle_Color_EN {
+    'purple' = 1,
+    'yellow' = 2,
+    'green' = 3,
+    'blue' = 4,
+    'lightblue' = 5
+}

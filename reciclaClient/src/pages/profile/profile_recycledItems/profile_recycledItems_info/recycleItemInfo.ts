@@ -2,7 +2,6 @@ import { Component, Inject } from '@angular/core';
 import { NavParams } from 'ionic-angular';
 import { RecycleItem } from '../../../../models/recycleItem';
 import { Http } from '@angular/http';
-import { NotificationProvider } from '../../../../providers/notifications';
 import { APP_CONFIG_TOKEN, ApplicationConfig } from '../../../../app/app-config';
 import { SessionProvider } from '../../../../providers/session';
 import { User } from '../../../../models/user';
@@ -17,13 +16,15 @@ export class recycleItemInfoPage {
     recycleItemId: number
     recycleItem: RecycleItem
 
+    showLoadingMsg = true
+    errorLoadingContent = false
+
     constructor(
         private navParams: NavParams,
         private http: Http,
         private sessionProvider: SessionProvider,
         private utilsProvider: UtilsProvider,
-        @Inject(APP_CONFIG_TOKEN) private config: ApplicationConfig,
-        private notificationProvider: NotificationProvider
+        @Inject(APP_CONFIG_TOKEN) private config: ApplicationConfig
     ) {
         this.recycleItemId = this.navParams.get("recycleItemId");
     }
@@ -40,11 +41,14 @@ export class recycleItemInfoPage {
                     console.log(this.recycleItem.name
                     )
                 }
+                this.showLoadingMsg = false
             }, error => {
-                this.notificationProvider.presentTopToast("Error obteniendo los detalles del objeto");
+                this.showLoadingMsg = false
+                this.errorLoadingContent = true
             });
         }, err => {
-            this.notificationProvider.presentTopToast('Error obteniendo los datos necesarios.')
+            this.showLoadingMsg = false
+            this.errorLoadingContent = true
         });
     }
 

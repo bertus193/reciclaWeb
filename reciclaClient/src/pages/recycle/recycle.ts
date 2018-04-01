@@ -2,6 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { NavController, LoadingController, ActionSheetController, Loading, AlertController } from 'ionic-angular';
 
 import { Camera, CameraOptions } from '@ionic-native/camera';
+import { Crop } from '@ionic-native/crop';
 import { Transfer, TransferObject, FileUploadOptions } from '@ionic-native/transfer';
 import { Geolocation } from '@ionic-native/geolocation';
 import { LocationAccuracy } from '@ionic-native/location-accuracy';
@@ -34,6 +35,7 @@ export class RecyclePage {
     errorMsg: string = "";
     user: User
     temporalName: string = ""
+    isitemTypeName: boolean = false
 
     constructor(
         @Inject(APP_CONFIG_TOKEN) private config: ApplicationConfig,
@@ -49,7 +51,8 @@ export class RecyclePage {
         private notificationProvider: NotificationProvider,
         private googleCloudServiceProvider: GoogleCloudServiceProvider,
         private utilsProvider: UtilsProvider,
-        private sessionProvider: SessionProvider
+        private sessionProvider: SessionProvider,
+        private crop: Crop
     ) {
         this.recycleItem = new RecycleItem();
     }
@@ -65,6 +68,8 @@ export class RecyclePage {
         this.recycleItem.name = TypeRecycle[this.recycleItem.itemType]
         this.recycleItem.recycleUser = this.user.id
         this.recycleItem.createdDate = new Date()
+        this.isitemTypeName = true
+
         this.getUserPositionButton(); //directly without new button step
     }
 
@@ -111,24 +116,37 @@ export class RecyclePage {
 
 
     public takePicture(sourceType) {
+        this.loading = this.loadingCtrl.create({
+            content: 'Cargando...'
+        });
+        this.loading.present()
 
         var options: CameraOptions = {
-            quality: 20,
-            targetWidth: 450,
-            targetHeight: 450,
+            quality: 100,
             sourceType: sourceType,
             saveToPhotoAlbum: false,
             correctOrientation: true,
+            targetWidth: 900,
+            targetHeight: 900,
             encodingType: this.camera.EncodingType.PNG,
             mediaType: this.camera.MediaType.PICTURE
         };
 
         // Get the data of an image 
         this.camera.getPicture(options).then((imagePath) => {
-            //var image = `data:image/png;base64,${imagePath}`;
-            this.uploadImage(imagePath)
-        }, (err) => { //camera.GetPicture
-            if (err != 'No Image Selected') {
+            var fileUri = 'file://' + imagePath;
+            //var image = `data:image/png;base64,${imagePath}`; //load image on view
+            this.crop.crop(fileUri, { quality: 100, targetWidth: 650, targetHeight: 650 }).then((image) => {
+                this.uploadImage(image)
+            }, error => { //crop.crop
+                this.loading.dismissAll()
+                if (error.message != "User cancelled") {
+                    this.notificationProvider.presentTopToast('Error en la selección de la imagen.');
+                }
+            })
+        }).catch(error => { //camera.GetPicture
+            this.loading.dismissAll()
+            if (error != 'No Image Selected') {
                 this.notificationProvider.presentTopToast('Error en la selección de la imagen.');
             }
 
@@ -228,6 +246,8 @@ export class RecyclePage {
     }
 
     public uploadImage(targetPath) {
+        this.loading.setContent('Subiendo la imagen...')
+
         var date = new Date()
         var filename = this.user.id + "_" + date.getTime() + ".png";
 
@@ -251,11 +271,6 @@ export class RecyclePage {
         };
 
         const fileTransfer: TransferObject = this.transfer.create();
-
-        this.loading = this.loadingCtrl.create({
-            content: 'Subiendo la imagen...'
-        });
-        this.loading.present()
 
         this.upload(targetPath, urlUpload, options, fileTransfer, urlUploadedFiles)
 
@@ -281,6 +296,7 @@ export class RecyclePage {
     public upload(targetPath, urlUpload, options, fileTransfer, urlUploadedFiles) {
         // Use the FileTransfer to upload the image
         fileTransfer.upload(targetPath, urlUpload, options).then(data => {
+            this.notificationProvider.presentAlertOk("He pasado!")
             this.googleCloudServiceProvider.getLabels(urlUploadedFiles).timeout(this.config.defaultTimeoutTime).subscribe((result: any) => {
                 var labelResponseList: LabelResponse[];
                 labelResponseList = result.json().responses[0].labelAnnotations;
@@ -302,7 +318,7 @@ export class RecyclePage {
                         else {
                             this.loading.dismissAll()
                         }
-                    }, error => {
+                    }, error => { // this.getTypeFromDB
                         this.loading.dismissAll()
                         this.notificationProvider.presentTopToast("Error obteniendo el tipo de objeto")
                     })
@@ -313,11 +329,12 @@ export class RecyclePage {
                 this.notificationProvider.presentTopToast("Error a la hora de utilizar la imagen.")
             })
 
-        }, err => { // uploadFile
+        }).catch(error => { // fileTransfer.upload
             this.loading.dismissAll()
-            this.notificationProvider.presentTopToast('Error en el procesado de la imagen.')
-        });
+            this.notificationProvider.presentTopToast('Error de conexión con el servidor de imágenes.')
+        })
     }
+
 
     showRadioModifyItemType(): Promise<boolean> {
         return new Promise((resolve, reject) => {
@@ -365,6 +382,7 @@ export class RecyclePage {
                 if (result.status == 200) {
 
                     this.navCtrl.push(MapPage, {
+                        isitemTypeName: this.isitemTypeName, // false => If take photo/library || true => recycleByItemType
                         recycleItem: this.recycleItem,
                         myPosition: myPosition
                     })
