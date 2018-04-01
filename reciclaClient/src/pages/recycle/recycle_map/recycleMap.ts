@@ -20,7 +20,6 @@ import { SessionProvider } from '../../../providers/session';
 import { TypeRecycle, TypeRecycle_Color_EN } from '../../../models/typeRecicle';
 import { PopoverMap } from './popover_map/popoverMap';
 import { UtilsProvider } from '../../../providers/utils';
-import { GoogleCloudServiceProvider } from '../../../providers/google';
 
 @Component({
     selector: 'page-recycleMap',
@@ -49,7 +48,6 @@ export class MapPage {
         private platform: Platform,
         private utilsProvider: UtilsProvider,
         private loadingCtrl: LoadingController,
-        private googleCloudServiceProvider: GoogleCloudServiceProvider,
         @Inject(APP_CONFIG_TOKEN) private config: ApplicationConfig) {
 
         this.recycleItem = this.navParams.get("recycleItem");
@@ -125,6 +123,8 @@ export class MapPage {
 
     public recycleFinish() {
 
+        var savedStorage: Storage = this.recycleItem.storage
+
         this.sessionProvider.getSession().then((user: User) => {
             var options = new RequestOptions({
                 headers: new Headers({
@@ -141,7 +141,9 @@ export class MapPage {
                 else {
                     this.notificationProvider.presentTopToast("Los datos insertados son incorrectos.")
                 }
+                this.recycleItem.storage = savedStorage
             }, error => {
+                this.recycleItem.storage = savedStorage
                 this.notificationProvider.presentTopToast(this.config.defaultTimeoutMsg)
             })
 

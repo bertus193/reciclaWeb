@@ -16,4 +16,7 @@ ion-icon {
     &[class*="reciclaUA-recyle"] {
         mask-image: url("../assets/imgs/icons/recycle.svg");
     }
+
+    padding-top: 2px !important;
+    height: 22px;   
 }

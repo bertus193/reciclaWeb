@@ -158,42 +158,52 @@ export class RecyclePage {
             this.user = user
             this.locationAccuracy.request(this.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY).then(
                 (resp) => {
-                    let actionSheet = this.actionSheetCtrl.create({
-                        title: 'Sube una foto de lo que desees reciclar',
-                        buttons: [
-                            {
-                                text: 'Cargar foto de la galería',
-                                handler: () => {
-                                    this.takePicture(this.camera.PictureSourceType.PHOTOLIBRARY);
-                                }
-                            },
-                            {
-                                text: 'Tomar una foto',
-                                handler: () => {
-                                    this.takePicture(this.camera.PictureSourceType.CAMERA);
-                                }
-                            },
-                            {
-                                text: 'Reciclar por tipo de objeto',
-                                handler: () => {
-                                    this.presentActionSheetTypeRecycle()
-                                }
-                            },
-                            {
-                                text: 'Cancelar',
-                                role: 'cancel'
-                            }
-                        ]
-                    });
-                    actionSheet.present();
+                    this.actionSheetMenuActions()
                 }).catch((error) => {
-                    this.notificationProvider.presentTopToast('Error en la obtención de los permisos necesarios.');
+                    if (this.config.DEBUG_MODE == true) {
+                        this.actionSheetMenuActions()
+                    }
+                    else {
+                        this.notificationProvider.presentTopToast('Error en la obtención de los permisos necesarios.');
+                    }
                 })
         }, err => {
             this.loading.dismissAll()
             this.notificationProvider.presentTopToast('Error obteniendo los datos necesarios.')
         });
     }
+
+    private actionSheetMenuActions() {
+        let actionSheet = this.actionSheetCtrl.create({
+            title: 'Sube una foto de lo que desees reciclar',
+            buttons: [
+                {
+                    text: 'Cargar foto de la galería',
+                    handler: () => {
+                        this.takePicture(this.camera.PictureSourceType.PHOTOLIBRARY);
+                    }
+                },
+                {
+                    text: 'Tomar una foto',
+                    handler: () => {
+                        this.takePicture(this.camera.PictureSourceType.CAMERA);
+                    }
+                },
+                {
+                    text: 'Reciclar por tipo de objeto',
+                    handler: () => {
+                        this.presentActionSheetTypeRecycle()
+                    }
+                },
+                {
+                    text: 'Cancelar',
+                    role: 'cancel'
+                }
+            ]
+        });
+        actionSheet.present();
+    }
+
     public presentActionSheetTypeRecycle() {
         var typeRecycle: number;
 
@@ -296,7 +306,6 @@ export class RecyclePage {
     public upload(targetPath, urlUpload, options, fileTransfer, urlUploadedFiles) {
         // Use the FileTransfer to upload the image
         fileTransfer.upload(targetPath, urlUpload, options).then(data => {
-            this.notificationProvider.presentAlertOk("He pasado!")
             this.googleCloudServiceProvider.getLabels(urlUploadedFiles).timeout(this.config.defaultTimeoutTime).subscribe((result: any) => {
                 var labelResponseList: LabelResponse[];
                 labelResponseList = result.json().responses[0].labelAnnotations;

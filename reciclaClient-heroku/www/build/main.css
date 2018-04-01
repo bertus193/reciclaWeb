@@ -25678,6 +25678,11 @@ ion-navbar.toolbar {
   min-height: calc(46px + env(safe-area-inset-bottom));
 }
 
+ion-icon {
+  padding-top: 2px !important;
+  height: 22px;
+}
+
 ion-icon[class*="reciclaUA-"] {
   -webkit-mask-size: contain;
   mask-size: contain;
