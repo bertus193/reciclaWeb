@@ -36,4 +36,8 @@ export class UserProvider {
     public getUserRecycleItems(id: number, accessToken: string, page: number, perPage: number) {
         return this.http.get(this.config.apiEndpoint + "/users/private/" + id + "/recycleItems?page=" + page + "&perPage=" + perPage + "&token=" + accessToken).timeout(this.config.defaultTimeoutTime)
     }
+
+    public login(user: User) {
+        return this.http.post(this.config.apiEndpoint + "/users/login", JSON.stringify(user), this.requestJsonOptions).timeout(this.config.defaultTimeoutTime)
+    }
 }

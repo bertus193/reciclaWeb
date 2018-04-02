@@ -105,7 +105,7 @@ export class LoginPage {
         var user: User = {
             id: -1,
             email: this.config.debugUserEmail,
-            password: Math.random().toString(),
+            password: this.config.debugUserPassword,
             name: 'Debug',
             fullName: 'Debug user',
             profilePicture: 'https://keluro.com/images/Blog/Debug.jpg',

@@ -44,7 +44,10 @@ export class myRecycledItemsPage {
             });
         }, error => {
             this.showLoadingMsg = false
-            this.errorLoadingContent = true
+            if (error.status != 404) {
+                this.errorLoadingContent = true
+            }
+
         })
     }
 
