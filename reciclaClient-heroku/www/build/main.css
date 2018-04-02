@@ -25700,6 +25700,27 @@ ion-icon[class*="reciclaUA-recyle"] {
   mask-image: url("../assets/imgs/icons/recycle.svg");
 }
 
+ion-card {
+  margin: 0px 10px 10px 10px !important;
+}
+
+ion-card-header {
+  padding: 13px !important;
+}
+
+ion-card-content {
+  padding: 13px 16px 11px 16px !important;
+}
+
+page-normalLogin .segmentName {
+  font-size: 14px;
+}
+
+page-normalRegister .registerSuccessMsg {
+  margin: 45px;
+  font-size: 16px;
+}
+
 page-profile .segmentName {
   font-size: 14px;
 }

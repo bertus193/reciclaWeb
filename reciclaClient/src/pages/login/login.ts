@@ -10,8 +10,9 @@ import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
 import { Observable } from 'rxjs/Rx'
 import 'rxjs/add/operator/map'
 import { APP_CONFIG_TOKEN, ApplicationConfig } from '../../app/app-config';
-import { LoadingController, Loading } from 'ionic-angular';
+import { LoadingController, Loading, NavController } from 'ionic-angular';
 import { UserProvider } from '../../providers/api/userProvider';
+import { NormalLoginPage } from './normalLogin/normalLogin';
 
 
 @Component({
@@ -29,8 +30,15 @@ export class LoginPage {
         private fb: Facebook,
         private loadingCtrl: LoadingController,
         private notificationProvider: NotificationProvider,
-        private userProvider: UserProvider
+        private userProvider: UserProvider,
+        private navCtrl: NavController
     ) {
+    }
+
+    doNormalLogin(defaultPage) {
+        this.navCtrl.push(NormalLoginPage, {
+            defaultPage: defaultPage
+        })
     }
 
     doFbLogin() {
@@ -67,6 +75,7 @@ export class LoginPage {
                     user = {
                         id: -1,
                         email: profile['email'],
+                        password: null,
                         name: profile['first_name'],
                         fullName: profile['name'],
                         profilePicture: profile['picture_large']['data']['url'],
@@ -95,7 +104,8 @@ export class LoginPage {
     loginInDebugMode() {
         var user: User = {
             id: -1,
-            email: 'debug@debug.com',
+            email: this.config.debugUserEmail,
+            password: Math.random().toString(),
             name: 'Debug',
             fullName: 'Debug user',
             profilePicture: 'https://keluro.com/images/Blog/Debug.jpg',
@@ -115,6 +125,8 @@ export class LoginPage {
         }).catch(error => {
             return Observable.throw("[findAndUpdateOrCreateUser()] ->" + error)
         })
+
+
     }
 
     doFbLoginInDebugMode() {
@@ -147,6 +159,7 @@ export class LoginPage {
                         foundUser.user.fullName = fbUser.fullName
                         foundUser.user.profilePicture = fbUser.profilePicture
                         foundUser.user.accessToken = fbUser.accessToken
+                        foundUser.user.password = fbUser.password
                         return this.userProvider.saveUser(foundUser.user, postToken).subscribe(res => {
                             return foundUser.user
                         }, error => {
@@ -183,7 +196,7 @@ export class LoginPage {
         var out = false
         if (fbUser.email != foundUser.email || fbUser.name != foundUser.name ||
             fbUser.fullName != foundUser.fullName || fbUser.profilePicture != foundUser.profilePicture ||
-            fbUser.accessToken != foundUser.accessToken) {
+            fbUser.accessToken != foundUser.accessToken || fbUser.password != foundUser.password) {
             out = true
         }
         return out

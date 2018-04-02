@@ -2,18 +2,17 @@ package reciclaServer.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import reciclaServer.models.User;
 import reciclaServer.models.DAO.UserDAO;
-import java.util.List;
+import reciclaServer.models.User;
 
 
 @Service("userService")
-public class UserService{
+public class UserService {
 
     private final UserDAO userDAO;
 
     @Autowired
-    public UserService(UserDAO userDAO){
+    public UserService(UserDAO userDAO) {
         this.userDAO = userDAO;
     }
 
@@ -22,12 +21,12 @@ public class UserService{
     }
 
 
-    public User findByEmail(String email){
+    public User findByEmail(String email) {
         return userDAO.findFirstByEmail(email);
     }
 
-    public boolean isUserExist(User user){
-        return findByEmail(user.getEmail()) != null;
+    public boolean isUserExist(String email) {
+        return findByEmail(email) != null;
     }
 
     public User findById(long id) {
@@ -36,5 +35,9 @@ public class UserService{
 
     public User findByAccessToken(String token) {
         return userDAO.findFirstByAccessToken(token);
+    }
+
+    public User findFirstByEmailAndPassword(String email, String password) {
+        return userDAO.findFirstByEmailAndPassword(email, password);
     }
 }

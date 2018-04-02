@@ -4,7 +4,6 @@ import { ApplicationConfig, APP_CONFIG_TOKEN } from '../../app/app-config';
 import { SessionProvider } from '../session';
 import { User } from '../../models/user';
 
-
 @Injectable()
 export class UserProvider {
 
@@ -21,8 +20,8 @@ export class UserProvider {
 
 
     public saveUser(user: User, token: string) {
-        user.recycleItems = null
         this.sessionProvider.updateSession(user)
+        user.recycleItems = null
         return this.http.put(this.config.apiEndpoint + "/users/private/" + user.id + "?token=" + token, JSON.stringify(user), this.requestJsonOptions).timeout(this.config.defaultTimeoutTime)
     }
 

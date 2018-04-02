@@ -10,6 +10,8 @@ export interface ApplicationConfig {
     defaultImageDirectory: string
     googleCloudVisionAPIKey: string
     itemsPerPage: number //Pagination list limit
+    debugUserEmail: string //If DEBUG_MODE == false is not used
+    debugUserPassword: string //If DEBUG_MODE == false is not used
 }
 
 // Configuration values for our app
@@ -22,7 +24,9 @@ export const APP_CONFIG: ApplicationConfig = {
     defaultTimeoutMsg: 'Parece que ha habido algún problema, prueba en unos minutos.',
     defaultImageDirectory: 'assets/imgs/icons/recycle.png',
     googleCloudVisionAPIKey: 'AIzaSyCVl9Ien_9KOFEN197dPqklyIJ7ad1z44k',
-    itemsPerPage: 10
+    itemsPerPage: 10,
+    debugUserEmail: 'debug@debug.com',
+    debugUserPassword: 'debugPassword'
 
 };
 

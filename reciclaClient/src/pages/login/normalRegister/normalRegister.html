@@ -1,0 +1,43 @@
+<ion-grid style="height: 100%">
+    <ion-row align-items-center text-center style="height: 100%">
+        <ion-col>
+            <div *ngIf="userIsRegistered == false;else usedIsRegisteredDiv">
+                <form [formGroup]="registerForm" (ngSubmit)="registerButton()">
+                    <ion-row>
+                        <ion-col>
+                            <ion-list inset>
+
+                                <ion-item>
+                                    <ion-input type="text" placeholder="Email" formControlName="email" required></ion-input>
+                                </ion-item>
+                                <ion-item>
+                                    <ion-input type="password" placeholder="Contraseña" formControlName="password" required></ion-input>
+                                </ion-item>
+                                <ion-item>
+                                    <ion-input type="password" placeholder="Repetir contraseña" formControlName="password_repeat" color="{{ registerForm.controls.password_repeat.errors ? 'danger' : 'primary' }}"
+                                        required></ion-input>
+                                </ion-item>
+                                <div align="left" style="height: 16px;">
+                                    <span style="color: #d80303;" *ngIf="registerForm.controls.password_repeat.errors?.MatchPassword">Las contraseñas deben coincidir</span>
+                                </div>
+                            </ion-list>
+                        </ion-col>
+                    </ion-row>
+
+                    <ion-row>
+                        <ion-col class="signup-col">
+                            <button ion-button class="submit-btn" full type="submit" [disabled]="!registerForm.valid">Registrarse</button>
+                        </ion-col>
+                    </ion-row>
+
+                </form>
+            </div>
+            <button ion-button class="submit-btn" full (click)="goToLoginButton()">Ir a inicio de sesión</button>
+            <ng-template #usedIsRegisteredDiv>
+                <div class="registerSuccessMsg">
+                    <b>¡Enhorabuena!</b>, te has registrado correctamente.
+                </div>
+            </ng-template>
+        </ion-col>
+    </ion-row>
+</ion-grid>

@@ -67,8 +67,9 @@ var RecycleItemsProvider = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_rxjs_add_operator_map__ = __webpack_require__(62);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7_rxjs_add_operator_map__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__app_app_config__ = __webpack_require__(33);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_ionic_angular__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_ionic_angular__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__providers_api_userProvider__ = __webpack_require__(87);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__normalLogin_normalLogin__ = __webpack_require__(324);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -92,8 +93,9 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 
 
 
+
 var LoginPage = (function () {
-    function LoginPage(config, sessionProvider, app, fb, loadingCtrl, notificationProvider, userProvider) {
+    function LoginPage(config, sessionProvider, app, fb, loadingCtrl, notificationProvider, userProvider, navCtrl) {
         this.config = config;
         this.sessionProvider = sessionProvider;
         this.app = app;
@@ -101,7 +103,13 @@ var LoginPage = (function () {
         this.loadingCtrl = loadingCtrl;
         this.notificationProvider = notificationProvider;
         this.userProvider = userProvider;
+        this.navCtrl = navCtrl;
     }
+    LoginPage.prototype.doNormalLogin = function (defaultPage) {
+        this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_11__normalLogin_normalLogin__["a" /* NormalLoginPage */], {
+            defaultPage: defaultPage
+        });
+    };
     LoginPage.prototype.doFbLogin = function () {
         var _this = this;
         this.loading = this.loadingCtrl.create({
@@ -133,6 +141,7 @@ var LoginPage = (function () {
                 user = {
                     id: -1,
                     email: profile['email'],
+                    password: null,
                     name: profile['first_name'],
                     fullName: profile['name'],
                     profilePicture: profile['picture_large']['data']['url'],
@@ -162,7 +171,8 @@ var LoginPage = (function () {
     LoginPage.prototype.loginInDebugMode = function () {
         var user = {
             id: -1,
-            email: 'debug@debug.com',
+            email: this.config.debugUserEmail,
+            password: Math.random().toString(),
             name: 'Debug',
             fullName: 'Debug user',
             profilePicture: 'https://keluro.com/images/Blog/Debug.jpg',
@@ -213,6 +223,7 @@ var LoginPage = (function () {
                     foundUser.user.fullName = fbUser.fullName;
                     foundUser.user.profilePicture = fbUser.profilePicture;
                     foundUser.user.accessToken = fbUser.accessToken;
+                    foundUser.user.password = fbUser.password;
                     return _this.userProvider.saveUser(foundUser.user, postToken).subscribe(function (res) {
                         return foundUser.user;
                     }, function (error) {
@@ -248,7 +259,7 @@ var LoginPage = (function () {
         var out = false;
         if (fbUser.email != foundUser.email || fbUser.name != foundUser.name ||
             fbUser.fullName != foundUser.fullName || fbUser.profilePicture != foundUser.profilePicture ||
-            fbUser.accessToken != foundUser.accessToken) {
+            fbUser.accessToken != foundUser.accessToken || fbUser.password != foundUser.password) {
             out = true;
         }
         return out;
@@ -279,17 +290,13 @@ var LoginPage = (function () {
     };
     LoginPage = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
-            selector: 'page-login',template:/*ion-inline-start:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/login/login.html"*/'<ion-content>\n    <ion-grid style="height: 100%">\n        <ion-row align-items-center text-center style="height: 100%">\n            <ion-col>\n                <h2>{{ config.appName }}</h2>\n                <p>\n                    Proyecto reciclaje TFG en la universidad de Alicante.\n                </p>\n\n                <ion-col class="login-button">\n                    <button ion-button block (click)="doFbLogin()">Facebook Login</button>\n                    <div *ngIf="config.DEBUG_MODE == true">\n                        <button ion-button block color="dark" (click)="doFbLoginInDebugMode()">Debug Login</button>\n                    </div>\n                </ion-col>\n            </ion-col>\n        </ion-row>\n    </ion-grid>\n</ion-content>'/*ion-inline-end:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/login/login.html"*/,
+            selector: 'page-login',template:/*ion-inline-start:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/login/login.html"*/'<ion-content>\n    <ion-grid style="height: 100%">\n        <ion-row align-items-center text-center style="height: 100%">\n            <ion-col>\n                <h2>{{ config.appName }}</h2>\n                <p>\n                    Proyecto reciclaje TFG en la universidad de Alicante.\n                </p>\n\n                <ion-col class="login-button">\n                    <button ion-button block (click)="doFbLogin()">Iniciar sesión con Facebook</button>\n                    <div>\n                        <button ion-button clear (click)="doNormalLogin(\'login\')">Iniciar sesión</button>\n                        <button ion-button clear (click)="doNormalLogin(\'register\')">Registrarse</button>\n                    </div>\n                    <br>\n                </ion-col>\n            </ion-col>\n        </ion-row>\n        <div *ngIf="config.DEBUG_MODE == true">\n            <button ion-button block [outline]="isOutline" [round]="isRound" color="light" (click)="doFbLoginInDebugMode()">Debug Login</button>\n        </div>\n    </ion-grid>\n\n</ion-content>'/*ion-inline-end:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/login/login.html"*/,
         }),
         __param(0, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["z" /* Inject */])(__WEBPACK_IMPORTED_MODULE_8__app_app_config__["b" /* APP_CONFIG_TOKEN */])),
-        __metadata("design:paramtypes", [Object, __WEBPACK_IMPORTED_MODULE_1__providers_session__["a" /* SessionProvider */],
-            __WEBPACK_IMPORTED_MODULE_4_ionic_angular_components_app_app__["a" /* App */],
-            __WEBPACK_IMPORTED_MODULE_5__ionic_native_facebook__["a" /* Facebook */],
-            __WEBPACK_IMPORTED_MODULE_9_ionic_angular__["h" /* LoadingController */],
-            __WEBPACK_IMPORTED_MODULE_2__providers_notifications__["a" /* NotificationProvider */],
-            __WEBPACK_IMPORTED_MODULE_10__providers_api_userProvider__["a" /* UserProvider */]])
+        __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_8__app_app_config__["ApplicationConfig"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_8__app_app_config__["ApplicationConfig"]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__providers_session__["a" /* SessionProvider */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__providers_session__["a" /* SessionProvider */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_4_ionic_angular_components_app_app__["a" /* App */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4_ionic_angular_components_app_app__["a" /* App */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_5__ionic_native_facebook__["a" /* Facebook */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__ionic_native_facebook__["a" /* Facebook */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_9_ionic_angular__["h" /* LoadingController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_9_ionic_angular__["h" /* LoadingController */]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_2__providers_notifications__["a" /* NotificationProvider */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__providers_notifications__["a" /* NotificationProvider */]) === "function" && _f || Object, typeof (_g = typeof __WEBPACK_IMPORTED_MODULE_10__providers_api_userProvider__["a" /* UserProvider */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_10__providers_api_userProvider__["a" /* UserProvider */]) === "function" && _g || Object, typeof (_h = typeof __WEBPACK_IMPORTED_MODULE_9_ionic_angular__["i" /* NavController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_9_ionic_angular__["i" /* NavController */]) === "function" && _h || Object])
     ], LoginPage);
     return LoginPage;
+    var _a, _b, _c, _d, _e, _f, _g, _h;
 }());
 
 //# sourceMappingURL=login.js.map
@@ -318,7 +325,7 @@ webpackEmptyAsyncContext.id = 173;
 
 var map = {
 	"../pages/tabs/tabs.module": [
-		705,
+		707,
 		0
 	]
 };
@@ -344,7 +351,7 @@ module.exports = webpackAsyncContext;
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return RecyclePage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_native_camera__ = __webpack_require__(220);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ionic_native_crop__ = __webpack_require__(223);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_transfer__ = __webpack_require__(224);
@@ -355,12 +362,12 @@ module.exports = webpackAsyncContext;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_rxjs_Rx___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8_rxjs_Rx__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_rxjs_add_operator_map__ = __webpack_require__(62);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_9_rxjs_add_operator_map__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__models_position__ = __webpack_require__(677);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__models_position__ = __webpack_require__(678);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__recycle_map_recycleMap__ = __webpack_require__(317);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__providers_notifications__ = __webpack_require__(84);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__providers_google__ = __webpack_require__(321);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__providers_session__ = __webpack_require__(34);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__models_recycleItem__ = __webpack_require__(681);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__models_recycleItem__ = __webpack_require__(682);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__models_typeRecicle__ = __webpack_require__(85);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__providers_utils__ = __webpack_require__(86);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__providers_api_userProvider__ = __webpack_require__(87);
@@ -753,10 +760,22 @@ var RecyclePage = (function () {
             selector: 'page-recycle',template:/*ion-inline-start:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/recycle/recycle.html"*/'<ion-header>\n    <ion-navbar>\n        <ion-title>\n            Reciclar!\n        </ion-title>\n    </ion-navbar>\n</ion-header>\n\n<ion-content padding>\n    <ion-grid style="height: 100%">\n        <ion-row align-items-center text-center style="height: 100%">\n            <ion-col>\n                <img src="assets/imgs/quieroReciclar.png" />\n                <p>\n                    <button ion-button (click)="presentActionSheetActions()">\n                        Quiero reciclar\n                    </button>\n                </p>\n            </ion-col>\n        </ion-row>\n    </ion-grid>\n</ion-content>'/*ion-inline-end:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/recycle/recycle.html"*/
         }),
         __param(0, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["z" /* Inject */])(__WEBPACK_IMPORTED_MODULE_7__app_app_config__["b" /* APP_CONFIG_TOKEN */])),
-        __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_7__app_app_config__["ApplicationConfig"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_7__app_app_config__["ApplicationConfig"]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["i" /* NavController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["i" /* NavController */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_2__ionic_native_camera__["a" /* Camera */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__ionic_native_camera__["a" /* Camera */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_4__ionic_native_transfer__["a" /* Transfer */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__ionic_native_transfer__["a" /* Transfer */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["a" /* ActionSheetController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["a" /* ActionSheetController */]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* LoadingController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* LoadingController */]) === "function" && _f || Object, typeof (_g = typeof __WEBPACK_IMPORTED_MODULE_5__ionic_native_geolocation__["a" /* Geolocation */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__ionic_native_geolocation__["a" /* Geolocation */]) === "function" && _g || Object, typeof (_h = typeof __WEBPACK_IMPORTED_MODULE_6__ionic_native_location_accuracy__["a" /* LocationAccuracy */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_6__ionic_native_location_accuracy__["a" /* LocationAccuracy */]) === "function" && _h || Object, typeof (_j = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["b" /* AlertController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["b" /* AlertController */]) === "function" && _j || Object, typeof (_k = typeof __WEBPACK_IMPORTED_MODULE_12__providers_notifications__["a" /* NotificationProvider */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_12__providers_notifications__["a" /* NotificationProvider */]) === "function" && _k || Object, typeof (_l = typeof __WEBPACK_IMPORTED_MODULE_13__providers_google__["a" /* GoogleCloudServiceProvider */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_13__providers_google__["a" /* GoogleCloudServiceProvider */]) === "function" && _l || Object, typeof (_m = typeof __WEBPACK_IMPORTED_MODULE_17__providers_utils__["a" /* UtilsProvider */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_17__providers_utils__["a" /* UtilsProvider */]) === "function" && _m || Object, typeof (_o = typeof __WEBPACK_IMPORTED_MODULE_14__providers_session__["a" /* SessionProvider */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_14__providers_session__["a" /* SessionProvider */]) === "function" && _o || Object, typeof (_p = typeof __WEBPACK_IMPORTED_MODULE_18__providers_api_userProvider__["a" /* UserProvider */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_18__providers_api_userProvider__["a" /* UserProvider */]) === "function" && _p || Object, typeof (_q = typeof __WEBPACK_IMPORTED_MODULE_3__ionic_native_crop__["a" /* Crop */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__ionic_native_crop__["a" /* Crop */]) === "function" && _q || Object])
+        __metadata("design:paramtypes", [Object, __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["i" /* NavController */],
+            __WEBPACK_IMPORTED_MODULE_2__ionic_native_camera__["a" /* Camera */],
+            __WEBPACK_IMPORTED_MODULE_4__ionic_native_transfer__["a" /* Transfer */],
+            __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["a" /* ActionSheetController */],
+            __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* LoadingController */],
+            __WEBPACK_IMPORTED_MODULE_5__ionic_native_geolocation__["a" /* Geolocation */],
+            __WEBPACK_IMPORTED_MODULE_6__ionic_native_location_accuracy__["a" /* LocationAccuracy */],
+            __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["b" /* AlertController */],
+            __WEBPACK_IMPORTED_MODULE_12__providers_notifications__["a" /* NotificationProvider */],
+            __WEBPACK_IMPORTED_MODULE_13__providers_google__["a" /* GoogleCloudServiceProvider */],
+            __WEBPACK_IMPORTED_MODULE_17__providers_utils__["a" /* UtilsProvider */],
+            __WEBPACK_IMPORTED_MODULE_14__providers_session__["a" /* SessionProvider */],
+            __WEBPACK_IMPORTED_MODULE_18__providers_api_userProvider__["a" /* UserProvider */],
+            __WEBPACK_IMPORTED_MODULE_3__ionic_native_crop__["a" /* Crop */]])
     ], RecyclePage);
     return RecyclePage;
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q;
 }());
 
 //# sourceMappingURL=recycle.js.map
@@ -769,7 +788,7 @@ var RecyclePage = (function () {
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MapPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_native_google_maps__ = __webpack_require__(318);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__providers_notifications__ = __webpack_require__(84);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__app_app_config__ = __webpack_require__(33);
@@ -1031,7 +1050,7 @@ var MapPage = (function () {
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return PopoverMap; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(22);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1158,7 +1177,7 @@ var GoogleCloudServiceProvider = (function () {
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ProfilePage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_session__ = __webpack_require__(34);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__login_login__ = __webpack_require__(139);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -1209,6 +1228,52 @@ var ProfilePage = (function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return NormalLoginPage; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(22);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+var NormalLoginPage = (function () {
+    function NormalLoginPage(navParams) {
+        this.navParams = navParams;
+        this.defaultPage = 'login';
+        this.email = '';
+        this.password = '';
+        this.defaultPage = this.navParams.get("defaultPage");
+    }
+    NormalLoginPage.prototype.ionViewDidLoad = function () {
+    };
+    NormalLoginPage.prototype.setDefaultPage = function (defaultPage) {
+        this.defaultPage = defaultPage;
+    };
+    NormalLoginPage.prototype.loginButton = function () {
+    };
+    NormalLoginPage = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
+            selector: 'page-normalLogin',template:/*ion-inline-start:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/login/normalLogin/normalLogin.html"*/'<ion-header>\n    <ion-navbar>\n        <ion-title>Iniciar sesión</ion-title>\n    </ion-navbar>\n    <ion-toolbar>\n        <ion-segment [(ngModel)]="defaultPage" style="margin-bottom: -15px">\n            <ion-segment-button value="login">\n                <div class="segmentName">Iniciar sesión</div>\n            </ion-segment-button>\n            <ion-segment-button value="register">\n                <div class="segmentName">Registrarse</div>\n            </ion-segment-button>\n        </ion-segment>\n    </ion-toolbar>\n\n</ion-header>\n\n<ion-content>\n    <div [ngSwitch]="defaultPage" style="height: 97%">\n        <ion-list *ngSwitchCase="\'login\'" style="height: 100%;">\n            <ion-grid style="height: 100%">\n                <ion-row align-items-center text-center style="height: 100%">\n                    <ion-col>\n                        <div class="login-box">\n                            <form (ngSubmit)="loginButton()" #registerForm="ngForm">\n                                <ion-row>\n                                    <ion-col>\n                                        <ion-list inset>\n\n                                            <ion-item>\n                                                <ion-input type="text" placeholder="Email" name="email" [(ngModel)]="email" required></ion-input>\n                                            </ion-item>\n\n                                            <ion-item>\n                                                <ion-input type="password" placeholder="Password" name="password" [(ngModel)]="password" required></ion-input>\n                                            </ion-item>\n\n                                        </ion-list>\n                                    </ion-col>\n                                </ion-row>\n\n                                <ion-row>\n                                    <ion-col class="signup-col">\n                                        <button ion-button class="submit-btn" full type="submit" [disabled]="!registerForm.form.valid">Iniciar sesión</button>\n                                    </ion-col>\n                                </ion-row>\n\n                            </form>\n                        </div>\n                    </ion-col>\n                </ion-row>\n            </ion-grid>\n        </ion-list>\n        <ion-list *ngSwitchCase="\'register\'" style="height: 100%">\n            <page-normalRegister (onRegisterFinishEvent)="setDefaultPage($event)"></page-normalRegister>\n        </ion-list>\n    </div>\n\n</ion-content>'/*ion-inline-end:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/login/normalLogin/normalLogin.html"*/
+        }),
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavParams */]])
+    ], NormalLoginPage);
+    return NormalLoginPage;
+}());
+
+//# sourceMappingURL=normalLogin.js.map
+
+/***/ }),
+
+/***/ 325:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return HomePage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -1250,14 +1315,16 @@ var HomePage = (function () {
 // Configuration values for our app
 var APP_CONFIG = {
     appName: 'ReciclaWeb App',
-    apiEndpoint: 'https://reciclaweb-server.herokuapp.com',
+    apiEndpoint: 'http://127.0.0.1:8080',
     uploadFilesUrl: 'https://reciclaweb.000webhostapp.com',
     DEBUG_MODE: true,
     defaultTimeoutTime: 10000,
     defaultTimeoutMsg: 'Parece que ha habido algún problema, prueba en unos minutos.',
     defaultImageDirectory: 'assets/imgs/icons/recycle.png',
     googleCloudVisionAPIKey: 'AIzaSyCVl9Ien_9KOFEN197dPqklyIJ7ad1z44k',
-    itemsPerPage: 10
+    itemsPerPage: 10,
+    debugUserEmail: 'debug@debug.com',
+    debugUserPassword: 'debugPassword'
 };
 var APP_CONFIG_TOKEN = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["B" /* InjectionToken */]('config');
 //# sourceMappingURL=app-config.js.map
@@ -1310,13 +1377,13 @@ var SessionProvider = (function () {
 
 /***/ }),
 
-/***/ 366:
+/***/ 367:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return recycleItemInfoPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_session__ = __webpack_require__(34);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__providers_utils__ = __webpack_require__(86);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__providers_api_recycleItemsProvider__ = __webpack_require__(138);
@@ -1370,23 +1437,25 @@ var recycleItemInfoPage = (function () {
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
             selector: 'page-recycleItemInfo',template:/*ion-inline-start:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/profile/profile_recycledItems/profile_recycledItems_info/recycleItemInfo.html"*/'<ion-header>\n    <ion-navbar>\n        <ion-title>Detalles del reciclaje</ion-title>\n    </ion-navbar>\n</ion-header>\n\n<ion-content>\n    <div *ngIf="recycleItem != null;else recycleItemsNotFound">\n        <ion-grid style="height: 97%;">\n            <ion-row style="height: 100%;">\n                <ion-col style="height: 100%;">\n                    <ion-card *ngIf="recycleItem" style="height: 100%;">\n                        <ion-card-header>{{ recycleItem.name }}</ion-card-header>\n                        <img [src]="recycleItem.image" onError="this.src = \'assets/imgs/quieroReciclar.png\'" style="max-height: 75%;" />\n                        <ion-card-content>\n                            <p>Tipo: {{ getItemType(recycleItem.itemType.id) }}</p>\n                            <p>Reciclado el: {{ recycleItem.createdDate | date: \'dd/MM/yyyy H:mm\'}}</p>\n                        </ion-card-content>\n                    </ion-card>\n                </ion-col>\n            </ion-row>\n        </ion-grid>\n    </div>\n</ion-content>\n\n<ng-template #recycleItemsNotFound>\n    <ion-row align-items-center text-center style="height: 100%">\n        <ion-col>\n            <div *ngIf="showLoadingMsg == true; else showLoadingResult">\n                <h5>Cargando...</h5>\n            </div>\n            <ng-template #showLoadingResult>\n                <div *ngIf="errorLoadingContent == true; else showNoRecycledItemFound">\n                    <div>\n                        <p>Ha habido algún problema</p>\n                        <h5 style="font-weight: bold">Intentalo de nuevo en unos minutos</h5>\n                    </div>\n                </div>\n                <ng-template #showNoRecycledItemFound>\n                    <div>\n                        <p>Todavía no has reciclado nada</p>\n                        <h5 style="font-weight: bold">¡A qué esperas!</h5>\n                    </div>\n                </ng-template>\n            </ng-template>\n        </ion-col>\n    </ion-row>\n</ng-template>'/*ion-inline-end:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/profile/profile_recycledItems/profile_recycledItems_info/recycleItemInfo.html"*/
         }),
-        __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavParams */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavParams */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__providers_session__["a" /* SessionProvider */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__providers_session__["a" /* SessionProvider */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_3__providers_utils__["a" /* UtilsProvider */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__providers_utils__["a" /* UtilsProvider */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_4__providers_api_recycleItemsProvider__["a" /* RecycleItemsProvider */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__providers_api_recycleItemsProvider__["a" /* RecycleItemsProvider */]) === "function" && _d || Object])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavParams */],
+            __WEBPACK_IMPORTED_MODULE_2__providers_session__["a" /* SessionProvider */],
+            __WEBPACK_IMPORTED_MODULE_3__providers_utils__["a" /* UtilsProvider */],
+            __WEBPACK_IMPORTED_MODULE_4__providers_api_recycleItemsProvider__["a" /* RecycleItemsProvider */]])
     ], recycleItemInfoPage);
     return recycleItemInfoPage;
-    var _a, _b, _c, _d;
 }());
 
 //# sourceMappingURL=recycleItemInfo.js.map
 
 /***/ }),
 
-/***/ 367:
+/***/ 368:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__ = __webpack_require__(368);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_module__ = __webpack_require__(372);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__ = __webpack_require__(369);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_module__ = __webpack_require__(373);
 
 
 Object(__WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__["a" /* platformBrowserDynamic */])().bootstrapModule(__WEBPACK_IMPORTED_MODULE_1__app_module__["a" /* AppModule */]);
@@ -1394,31 +1463,31 @@ Object(__WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__["a" /* pl
 
 /***/ }),
 
-/***/ 372:
+/***/ 373:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppModule; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_platform_browser__ = __webpack_require__(43);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular__ = __webpack_require__(26);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__app_component__ = __webpack_require__(699);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__pages_index__ = __webpack_require__(700);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__ionic_native_status_bar__ = __webpack_require__(364);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__ionic_native_splash_screen__ = __webpack_require__(365);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular__ = __webpack_require__(22);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__app_component__ = __webpack_require__(700);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__pages_index__ = __webpack_require__(701);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__ionic_native_status_bar__ = __webpack_require__(365);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__ionic_native_splash_screen__ = __webpack_require__(366);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__ionic_native_facebook__ = __webpack_require__(323);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__ionic_storage__ = __webpack_require__(319);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__angular_http__ = __webpack_require__(64);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__ionic_native_crop__ = __webpack_require__(223);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__app_config__ = __webpack_require__(33);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__ionic_native_file__ = __webpack_require__(702);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__ionic_native_file__ = __webpack_require__(704);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__ionic_native_transfer__ = __webpack_require__(224);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__ionic_native_file_path__ = __webpack_require__(703);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__ionic_native_file_path__ = __webpack_require__(705);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__ionic_native_camera__ = __webpack_require__(220);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__ionic_native_geolocation__ = __webpack_require__(225);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__ionic_native_location_accuracy__ = __webpack_require__(226);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__ionic_native_google_maps__ = __webpack_require__(318);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__providers__ = __webpack_require__(704);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__providers__ = __webpack_require__(706);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1494,7 +1563,7 @@ var AppModule = (function () {
 
 /***/ }),
 
-/***/ 677:
+/***/ 678:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1512,7 +1581,7 @@ var Position = (function () {
 
 /***/ }),
 
-/***/ 681:
+/***/ 682:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1527,14 +1596,14 @@ var RecycleItem = (function () {
 
 /***/ }),
 
-/***/ 699:
+/***/ 700:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MyApp; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ionic_native_status_bar__ = __webpack_require__(364);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_native_splash_screen__ = __webpack_require__(365);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ionic_native_status_bar__ = __webpack_require__(365);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_native_splash_screen__ = __webpack_require__(366);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__pages_tabs_tabs__ = __webpack_require__(92);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__providers_session__ = __webpack_require__(34);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__pages_login_login__ = __webpack_require__(139);
@@ -1586,20 +1655,24 @@ var MyApp = (function () {
 
 /***/ }),
 
-/***/ 700:
+/***/ 701:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return APP_PAGES; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__recycle_recycle__ = __webpack_require__(219);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__profile_profile__ = __webpack_require__(322);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__home_home__ = __webpack_require__(324);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__home_home__ = __webpack_require__(325);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__tabs_tabs__ = __webpack_require__(92);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__login_login__ = __webpack_require__(139);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__profile_profile_recycledItems_myRecycledItems__ = __webpack_require__(701);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__profile_profile_recycledItems_myRecycledItems__ = __webpack_require__(702);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__recycle_recycle_map_recycleMap__ = __webpack_require__(317);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__recycle_recycle_map_popover_map_popoverMap__ = __webpack_require__(320);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__profile_profile_recycledItems_profile_recycledItems_info_recycleItemInfo__ = __webpack_require__(366);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__profile_profile_recycledItems_profile_recycledItems_info_recycleItemInfo__ = __webpack_require__(367);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__login_normalLogin_normalLogin__ = __webpack_require__(324);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__login_normalRegister_normalRegister__ = __webpack_require__(703);
+
+
 
 
 
@@ -1618,13 +1691,15 @@ var APP_PAGES = [
     __WEBPACK_IMPORTED_MODULE_4__login_login__["a" /* LoginPage */],
     __WEBPACK_IMPORTED_MODULE_5__profile_profile_recycledItems_myRecycledItems__["a" /* myRecycledItemsPage */],
     __WEBPACK_IMPORTED_MODULE_6__recycle_recycle_map_recycleMap__["a" /* MapPage */],
-    __WEBPACK_IMPORTED_MODULE_7__recycle_recycle_map_popover_map_popoverMap__["a" /* PopoverMap */]
+    __WEBPACK_IMPORTED_MODULE_7__recycle_recycle_map_popover_map_popoverMap__["a" /* PopoverMap */],
+    __WEBPACK_IMPORTED_MODULE_9__login_normalLogin_normalLogin__["a" /* NormalLoginPage */],
+    __WEBPACK_IMPORTED_MODULE_10__login_normalRegister_normalRegister__["a" /* NormalRegisterPage */]
 ];
 //# sourceMappingURL=index.js.map
 
 /***/ }),
 
-/***/ 701:
+/***/ 702:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1633,8 +1708,8 @@ var APP_PAGES = [
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__models_typeRecicle__ = __webpack_require__(85);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__app_app_config__ = __webpack_require__(33);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__providers_session__ = __webpack_require__(34);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_ionic_angular__ = __webpack_require__(26);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__profile_recycledItems_info_recycleItemInfo__ = __webpack_require__(366);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_ionic_angular__ = __webpack_require__(22);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__profile_recycledItems_info_recycleItemInfo__ = __webpack_require__(367);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__providers_api_userProvider__ = __webpack_require__(87);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -1754,7 +1829,80 @@ var myRecycledItemsPage = (function () {
 
 /***/ }),
 
-/***/ 704:
+/***/ 703:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return NormalRegisterPage; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_forms__ = __webpack_require__(26);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+var NormalRegisterPage = (function () {
+    function NormalRegisterPage(formBuilder) {
+        this.formBuilder = formBuilder;
+        this.userIsRegistered = false;
+        this.onRegisterFinishEvent = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["v" /* EventEmitter */]();
+        this.registerForm = this.formBuilder.group({
+            email: [''],
+            password: [''],
+            password_repeat: [''],
+        }, {
+            validator: NormalRegisterPage_1.MatchPassword
+        });
+    }
+    NormalRegisterPage_1 = NormalRegisterPage;
+    NormalRegisterPage.prototype.ionViewDidLoad = function () {
+    };
+    NormalRegisterPage.prototype.registerButton = function () {
+        this.userIsRegistered = true;
+    };
+    NormalRegisterPage.prototype.goToLoginButton = function () {
+        console.log(1);
+        this.onRegisterFinishEvent.emit('login');
+        this.userIsRegistered = false;
+    };
+    NormalRegisterPage.MatchPassword = function (control) {
+        var password = control.controls.password; // to get value in input tag
+        var password_repeat = control.controls.password_repeat; // to get value in input tag
+        if (password.value != '' && password_repeat.value != '') {
+            if (password.value != password_repeat.value) {
+                password_repeat.setErrors({ MatchPassword: true });
+            }
+            else {
+                password_repeat.setErrors(null);
+                return null;
+            }
+        }
+    };
+    __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["O" /* Output */])(),
+        __metadata("design:type", __WEBPACK_IMPORTED_MODULE_0__angular_core__["v" /* EventEmitter */])
+    ], NormalRegisterPage.prototype, "onRegisterFinishEvent", void 0);
+    NormalRegisterPage = NormalRegisterPage_1 = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
+            selector: 'page-normalRegister',template:/*ion-inline-start:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/login/normalRegister/normalRegister.html"*/'<ion-grid style="height: 100%">\n    <ion-row align-items-center text-center style="height: 100%">\n        <ion-col>\n            <div *ngIf="userIsRegistered == false;else usedIsRegisteredDiv">\n                <form [formGroup]="registerForm" (ngSubmit)="registerButton()">\n                    <ion-row>\n                        <ion-col>\n                            <ion-list inset>\n\n                                <ion-item>\n                                    <ion-input type="text" placeholder="Email" formControlName="email" required></ion-input>\n                                </ion-item>\n                                <ion-item>\n                                    <ion-input type="password" placeholder="Contraseña" formControlName="password" required></ion-input>\n                                </ion-item>\n                                <ion-item>\n                                    <ion-input type="password" placeholder="Repetir contraseña" formControlName="password_repeat" color="{{ registerForm.controls.password_repeat.errors ? \'danger\' : \'primary\' }}"\n                                        required></ion-input>\n                                </ion-item>\n                                <div align="left" style="height: 16px;">\n                                    <span style="color: #d80303;" *ngIf="registerForm.controls.password_repeat.errors?.MatchPassword">Las contraseñas deben coincidir</span>\n                                </div>\n                            </ion-list>\n                        </ion-col>\n                    </ion-row>\n\n                    <ion-row>\n                        <ion-col class="signup-col">\n                            <button ion-button class="submit-btn" full type="submit" [disabled]="!registerForm.valid">Registrarse</button>\n                        </ion-col>\n                    </ion-row>\n\n                </form>\n            </div>\n            <button ion-button class="submit-btn" full (click)="goToLoginButton()">Ir a inicio de sesión</button>\n            <ng-template #usedIsRegisteredDiv>\n                <div class="registerSuccessMsg">\n                    <b>¡Enhorabuena!</b>, te has registrado correctamente.\n                </div>\n            </ng-template>\n        </ion-col>\n    </ion-row>\n</ion-grid>'/*ion-inline-end:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/login/normalRegister/normalRegister.html"*/
+        }),
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_forms__["a" /* FormBuilder */]])
+    ], NormalRegisterPage);
+    return NormalRegisterPage;
+    var NormalRegisterPage_1;
+}());
+
+//# sourceMappingURL=normalRegister.js.map
+
+/***/ }),
+
+/***/ 706:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1789,7 +1937,7 @@ var APP_PROVIDERS = [
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return NotificationProvider; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(22);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -2032,8 +2180,8 @@ var UserProvider = (function () {
         });
     }
     UserProvider.prototype.saveUser = function (user, token) {
-        user.recycleItems = null;
         this.sessionProvider.updateSession(user);
+        user.recycleItems = null;
         return this.http.put(this.config.apiEndpoint + "/users/private/" + user.id + "?token=" + token, JSON.stringify(user), this.requestJsonOptions).timeout(this.config.defaultTimeoutTime);
     };
     UserProvider.prototype.createUser = function (user) {
@@ -2048,10 +2196,10 @@ var UserProvider = (function () {
     UserProvider = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["A" /* Injectable */])(),
         __param(2, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["z" /* Inject */])(__WEBPACK_IMPORTED_MODULE_2__app_app_config__["b" /* APP_CONFIG_TOKEN */])),
-        __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3__session__["a" /* SessionProvider */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__session__["a" /* SessionProvider */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_2__app_app_config__["ApplicationConfig"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__app_app_config__["ApplicationConfig"]) === "function" && _c || Object])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */],
+            __WEBPACK_IMPORTED_MODULE_3__session__["a" /* SessionProvider */], Object])
     ], UserProvider);
     return UserProvider;
-    var _a, _b, _c;
 }());
 
 //# sourceMappingURL=userProvider.js.map
@@ -2066,7 +2214,7 @@ var UserProvider = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__recycle_recycle__ = __webpack_require__(219);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__profile_profile__ = __webpack_require__(322);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__home_home__ = __webpack_require__(324);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__home_home__ = __webpack_require__(325);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -2098,5 +2246,5 @@ var TabsPage = (function () {
 
 /***/ })
 
-},[367]);
+},[368]);
 //# sourceMappingURL=main.js.map

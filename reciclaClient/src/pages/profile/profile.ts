@@ -10,7 +10,7 @@ import { User } from '../../models/user';
 })
 export class ProfilePage {
     user: User
-    profileSegment: any
+    profileSegment: string
 
     constructor(
         private sessionProvider: SessionProvider,

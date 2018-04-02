@@ -8,12 +8,18 @@
                 </p>
 
                 <ion-col class="login-button">
-                    <button ion-button block (click)="doFbLogin()">Facebook Login</button>
-                    <div *ngIf="config.DEBUG_MODE == true">
-                        <button ion-button block color="dark" (click)="doFbLoginInDebugMode()">Debug Login</button>
+                    <button ion-button block (click)="doFbLogin()">Iniciar sesión con Facebook</button>
+                    <div>
+                        <button ion-button clear (click)="doNormalLogin('login')">Iniciar sesión</button>
+                        <button ion-button clear (click)="doNormalLogin('register')">Registrarse</button>
                     </div>
+                    <br>
                 </ion-col>
             </ion-col>
         </ion-row>
+        <div *ngIf="config.DEBUG_MODE == true">
+            <button ion-button block [outline]="isOutline" [round]="isRound" color="light" (click)="doFbLoginInDebugMode()">Debug Login</button>
+        </div>
     </ion-grid>
+
 </ion-content>

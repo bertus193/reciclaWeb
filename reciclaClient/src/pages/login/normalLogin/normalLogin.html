@@ -1,0 +1,59 @@
+<ion-header>
+    <ion-navbar>
+        <ion-title>Iniciar sesión</ion-title>
+    </ion-navbar>
+    <ion-toolbar>
+        <ion-segment [(ngModel)]="defaultPage" style="margin-bottom: -15px">
+            <ion-segment-button value="login">
+                <div class="segmentName">Iniciar sesión</div>
+            </ion-segment-button>
+            <ion-segment-button value="register">
+                <div class="segmentName">Registrarse</div>
+            </ion-segment-button>
+        </ion-segment>
+    </ion-toolbar>
+
+</ion-header>
+
+<ion-content>
+    <div [ngSwitch]="defaultPage" style="height: 97%">
+        <ion-list *ngSwitchCase="'login'" style="height: 100%;">
+            <ion-grid style="height: 100%">
+                <ion-row align-items-center text-center style="height: 100%">
+                    <ion-col>
+                        <div class="login-box">
+                            <form (ngSubmit)="loginButton()" #registerForm="ngForm">
+                                <ion-row>
+                                    <ion-col>
+                                        <ion-list inset>
+
+                                            <ion-item>
+                                                <ion-input type="text" placeholder="Email" name="email" [(ngModel)]="email" required></ion-input>
+                                            </ion-item>
+
+                                            <ion-item>
+                                                <ion-input type="password" placeholder="Password" name="password" [(ngModel)]="password" required></ion-input>
+                                            </ion-item>
+
+                                        </ion-list>
+                                    </ion-col>
+                                </ion-row>
+
+                                <ion-row>
+                                    <ion-col class="signup-col">
+                                        <button ion-button class="submit-btn" full type="submit" [disabled]="!registerForm.form.valid">Iniciar sesión</button>
+                                    </ion-col>
+                                </ion-row>
+
+                            </form>
+                        </div>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+        </ion-list>
+        <ion-list *ngSwitchCase="'register'" style="height: 100%">
+            <page-normalRegister (onRegisterFinishEvent)="setDefaultPage($event)"></page-normalRegister>
+        </ion-list>
+    </div>
+
+</ion-content>

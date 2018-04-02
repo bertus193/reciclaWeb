@@ -47,9 +47,8 @@ public class UserController {
 
     @RequestMapping(value = "/users", method = RequestMethod.POST)
     public ResponseEntity<?> createUser(@RequestBody User user) {
-        System.out.println("Creating User " + user.getEmail());
 
-        if (userService.isUserExist(user)) {
+        if (userService.isUserExist(user.getEmail())) {
             System.out.println("A User with name " + user.getEmail() + " already exist");
             return new ResponseEntity<Void>(HttpStatus.CONFLICT);
         }
@@ -59,7 +58,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/users/private/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<User> updateUser(HttpServletRequest request, @PathVariable("id") long id, @RequestBody User user) {
+    public ResponseEntity<?> updateUser(HttpServletRequest request, @PathVariable("id") long id, @RequestBody User user) {
 
         long userId = (long) request.getAttribute("userId");
 
@@ -114,5 +113,16 @@ public class UserController {
         }
     }
 
+    @RequestMapping(value = "/users/login", method = RequestMethod.POST)
+    public ResponseEntity<?> login(@RequestBody User user) {
 
+        User userFound = userService.findFirstByEmailAndPassword(user.getEmail(), user.getPassword());
+
+        if (userFound != null) {
+            return new ResponseEntity<>(userFound, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+    }
 }
