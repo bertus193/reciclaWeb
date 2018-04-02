@@ -8,6 +8,7 @@ import { UUID } from 'angular2-uuid';
 import { APP_CONFIG_TOKEN, ApplicationConfig } from '../../../app/app-config';
 import { SessionProvider } from '../../../providers/session';
 import { TabsPage } from '../../tabs/tabs';
+import { EncryptProvider } from '../../../providers/encryptProvider';
 
 @Component({
     selector: 'page-normalRegister',
@@ -30,7 +31,8 @@ export class NormalRegisterPage {
         private notificationProvider: NotificationProvider,
         private loadingCtrl: LoadingController,
         @Inject(APP_CONFIG_TOKEN) private config: ApplicationConfig,
-        private sessionProvider: SessionProvider
+        private sessionProvider: SessionProvider,
+        private encryptProvider: EncryptProvider
     ) {
         this.registerForm = this.formBuilder.group({
             email: [''],
@@ -53,12 +55,14 @@ export class NormalRegisterPage {
         var emailForm = this.registerForm.get("email")
         var passwordForm = this.registerForm.get("password")
 
+        var password = this.encryptProvider.encryptPassword(passwordForm.value)
+
         let uuid = UUID.UUID();
 
         var user: User = {
             id: null,
             email: emailForm.value,
-            password: passwordForm.value,
+            password: password,
             name: 'Nombre',
             fullName: 'Nombre Completo',
             profilePicture: 'assets/imgs/quieroReciclar.png',

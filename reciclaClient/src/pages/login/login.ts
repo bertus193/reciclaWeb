@@ -13,6 +13,7 @@ import { APP_CONFIG_TOKEN, ApplicationConfig } from '../../app/app-config';
 import { LoadingController, Loading, NavController } from 'ionic-angular';
 import { UserProvider } from '../../providers/api/userProvider';
 import { NormalLoginPage } from './normalLogin/normalLogin';
+import { EncryptProvider } from '../../providers/encryptProvider';
 
 
 @Component({
@@ -31,7 +32,8 @@ export class LoginPage {
         private loadingCtrl: LoadingController,
         private notificationProvider: NotificationProvider,
         private userProvider: UserProvider,
-        private navCtrl: NavController
+        private navCtrl: NavController,
+        private encryptProvider: EncryptProvider
     ) {
     }
 
@@ -102,10 +104,12 @@ export class LoginPage {
     }
 
     loginInDebugMode() {
+        var password = this.encryptProvider.encryptPassword(this.config.debugUserPassword)
+
         var user: User = {
             id: -1,
             email: this.config.debugUserEmail,
-            password: this.config.debugUserPassword,
+            password: password,
             name: 'Debug',
             fullName: 'Debug user',
             profilePicture: 'https://keluro.com/images/Blog/Debug.jpg',
@@ -196,7 +200,8 @@ export class LoginPage {
         var out = false
         if (fbUser.email != foundUser.email || fbUser.name != foundUser.name ||
             fbUser.fullName != foundUser.fullName || fbUser.profilePicture != foundUser.profilePicture ||
-            fbUser.accessToken != foundUser.accessToken || fbUser.password != foundUser.password) {
+            fbUser.accessToken != foundUser.accessToken ||
+            (fbUser.password != foundUser.password) && fbUser.password != '' && fbUser.password != null) {
             out = true
         }
         return out

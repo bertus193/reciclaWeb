@@ -6,6 +6,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { SessionProvider } from '../../../providers/session';
 import { TabsPage } from '../../tabs/tabs';
 import { NotificationProvider } from '../../../providers/notifications';
+import { EncryptProvider } from '../../../providers/encryptProvider';
 
 @Component({
     selector: 'page-normalLogin',
@@ -29,7 +30,8 @@ export class NormalLoginPage {
         private userProvider: UserProvider,
         private loadingCtrl: LoadingController,
         private sessionProvider: SessionProvider,
-        private notificationProvider: NotificationProvider
+        private notificationProvider: NotificationProvider,
+        private encryptProvider: EncryptProvider
     ) {
         this.defaultPage = this.navParams.get("defaultPage");
 
@@ -55,10 +57,12 @@ export class NormalLoginPage {
         var emailForm = this.loginForm.get("email")
         var passwordForm = this.loginForm.get("password")
 
+        var password = this.encryptProvider.encryptPassword(passwordForm.value)
+
         var user: User = {
             id: null,
             email: emailForm.value,
-            password: passwordForm.value,
+            password: password,
             name: null,
             fullName: null,
             profilePicture: null,

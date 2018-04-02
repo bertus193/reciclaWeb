@@ -116,13 +116,20 @@ public class UserController {
     @RequestMapping(value = "/users/login", method = RequestMethod.POST)
     public ResponseEntity<?> login(@RequestBody User user) {
 
-        User userFound = userService.findFirstByEmailAndPassword(user.getEmail(), user.getPassword());
+        if (user.getEmail() != null && user.getPassword() != null &&
+                !user.getEmail().isEmpty() && !user.getPassword().isEmpty()) {
 
-        if (userFound != null) {
-            return new ResponseEntity<>(userFound, HttpStatus.OK);
+            User userFound = userService.findFirstByEmailAndPassword(user.getEmail(), user.getPassword());
+
+            if (userFound != null) {
+                return new ResponseEntity<>(userFound, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            }
         } else {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
+
 
     }
 }
