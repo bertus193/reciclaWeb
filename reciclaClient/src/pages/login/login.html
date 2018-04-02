@@ -6,13 +6,15 @@
                 <p>
                     Proyecto reciclaje TFG en la universidad de Alicante.
                 </p>
-
                 <ion-col class="login-button">
-                    <button ion-button block (click)="doFbLogin()">Iniciar sesión con Facebook</button>
-                    <div>
-                        <button ion-button clear (click)="doNormalLogin('login')">Iniciar sesión</button>
-                        <button ion-button clear (click)="doNormalLogin('register')">Registrarse</button>
-                    </div>
+                    <p style="margin:0">
+                        <button class="loginBtn loginBtn-facebook" (click)="doFbLogin()">Iniciar sesión con Facebook</button>
+                    </p>
+                    <p style="margin:0">
+                        <button class="loginBtn loginBtn-instagram" (click)="doInstagramLogin()">Iniciar sesión con Instagram</button>
+                    </p>
+                    <button ion-button clear (click)="doNormalLogin('login')">Iniciar sesión</button>
+                    <button ion-button clear (click)="doNormalLogin('register')">Registrarse</button>
                     <br>
                 </ion-col>
             </ion-col>

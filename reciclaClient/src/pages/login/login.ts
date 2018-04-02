@@ -14,6 +14,7 @@ import { LoadingController, Loading, NavController } from 'ionic-angular';
 import { UserProvider } from '../../providers/api/userProvider';
 import { NormalLoginPage } from './normalLogin/normalLogin';
 import { EncryptProvider } from '../../providers/encryptProvider';
+import { InstagramProvider } from '../../providers/instagramProvider';
 
 
 @Component({
@@ -33,7 +34,8 @@ export class LoginPage {
         private notificationProvider: NotificationProvider,
         private userProvider: UserProvider,
         private navCtrl: NavController,
-        private encryptProvider: EncryptProvider
+        private encryptProvider: EncryptProvider,
+        private instagramProvider: InstagramProvider
     ) {
     }
 
@@ -48,7 +50,7 @@ export class LoginPage {
             content: 'Iniciando sesión...'
         });
         this.loading.present()
-        this.login().then(res => {
+        this.loginFb().then(res => {
             res.subscribe(user => {
                 this.loading.dismiss()
                 if (user != null) {
@@ -63,10 +65,55 @@ export class LoginPage {
             this.loading.dismiss()
             this.notificationProvider.presentTopToast(this.config.defaultTimeoutMsg);
         })
-
     }
 
-    login(): Promise<Observable<User>> {
+    doInstagramLogin() {
+        this.instagramProvider.login().then(tokenRes => {
+            this.instagramProvider.getInstagramUserInfo(tokenRes.access_token).subscribe(res => {
+
+                var instagramUser = res.json()
+                this.findUserByEmail(instagramUser.data.id).subscribe(res => {
+                    if (res.status == 200) {
+                        this.sessionProvider.updateSession(res.user)
+                        this.app.getRootNavs()[0].setRoot(TabsPage)
+                    }
+                }, error => {
+                    if (error.status == 404) {
+                        this.createNewInstagramUser(instagramUser, tokenRes.access_token)
+                    }
+                    else {
+                        this.notificationProvider.presentTopToast(this.config.defaultTimeoutMsg)
+                    }
+                })
+            }, error => {
+                this.notificationProvider.presentTopToast("Error obteniendo el usuario de Instagram.")
+            })
+        })
+    }
+
+    createNewInstagramUser(instagramUser: any, access_token: string) {
+        var user: User
+        user = {
+            id: -1,
+            email: instagramUser.data.id,
+            password: null,
+            name: instagramUser.data.full_name,
+            fullName: instagramUser.data.full_name,
+            profilePicture: instagramUser.data.profile_picture,
+            accessToken: access_token,
+            recycleItems: [],
+            createdDate: new Date(),
+            lastPosition: null
+        }
+        this.userProvider.createUser(user).subscribe(res => {
+            this.sessionProvider.updateSession(res.json())
+            this.app.getRootNavs()[0].setRoot(TabsPage)
+        }, error => {
+            this.notificationProvider.presentTopToast(this.config.defaultTimeoutMsg)
+        })
+    }
+
+    loginFb(): Promise<Observable<User>> {
 
         var user: User
 
@@ -86,7 +133,7 @@ export class LoginPage {
                         createdDate: null,
                         lastPosition: null
                     }
-                    return this.findAndUpdateOrCreateUser(user).map((res: any) => {
+                    return this.findAndUpdateOrCreateUser(user).timeout(this.config.defaultTimeoutTime).map((res: any) => {
                         if (res.value != null) {
                             user = res.value
                         } else {
@@ -119,7 +166,7 @@ export class LoginPage {
             lastPosition: null
         }
 
-        return this.findAndUpdateOrCreateUser(user).map((res: any) => {
+        return this.findAndUpdateOrCreateUser(user).timeout(this.config.defaultTimeoutTime).map((res: any) => {
             if (res.value != null) {
                 user = res.value
             } else {

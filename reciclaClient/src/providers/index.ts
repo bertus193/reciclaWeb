@@ -5,6 +5,7 @@ import { GoogleCloudServiceProvider } from "./google";
 import { UserProvider } from "./api/userProvider";
 import { RecycleItemsProvider } from "./api/recycleItemsProvider";
 import { EncryptProvider } from "./encryptProvider";
+import { InstagramProvider } from "./instagramProvider";
 
 export const APP_PROVIDERS = [
     SessionProvider,
@@ -13,5 +14,6 @@ export const APP_PROVIDERS = [
     GoogleCloudServiceProvider,
     UserProvider,
     RecycleItemsProvider,
-    EncryptProvider
+    EncryptProvider,
+    InstagramProvider
 ];

@@ -30,4 +30,8 @@ export class ProfilePage {
         this.app.getRootNavs()[0].setRoot(LoginPage)
     }
 
+    public emailIsNumber(): boolean {
+        return parseFloat(this.user.email).toString() == this.user.email
+    }
+
 }
