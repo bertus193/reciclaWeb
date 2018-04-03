@@ -10,7 +10,6 @@ export class EncryptProvider {
         let shaObj = new jsSHA("SHA-256", "TEXT");
         shaObj.update("This is a test");
         let hash = shaObj.getHash("HEX");
-        console.log(hash)
         return hash
     }
 

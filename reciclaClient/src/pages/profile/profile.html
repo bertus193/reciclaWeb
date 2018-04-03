@@ -21,9 +21,12 @@
                             <ion-card-header>{{ user.fullName }}</ion-card-header>
                             <img [src]="user.profilePicture" onError="this.src = 'assets/imgs/quieroReciclar.png'" />
                             <ion-card-content>
-                                <span *ngIf="!emailIsNumber()">
+                                <span *ngIf="!emailIsNumber(); else showUsername">
                                     <p>Email: {{ user.email }}</p>
                                 </span>
+                                <ng-template #showUsername>
+                                    <p>Usuario: {{ user.username }}</p>
+                                </ng-template>
                                 <p>Fecha registro: {{ user.createdDate | date: 'dd/MM/yyyy H:mm'}}</p>
                             </ion-card-content>
                         </ion-card>

@@ -11,12 +11,14 @@ export interface ApplicationConfig {
     googleCloudVisionAPIKey: string
     itemsPerPage: number //Pagination list limit
     debugUserEmail: string //If DEBUG_MODE == false is not used
-    debugUserPassword: string //If DEBUG_MODE == false is not used
+    debugUserPassword: string //If DEBUG_MODE == false is not used,
+    instagramAPIKey: string
 }
 
 // Configuration values for our app
 export const APP_CONFIG: ApplicationConfig = {
     appName: 'ReciclaWeb App',
+    // https://reciclaweb-server.herokuapp.com || http://127.0.0.1:8080
     apiEndpoint: 'https://reciclaweb-server.herokuapp.com',
     uploadFilesUrl: 'https://reciclaweb.000webhostapp.com',
     DEBUG_MODE: true,
@@ -26,7 +28,8 @@ export const APP_CONFIG: ApplicationConfig = {
     googleCloudVisionAPIKey: 'AIzaSyCVl9Ien_9KOFEN197dPqklyIJ7ad1z44k',
     itemsPerPage: 10,
     debugUserEmail: 'debug@debug.com',
-    debugUserPassword: 'debugPassword'
+    debugUserPassword: 'debugPassword',
+    instagramAPIKey: '92039beca32246398f5d17847329007a'
 
 };
 

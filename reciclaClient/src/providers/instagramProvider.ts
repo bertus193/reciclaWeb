@@ -1,20 +1,22 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 
 import { Instagram } from "ng2-cordova-oauth/core";
 import { OauthCordova } from 'ng2-cordova-oauth/platform/cordova';
 import { Http } from '@angular/http';
+import { APP_CONFIG_TOKEN, ApplicationConfig } from '../app/app-config';
 
 @Injectable()
 export class InstagramProvider {
 
     constructor(
-        private http: Http
+        private http: Http,
+        @Inject(APP_CONFIG_TOKEN) private config: ApplicationConfig
     ) { }
 
     private oauth: OauthCordova = new OauthCordova();
 
     private instagramProvider: Instagram = new Instagram({
-        clientId: "92039beca32246398f5d17847329007a",      // Register you client id from https://www.instagram.com/developer/
+        clientId: this.config.instagramAPIKey,      // Register you client id from https://www.instagram.com/developer/
         redirectUri: 'http://localhost',  // Let is be localhost for Mobile Apps
         responseType: 'token',   // Use token only 
         appScope: ['basic']

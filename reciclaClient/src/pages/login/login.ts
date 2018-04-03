@@ -15,6 +15,7 @@ import { UserProvider } from '../../providers/api/userProvider';
 import { NormalLoginPage } from './normalLogin/normalLogin';
 import { EncryptProvider } from '../../providers/encryptProvider';
 import { InstagramProvider } from '../../providers/instagramProvider';
+import { TypeUser } from '../../models/typeUser';
 
 
 @Component({
@@ -67,29 +68,7 @@ export class LoginPage {
         })
     }
 
-    doInstagramLogin() {
-        this.instagramProvider.login().then(tokenRes => {
-            this.instagramProvider.getInstagramUserInfo(tokenRes.access_token).subscribe(res => {
 
-                var instagramUser = res.json()
-                this.findUserByEmail(instagramUser.data.id).subscribe(res => {
-                    if (res.status == 200) {
-                        this.sessionProvider.updateSession(res.user)
-                        this.app.getRootNavs()[0].setRoot(TabsPage)
-                    }
-                }, error => {
-                    if (error.status == 404) {
-                        this.createNewInstagramUser(instagramUser, tokenRes.access_token)
-                    }
-                    else {
-                        this.notificationProvider.presentTopToast(this.config.defaultTimeoutMsg)
-                    }
-                })
-            }, error => {
-                this.notificationProvider.presentTopToast("Error obteniendo el usuario de Instagram.")
-            })
-        })
-    }
 
     createNewInstagramUser(instagramUser: any, access_token: string) {
         var user: User
@@ -97,13 +76,14 @@ export class LoginPage {
             id: -1,
             email: instagramUser.data.id,
             password: null,
-            name: instagramUser.data.full_name,
+            username: instagramUser.data.username,
             fullName: instagramUser.data.full_name,
             profilePicture: instagramUser.data.profile_picture,
             accessToken: access_token,
             recycleItems: [],
             createdDate: new Date(),
-            lastPosition: null
+            lastPosition: null,
+            type: TypeUser.Instagram
         }
         this.userProvider.createUser(user).subscribe(res => {
             this.sessionProvider.updateSession(res.json())
@@ -123,15 +103,16 @@ export class LoginPage {
 
                     user = {
                         id: -1,
-                        email: profile['email'],
+                        email: profile['id'],
                         password: null,
-                        name: profile['first_name'],
+                        username: profile['email'],
                         fullName: profile['name'],
                         profilePicture: profile['picture_large']['data']['url'],
                         accessToken: fbUser.authResponse.accessToken,
                         recycleItems: [],
-                        createdDate: null,
-                        lastPosition: null
+                        createdDate: new Date(),
+                        lastPosition: null,
+                        type: TypeUser.Facebook
                     }
                     return this.findAndUpdateOrCreateUser(user).timeout(this.config.defaultTimeoutTime).map((res: any) => {
                         if (res.value != null) {
@@ -150,6 +131,43 @@ export class LoginPage {
                 });
     }
 
+    loginInstagram() {
+        this.instagramProvider.login().then(tokenRes => {
+            this.instagramProvider.getInstagramUserInfo(tokenRes.access_token).subscribe(res => {
+                var instagramUser = res.json()
+                var user: User
+
+                user = {
+                    id: -1,
+                    email: instagramUser.data.id,
+                    password: null,
+                    username: instagramUser.data.username,
+                    fullName: instagramUser.data.full_name,
+                    profilePicture: instagramUser.data.profile_picture,
+                    accessToken: tokenRes.access_token,
+                    recycleItems: [],
+                    createdDate: new Date(),
+                    lastPosition: null,
+                    type: TypeUser.Instagram
+                }
+
+                this.findAndUpdateOrCreateUser(user).timeout(this.config.defaultTimeoutTime).subscribe((res: any) => {
+                    if (res.value != null) {
+                        user = res.value
+                    } else {
+                        user = res
+                    }
+                    return user
+                }, error => {
+                    this.notificationProvider.presentAlertError(JSON.stringify(error))
+                })
+
+            }, error => {
+                this.notificationProvider.presentTopToast("Error obteniendo el usuario de Instagram.")
+            })
+        })
+    }
+
     loginInDebugMode() {
         var password = this.encryptProvider.encryptPassword(this.config.debugUserPassword)
 
@@ -157,13 +175,14 @@ export class LoginPage {
             id: -1,
             email: this.config.debugUserEmail,
             password: password,
-            name: 'Debug',
+            username: Math.random().toString(),
             fullName: 'Debug user',
             profilePicture: 'https://keluro.com/images/Blog/Debug.jpg',
             accessToken: 'DEBUG_MODE',
             recycleItems: [],
             createdDate: new Date(),
-            lastPosition: null
+            lastPosition: null,
+            type: TypeUser.Normal
         }
 
         return this.findAndUpdateOrCreateUser(user).timeout(this.config.defaultTimeoutTime).map((res: any) => {
@@ -199,21 +218,18 @@ export class LoginPage {
         }
     }
 
-    findAndUpdateOrCreateUser(fbUser: User): Observable<User> {
-        return this.findUserByEmail(fbUser.email).map(
+    findAndUpdateOrCreateUser(loginUser: User): Observable<User> {
+        return this.findUserByEmail(loginUser.email).map(
             foundUser => {
                 if (foundUser.status == 200) {
-                    if (this.usersAreDifferent(fbUser, foundUser.user) == true) {
-                        var postToken = foundUser.user.accessToken
-                        foundUser.user.email = fbUser.email
-                        foundUser.user.name = fbUser.name
-                        foundUser.user.fullName = fbUser.fullName
-                        foundUser.user.profilePicture = fbUser.profilePicture
-                        foundUser.user.accessToken = fbUser.accessToken
-                        foundUser.user.password = fbUser.password
-                        return this.userProvider.saveUser(foundUser.user, postToken).subscribe(res => {
-                            return foundUser.user
+                    if (this.usersAreDifferent(loginUser, foundUser.user) == true) {
+                        loginUser.id = foundUser.user.id
+                        loginUser.lastPosition = foundUser.user.lastPosition
+                        loginUser.createdDate = foundUser.user.createdDate
+                        return this.userProvider.saveUser(loginUser, foundUser.user.accessToken).subscribe(_ => {
+                            return loginUser
                         }, error => {
+                            this.notificationProvider.presentAlertOk(JSON.stringify(loginUser))
                             this.notificationProvider.presentTopToast("Error guardando el usuario.")
                         })
                     }
@@ -226,7 +242,7 @@ export class LoginPage {
             }).catch(err => {
                 if (err.status === 404) {
 
-                    return this.createUserByFBUser(fbUser).map(res => {
+                    return this.createUserByFBUser(loginUser).map(res => {
                         if (res.status == 201) {
                             return Observable.of(res.user)
                         }
@@ -245,7 +261,7 @@ export class LoginPage {
 
     usersAreDifferent(fbUser: User, foundUser: User): boolean {
         var out = false
-        if (fbUser.email != foundUser.email || fbUser.name != foundUser.name ||
+        if (fbUser.email != foundUser.email || fbUser.username != foundUser.username ||
             fbUser.fullName != foundUser.fullName || fbUser.profilePicture != foundUser.profilePicture ||
             fbUser.accessToken != foundUser.accessToken ||
             (fbUser.password != foundUser.password) && fbUser.password != '' && fbUser.password != null) {

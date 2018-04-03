@@ -69,17 +69,18 @@ public class UserController {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
 
-
             Position position = currentUser.getLastPosition();
 
-            if (currentUser.getLastPosition() == null) {
-                position = new Position(user.getLastPosition().getLatitude(), user.getLastPosition().getLongitude());
-            } else {
-                position.setLatitude(user.getLastPosition().getLatitude());
-                position.setLongitude(user.getLastPosition().getLongitude());
+            if (user.getLastPosition() != null) {
+                if (currentUser.getLastPosition() == null) {
+                    position = new Position(user.getLastPosition().getLatitude(), user.getLastPosition().getLongitude());
+                } else {
+                    position.setLatitude(user.getLastPosition().getLatitude());
+                    position.setLongitude(user.getLastPosition().getLongitude());
+                }
+                user.setLastPosition(positionService.savePosition(position));
             }
 
-            user.setLastPosition(positionService.savePosition(position));
 
             userService.saveUser(user);
             return new ResponseEntity<>(user, HttpStatus.OK);

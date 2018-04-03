@@ -9,6 +9,7 @@ import { APP_CONFIG_TOKEN, ApplicationConfig } from '../../../app/app-config';
 import { SessionProvider } from '../../../providers/session';
 import { TabsPage } from '../../tabs/tabs';
 import { EncryptProvider } from '../../../providers/encryptProvider';
+import { TypeUser } from '../../../models/typeUser';
 
 @Component({
     selector: 'page-normalRegister',
@@ -63,13 +64,14 @@ export class NormalRegisterPage {
             id: null,
             email: emailForm.value,
             password: password,
-            name: 'Nombre',
+            username: null,
             fullName: 'Nombre Completo',
             profilePicture: 'assets/imgs/quieroReciclar.png',
             accessToken: uuid.toString(),
             recycleItems: null,
             createdDate: new Date(),
-            lastPosition: null
+            lastPosition: null,
+            type: TypeUser.Normal
         }
 
         this.userProvider.createUser(user).subscribe(res => {

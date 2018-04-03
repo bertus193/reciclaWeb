@@ -7,6 +7,7 @@ import { SessionProvider } from '../../../providers/session';
 import { TabsPage } from '../../tabs/tabs';
 import { NotificationProvider } from '../../../providers/notifications';
 import { EncryptProvider } from '../../../providers/encryptProvider';
+import { TypeUser } from '../../../models/typeUser';
 
 @Component({
     selector: 'page-normalLogin',
@@ -63,13 +64,14 @@ export class NormalLoginPage {
             id: null,
             email: emailForm.value,
             password: password,
-            name: null,
+            username: null,
             fullName: null,
             profilePicture: null,
             accessToken: null,
             recycleItems: null,
             createdDate: null,
-            lastPosition: null
+            lastPosition: null,
+            type: TypeUser.Normal
         }
 
         this.userProvider.login(user).subscribe(res => {
