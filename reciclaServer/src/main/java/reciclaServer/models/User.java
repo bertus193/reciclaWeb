@@ -29,7 +29,7 @@ public class User {
 
     private String password;
 
-    private String name;
+    private String username;
 
     private String fullName;
 
@@ -38,6 +38,9 @@ public class User {
     private String accessToken;
 
     private Timestamp createdDate;
+
+    @Enumerated(EnumType.STRING) //Fix: by default enums are persisted as int using oridinal
+    private TypeUser type;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "last_position")
@@ -68,12 +71,12 @@ public class User {
         this.email = email;
     }
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getFullName() {
@@ -130,5 +133,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public TypeUser getType() {
+        return type;
+    }
+
+    public void setType(TypeUser type) {
+        this.type = type;
     }
 }
