@@ -80,7 +80,13 @@ export class myRecycledItemsPage {
                     resolve(false)
                 }
             }, error => {
-                resolve(false)
+                if (error.status == 404) { // no items found
+                    resolve(true)
+                }
+                else {
+                    resolve(false)
+                }
+
             })
         })
 

@@ -2,4 +2,14 @@ page-profile {
     .segmentName{
         font-size: 14px;
     }
+
+    .editButton{
+        float: right;
+        display: inline;
+        position: absolute;
+        top: 5px;
+        right: 0;
+        right: 20px;
+        padding: 0;
+    }
 }

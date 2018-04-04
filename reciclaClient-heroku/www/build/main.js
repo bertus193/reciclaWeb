@@ -202,6 +202,9 @@ var LoginPage = (function () {
     };
     LoginPage.prototype.loginInstagram = function () {
         var _this = this;
+        this.loading = this.loadingCtrl.create({
+            content: 'Iniciando sesión...'
+        });
         this.instagramProvider.login().then(function (tokenRes) {
             _this.instagramProvider.getInstagramUserInfo(tokenRes.access_token).subscribe(function (res) {
                 var instagramUser = res.json();
@@ -226,13 +229,19 @@ var LoginPage = (function () {
                     else {
                         user = res;
                     }
-                    return user;
+                    _this.sessionProvider.updateSession(user);
+                    _this.app.getRootNavs()[0].setRoot(__WEBPACK_IMPORTED_MODULE_3__tabs_tabs__["a" /* TabsPage */]);
                 }, function (error) {
-                    _this.notificationProvider.presentAlertError(JSON.stringify(error));
+                    _this.loading.dismiss();
+                    _this.notificationProvider.presentTopToast("Error iniciando sesión.");
                 });
             }, function (error) {
+                _this.loading.dismiss();
                 _this.notificationProvider.presentTopToast("Error obteniendo el usuario de Instagram.");
             });
+        }).catch(function (error) {
+            _this.loading.dismiss();
+            _this.notificationProvider.presentTopToast(_this.config.defaultTimeoutMsg);
         });
     };
     LoginPage.prototype.loginInDebugMode = function () {
@@ -292,7 +301,6 @@ var LoginPage = (function () {
                     return _this.userProvider.saveUser(loginUser, foundUser.user.accessToken).subscribe(function (_) {
                         return loginUser;
                     }, function (error) {
-                        _this.notificationProvider.presentAlertOk(JSON.stringify(loginUser));
                         _this.notificationProvider.presentTopToast("Error guardando el usuario.");
                     });
                 }
@@ -1188,7 +1196,7 @@ var MapPage = (function () {
     };
     MapPage = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
-            selector: 'page-recycleMap',template:/*ion-inline-start:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/recycle/recycle_map/recycleMap.html"*/'<ion-header>\n    <ion-navbar>\n        <div style="display: flex;justify-content: center; align-items: center;">\n            <div class="title-navbar" align="center">\n                <div class=\'main-title\'>Reciclar {{getItemType(recycleItem.itemType)}}</div>\n                <div class=\'sub-title\'>{{recycleItem.name}}</div>\n            </div>\n            <div class="iconsRight">\n                <div *ngIf="!recycledAlready; else onlymap">\n                    <ion-buttons right>\n                        <button ion-button icon-only color="royal" (tap)="recycleFinish()">\n                            <ion-icon name="checkmark"></ion-icon>\n                        </button>\n\n                        <button ion-button icon-only color="royal" (tap)="presentPopover($event)">\n                            <ion-icon name="more"></ion-icon>\n                        </button>\n                    </ion-buttons>\n                </div>\n\n                <ng-template #onlymap>\n                    <ion-buttons right>\n                        <button ion-button icon-only (click)="viewOnExtenalMap()">\n                            <ion-icon name="md-map"></ion-icon>\n                        </button>\n                    </ion-buttons>\n                </ng-template>\n            </div>\n        </div>\n    </ion-navbar>\n</ion-header>\n\n<ion-content>\n    <div #map id="map_canvas">\n    </div>\n</ion-content>'/*ion-inline-end:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/recycle/recycle_map/recycleMap.html"*/
+            selector: 'page-recycleMap',template:/*ion-inline-start:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/recycle/recycle_map/recycleMap.html"*/'<ion-header>\n    <ion-navbar>\n        <div style="display: flex;justify-content: center; align-items: center;">\n            <div class="title-navbar" align="center">\n                <div class=\'main-title\'>Reciclar {{getItemType(recycleItem.itemType)}}</div>\n                <div class=\'sub-title\'>{{recycleItem.name}}</div>\n            </div>\n            <div class="iconsRight">\n                <div *ngIf="!recycledAlready; else onlymap">\n                    <ion-buttons right>\n                        <button ion-button icon-only color="royal" (click)="recycleFinish()">\n                            <ion-icon name="checkmark"></ion-icon>\n                        </button>\n\n                        <button ion-button icon-only color="royal" (click)="presentPopover($event)">\n                            <ion-icon name="md-create"></ion-icon>\n                        </button>\n                    </ion-buttons>\n                </div>\n\n                <ng-template #onlymap>\n                    <ion-buttons right>\n                        <button ion-button icon-only (click)="viewOnExtenalMap()">\n                            <ion-icon name="md-map"></ion-icon>\n                        </button>\n                    </ion-buttons>\n                </ng-template>\n            </div>\n        </div>\n    </ion-navbar>\n</ion-header>\n\n<ion-content>\n    <div #map id="map_canvas">\n    </div>\n</ion-content>'/*ion-inline-end:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/recycle/recycle_map/recycleMap.html"*/
         }),
         __param(9, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["z" /* Inject */])(__WEBPACK_IMPORTED_MODULE_4__app_app_config__["b" /* APP_CONFIG_TOKEN */])),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavParams */],
@@ -1371,12 +1379,11 @@ var ProfilePage = (function () {
         this.sessionProvider.destroySession();
         this.app.getRootNavs()[0].setRoot(__WEBPACK_IMPORTED_MODULE_3__login_login__["a" /* LoginPage */]);
     };
-    ProfilePage.prototype.emailIsNumber = function () {
-        return parseFloat(this.user.email).toString() == this.user.email;
+    ProfilePage.prototype.goEditProfile = function () {
     };
     ProfilePage = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
-            selector: 'page-profile',template:/*ion-inline-start:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/profile/profile.html"*/'<ion-header>\n    <ion-toolbar>\n        <ion-segment [(ngModel)]="profileSegment" style="margin-bottom: -15px">\n            <ion-segment-button value="profile">\n                <div class="segmentName">Perfil</div>\n            </ion-segment-button>\n            <ion-segment-button value="history">\n                <div class="segmentName">Historial</div>\n            </ion-segment-button>\n        </ion-segment>\n    </ion-toolbar>\n</ion-header>\n\n<ion-content>\n    <div [ngSwitch]="profileSegment" style="height: 97%">\n        <ion-list *ngSwitchCase="\'profile\'" style="height: 100%;">\n            <ion-grid>\n                <ion-row>\n                    <ion-col>\n                        <ion-card *ngIf="user">\n                            <ion-card-header>{{ user.fullName }}</ion-card-header>\n                            <img [src]="user.profilePicture" onError="this.src = \'assets/imgs/quieroReciclar.png\'" />\n                            <ion-card-content>\n                                <span *ngIf="!emailIsNumber(); else showUsername">\n                                    <p>Email: {{ user.email }}</p>\n                                </span>\n                                <ng-template #showUsername>\n                                    <p>Usuario: {{ user.username }}</p>\n                                </ng-template>\n                                <p>Fecha registro: {{ user.createdDate | date: \'dd/MM/yyyy H:mm\'}}</p>\n                            </ion-card-content>\n                        </ion-card>\n                        <button ion-button block (click)="goToLogout()">Cerrar sesión</button>\n                    </ion-col>\n                </ion-row>\n            </ion-grid>\n        </ion-list>\n        <ion-list *ngSwitchCase="\'history\'" style="height: 100%">\n            <page-myRecycledItems></page-myRecycledItems>\n        </ion-list>\n    </div>\n\n</ion-content>'/*ion-inline-end:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/profile/profile.html"*/
+            selector: 'page-profile',template:/*ion-inline-start:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/profile/profile.html"*/'<ion-header>\n    <ion-toolbar>\n        <ion-segment [(ngModel)]="profileSegment" style="margin-bottom: -15px">\n            <ion-segment-button value="profile">\n                <div class="segmentName">Perfil</div>\n            </ion-segment-button>\n            <ion-segment-button value="history">\n                <div class="segmentName">Historial</div>\n            </ion-segment-button>\n        </ion-segment>\n    </ion-toolbar>\n</ion-header>\n\n<ion-content>\n    <div [ngSwitch]="profileSegment" style="height: 97%">\n        <ion-list *ngSwitchCase="\'profile\'" style="height: 100%;">\n            <ion-grid>\n                <ion-row>\n                    <ion-col>\n                        <ion-card *ngIf="user">\n                            <ion-card-header>\n                                <span style="float: left;">{{ user.fullName }}</span>\n                                <span style="float: right;" *ngIf="user.type == \'Normal\'">\n                                    <button color="dark" ion-button clear class="editButton" (click)="goEditProfile()">\n                                        <ion-icon name="md-create"></ion-icon>\n                                    </button>\n                                </span>\n                            </ion-card-header>\n                            <img [src]="user.profilePicture" onError="this.src = \'assets/imgs/quieroReciclar.png\'" />\n                            <ion-card-content>\n                                <span *ngIf="user.type == \'Normal\'; else showUsername">\n                                    <p>Email: {{ user.email }}</p>\n                                </span>\n                                <ng-template #showUsername>\n                                    <p>Usuario: {{ user.username }}</p>\n                                </ng-template>\n                                <p>Fecha registro: {{ user.createdDate | date: \'dd/MM/yyyy H:mm\'}}</p>\n                            </ion-card-content>\n                        </ion-card>\n                        <button ion-button block (click)="goToLogout()">Cerrar sesión</button>\n                    </ion-col>\n                </ion-row>\n            </ion-grid>\n        </ion-list>\n        <ion-list *ngSwitchCase="\'history\'" style="height: 100%">\n            <page-myRecycledItems></page-myRecycledItems>\n        </ion-list>\n    </div>\n\n</ion-content>'/*ion-inline-end:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/profile/profile.html"*/
         }),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2__providers_session__["a" /* SessionProvider */],
             __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["c" /* App */]])
@@ -2176,7 +2183,12 @@ var myRecycledItemsPage = (function () {
                     resolve(false);
                 }
             }, function (error) {
-                resolve(false);
+                if (error.status == 404) {
+                    resolve(true);
+                }
+                else {
+                    resolve(false);
+                }
             });
         });
     };

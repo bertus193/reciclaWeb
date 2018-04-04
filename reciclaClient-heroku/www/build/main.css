@@ -25780,7 +25780,7 @@ ion-card-content {
   background: url("../assets/imgs/icon_instagram.png") 10px 8px no-repeat;
 }
 
-.loginBtn-instagram:hover, .loginBtn-facebook:focus {
+.loginBtn-instagram:hover, .loginBtn-instagram:focus {
   background-color: #BC2F61;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#BC2F61), to(#900D3C));
   background-image: linear-gradient(#BC2F61, #900D3C);
@@ -25805,6 +25805,16 @@ page-normalRegister .scroll-content {
 
 page-profile .segmentName {
   font-size: 14px;
+}
+
+page-profile .editButton {
+  float: right;
+  display: inline;
+  position: absolute;
+  top: 5px;
+  right: 0;
+  right: 20px;
+  padding: 0;
 }
 
 page-myRecycledItems .recycleItemIonItem:hover {

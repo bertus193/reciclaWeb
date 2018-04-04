@@ -132,6 +132,9 @@ export class LoginPage {
     }
 
     loginInstagram() {
+        this.loading = this.loadingCtrl.create({
+            content: 'Iniciando sesión...'
+        });
         this.instagramProvider.login().then(tokenRes => {
             this.instagramProvider.getInstagramUserInfo(tokenRes.access_token).subscribe(res => {
                 var instagramUser = res.json()
@@ -157,14 +160,20 @@ export class LoginPage {
                     } else {
                         user = res
                     }
-                    return user
+                    this.sessionProvider.updateSession(user)
+                    this.app.getRootNavs()[0].setRoot(TabsPage)
                 }, error => {
-                    this.notificationProvider.presentAlertError(JSON.stringify(error))
+                    this.loading.dismiss()
+                    this.notificationProvider.presentTopToast("Error iniciando sesión.")
                 })
 
             }, error => {
+                this.loading.dismiss()
                 this.notificationProvider.presentTopToast("Error obteniendo el usuario de Instagram.")
             })
+        }).catch(error => {
+            this.loading.dismiss()
+            this.notificationProvider.presentTopToast(this.config.defaultTimeoutMsg)
         })
     }
 
@@ -229,7 +238,6 @@ export class LoginPage {
                         return this.userProvider.saveUser(loginUser, foundUser.user.accessToken).subscribe(_ => {
                             return loginUser
                         }, error => {
-                            this.notificationProvider.presentAlertOk(JSON.stringify(loginUser))
                             this.notificationProvider.presentTopToast("Error guardando el usuario.")
                         })
                     }

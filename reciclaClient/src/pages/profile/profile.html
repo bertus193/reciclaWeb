@@ -18,10 +18,17 @@
                 <ion-row>
                     <ion-col>
                         <ion-card *ngIf="user">
-                            <ion-card-header>{{ user.fullName }}</ion-card-header>
+                            <ion-card-header>
+                                <span style="float: left;">{{ user.fullName }}</span>
+                                <span style="float: right;" *ngIf="user.type == 'Normal'">
+                                    <button color="dark" ion-button clear class="editButton" (click)="goEditProfile()">
+                                        <ion-icon name="md-create"></ion-icon>
+                                    </button>
+                                </span>
+                            </ion-card-header>
                             <img [src]="user.profilePicture" onError="this.src = 'assets/imgs/quieroReciclar.png'" />
                             <ion-card-content>
-                                <span *ngIf="!emailIsNumber(); else showUsername">
+                                <span *ngIf="user.type == 'Normal'; else showUsername">
                                     <p>Email: {{ user.email }}</p>
                                 </span>
                                 <ng-template #showUsername>
