@@ -49,7 +49,6 @@ public class UserController {
     public ResponseEntity<?> createUser(@RequestBody User user) {
 
         if (userService.isUserExist(user.getEmail())) {
-            System.out.println("A User with name " + user.getEmail() + " already exist");
             return new ResponseEntity<Void>(HttpStatus.CONFLICT);
         }
 
