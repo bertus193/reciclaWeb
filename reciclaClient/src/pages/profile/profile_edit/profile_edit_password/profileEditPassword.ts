@@ -1,6 +1,6 @@
 import { Component, Output, EventEmitter, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, AbstractControl } from '@angular/forms';
-import { Loading, LoadingController, NavParams } from 'ionic-angular';
+import { Loading, LoadingController, NavParams, NavController } from 'ionic-angular';
 import { APP_CONFIG_TOKEN, ApplicationConfig } from '../../../../app/app-config';
 import { UserProvider } from '../../../../providers/api/userProvider';
 import { User } from '../../../../models/user';
@@ -25,6 +25,7 @@ export class ProfileEditPasswordPage {
         private loadingCtrl: LoadingController,
         private userProvider: UserProvider,
         private navParams: NavParams,
+        private navCtrl: NavController,
         private encryptProvider: EncryptProvider,
         private notificationProvider: NotificationProvider,
         @Inject(APP_CONFIG_TOKEN) private config: ApplicationConfig,
@@ -50,8 +51,23 @@ export class ProfileEditPasswordPage {
         this.loading.present()
         var password = this.profileEditPasswordForm.get("prev_password").value
         this.user.password = this.encryptProvider.encryptPassword(password)
+
         this.userProvider.login(this.user).subscribe(res => {
-            this.loading.dismiss()
+
+            password = this.profileEditPasswordForm.get("password").value
+            console.log(password)
+            this.user.password = this.encryptProvider.encryptPassword(password)
+
+            this.userProvider.saveUser(this.user, this.user.accessToken).subscribe(res => {
+                this.notificationProvider.presentTopToast("La contraseña ha sido modificada correctamente!")
+                this.navCtrl.pop()
+                this.loading.dismiss()
+
+            }, error => {
+                this.loading.dismiss()
+                this.notificationProvider.presentTopToast("Error, no se ha podido guardar la contraseña.")
+            })
+
         }, error => {
             if (error.status == 403) {
                 this.loading.dismiss()

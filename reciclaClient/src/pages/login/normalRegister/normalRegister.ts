@@ -64,7 +64,7 @@ export class NormalRegisterPage {
             id: null,
             email: emailForm.value,
             password: password,
-            username: null,
+            username: emailForm.value,
             fullName: 'Nombre Completo',
             profilePicture: 'assets/imgs/quieroReciclar.png',
             accessToken: uuid.toString(),

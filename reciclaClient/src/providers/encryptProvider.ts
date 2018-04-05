@@ -8,7 +8,7 @@ export class EncryptProvider {
 
     encryptPassword(password: string): string {
         let shaObj = new jsSHA("SHA-256", "TEXT");
-        shaObj.update("This is a test");
+        shaObj.update(password)
         let hash = shaObj.getHash("HEX");
         return hash
     }

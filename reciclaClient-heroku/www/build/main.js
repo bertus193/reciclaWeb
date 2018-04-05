@@ -2510,7 +2510,7 @@ var NormalRegisterPage = (function () {
             id: null,
             email: emailForm.value,
             password: password,
-            username: null,
+            username: emailForm.value,
             fullName: 'Nombre Completo',
             profilePicture: 'assets/imgs/quieroReciclar.png',
             accessToken: uuid.toString(),
@@ -2558,22 +2558,17 @@ var NormalRegisterPage = (function () {
     };
     __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["O" /* Output */])(),
-        __metadata("design:type", __WEBPACK_IMPORTED_MODULE_0__angular_core__["v" /* EventEmitter */])
+        __metadata("design:type", typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["v" /* EventEmitter */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["v" /* EventEmitter */]) === "function" && _a || Object)
     ], NormalRegisterPage.prototype, "onRegisterFinishEvent", void 0);
     NormalRegisterPage = NormalRegisterPage_1 = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
             selector: 'page-normalRegister',template:/*ion-inline-start:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/login/normalRegister/normalRegister.html"*/'<ion-grid style="height: 100%">\n    <ion-row align-items-center text-center style="height: 100%">\n        <ion-col>\n            <form [formGroup]="registerForm" (ngSubmit)="register_Button()">\n                <ion-row>\n                    <ion-col>\n                        <ion-list inset>\n\n                            <ion-item>\n                                <ion-input type="text" placeholder="Email" formControlName="email" required></ion-input>\n                            </ion-item>\n                            <ion-item>\n                                <ion-input type="password" placeholder="Contraseña" formControlName="password" required></ion-input>\n                            </ion-item>\n                            <ion-item>\n                                <ion-input type="password" placeholder="Repetir contraseña" formControlName="password_repeat" color="{{ registerForm.controls.password_repeat.errors ? \'danger\' : \'primary\' }}"\n                                    required></ion-input>\n                            </ion-item>\n                            <div align="left" style="height: 16px;">\n                                <span style="color: #d80303;" *ngIf="registerForm.controls.password_repeat.errors?.MatchPassword">Las contraseñas deben coincidir</span>\n                            </div>\n                        </ion-list>\n                    </ion-col>\n                </ion-row>\n\n                <ion-row>\n                    <ion-col class="signup-col">\n                        <button ion-button class="submit-btn" full type="submit" [disabled]="!registerForm.valid">Registrarse</button>\n                    </ion-col>\n                </ion-row>\n            </form>\n        </ion-col>\n    </ion-row>\n</ion-grid>'/*ion-inline-end:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/login/normalRegister/normalRegister.html"*/
         }),
         __param(5, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["z" /* Inject */])(__WEBPACK_IMPORTED_MODULE_6__app_app_config__["b" /* APP_CONFIG_TOKEN */])),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_4_ionic_angular__["c" /* App */],
-            __WEBPACK_IMPORTED_MODULE_1__angular_forms__["a" /* FormBuilder */],
-            __WEBPACK_IMPORTED_MODULE_2__providers_api_userProvider__["a" /* UserProvider */],
-            __WEBPACK_IMPORTED_MODULE_3__providers_notifications__["a" /* NotificationProvider */],
-            __WEBPACK_IMPORTED_MODULE_4_ionic_angular__["h" /* LoadingController */], Object, __WEBPACK_IMPORTED_MODULE_7__providers_session__["a" /* SessionProvider */],
-            __WEBPACK_IMPORTED_MODULE_9__providers_encryptProvider__["a" /* EncryptProvider */]])
+        __metadata("design:paramtypes", [typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_4_ionic_angular__["c" /* App */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4_ionic_angular__["c" /* App */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1__angular_forms__["a" /* FormBuilder */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_forms__["a" /* FormBuilder */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_2__providers_api_userProvider__["a" /* UserProvider */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__providers_api_userProvider__["a" /* UserProvider */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_3__providers_notifications__["a" /* NotificationProvider */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__providers_notifications__["a" /* NotificationProvider */]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_4_ionic_angular__["h" /* LoadingController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4_ionic_angular__["h" /* LoadingController */]) === "function" && _f || Object, typeof (_g = typeof __WEBPACK_IMPORTED_MODULE_6__app_app_config__["ApplicationConfig"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_6__app_app_config__["ApplicationConfig"]) === "function" && _g || Object, typeof (_h = typeof __WEBPACK_IMPORTED_MODULE_7__providers_session__["a" /* SessionProvider */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_7__providers_session__["a" /* SessionProvider */]) === "function" && _h || Object, typeof (_j = typeof __WEBPACK_IMPORTED_MODULE_9__providers_encryptProvider__["a" /* EncryptProvider */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_9__providers_encryptProvider__["a" /* EncryptProvider */]) === "function" && _j || Object])
     ], NormalRegisterPage);
     return NormalRegisterPage;
-    var NormalRegisterPage_1;
+    var NormalRegisterPage_1, _a, _b, _c, _d, _e, _f, _g, _h, _j;
 }());
 
 //# sourceMappingURL=normalRegister.js.map
@@ -2612,11 +2607,12 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 
 
 var ProfileEditPasswordPage = (function () {
-    function ProfileEditPasswordPage(formBuilder, loadingCtrl, userProvider, navParams, encryptProvider, notificationProvider, config) {
+    function ProfileEditPasswordPage(formBuilder, loadingCtrl, userProvider, navParams, navCtrl, encryptProvider, notificationProvider, config) {
         this.formBuilder = formBuilder;
         this.loadingCtrl = loadingCtrl;
         this.userProvider = userProvider;
         this.navParams = navParams;
+        this.navCtrl = navCtrl;
         this.encryptProvider = encryptProvider;
         this.notificationProvider = notificationProvider;
         this.config = config;
@@ -2641,11 +2637,20 @@ var ProfileEditPasswordPage = (function () {
         var password = this.profileEditPasswordForm.get("prev_password").value;
         this.user.password = this.encryptProvider.encryptPassword(password);
         this.userProvider.login(this.user).subscribe(function (res) {
-            _this.loading.dismiss();
+            password = _this.profileEditPasswordForm.get("password").value;
+            console.log(password);
+            _this.user.password = _this.encryptProvider.encryptPassword(password);
+            _this.userProvider.saveUser(_this.user, _this.user.accessToken).subscribe(function (res) {
+                _this.notificationProvider.presentTopToast("La contraseña ha sido modificada correctamente!");
+                _this.navCtrl.pop();
+                _this.loading.dismiss();
+            }, function (error) {
+                _this.loading.dismiss();
+                _this.notificationProvider.presentTopToast("Error, no se ha podido guardar la contraseña.");
+            });
         }, function (error) {
             if (error.status == 403) {
                 _this.loading.dismiss();
-                console.log(_this.user.password);
                 _this.notificationProvider.presentAlertError("La contraseña actual no es correcta.");
             }
             else {
@@ -2671,11 +2676,11 @@ var ProfileEditPasswordPage = (function () {
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
             selector: 'page-profileEditPassword',template:/*ion-inline-start:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/profile/profile_edit/profile_edit_password/profileEditPassword.html"*/'<ion-grid style="height: 100%">\n    <ion-row align-items-center text-center style="height: 100%">\n        <ion-col>\n            <form [formGroup]="profileEditPasswordForm" (ngSubmit)="editPassword_Button()">\n                <ion-row>\n                    <ion-col>\n                        <ion-list inset>\n\n                            <ion-item>\n                                <ion-input type="password" placeholder="Contraseña actual" formControlName="prev_password" required></ion-input>\n                            </ion-item>\n                            <ion-item>\n                                <ion-input type="password" placeholder="Nueva contraseña" formControlName="password" required></ion-input>\n                            </ion-item>\n                            <ion-item>\n                                <ion-input type="password" placeholder="Repetir contraseña" formControlName="password_repeat" color="{{ profileEditPasswordForm.controls.password_repeat.errors ? \'danger\' : \'primary\' }}"\n                                    required></ion-input>\n                            </ion-item>\n                            <div align="left" style="height: 16px;">\n                                <span style="color: #d80303;" *ngIf="profileEditPasswordForm.controls.password_repeat.errors?.MatchPassword">Las contraseñas deben coincidir</span>\n                            </div>\n                        </ion-list>\n                    </ion-col>\n                </ion-row>\n\n                <ion-row>\n                    <ion-col class="signup-col">\n                        <button ion-button class="submit-btn" full type="submit" [disabled]="!profileEditPasswordForm.valid">Modificar contraseña</button>\n                    </ion-col>\n                </ion-row>\n            </form>\n        </ion-col>\n    </ion-row>\n</ion-grid>'/*ion-inline-end:"/Users/albertoricogarcia/Documents/workspace/reciclaWeb/reciclaClient/src/pages/profile/profile_edit/profile_edit_password/profileEditPassword.html"*/
         }),
-        __param(6, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["z" /* Inject */])(__WEBPACK_IMPORTED_MODULE_3__app_app_config__["b" /* APP_CONFIG_TOKEN */])),
-        __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_forms__["a" /* FormBuilder */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_forms__["a" /* FormBuilder */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["h" /* LoadingController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["h" /* LoadingController */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_4__providers_api_userProvider__["a" /* UserProvider */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__providers_api_userProvider__["a" /* UserProvider */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["j" /* NavParams */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["j" /* NavParams */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_6__providers_encryptProvider__["a" /* EncryptProvider */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_6__providers_encryptProvider__["a" /* EncryptProvider */]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_5__providers_notifications__["a" /* NotificationProvider */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__providers_notifications__["a" /* NotificationProvider */]) === "function" && _f || Object, typeof (_g = typeof __WEBPACK_IMPORTED_MODULE_3__app_app_config__["ApplicationConfig"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__app_app_config__["ApplicationConfig"]) === "function" && _g || Object])
+        __param(7, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["z" /* Inject */])(__WEBPACK_IMPORTED_MODULE_3__app_app_config__["b" /* APP_CONFIG_TOKEN */])),
+        __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_forms__["a" /* FormBuilder */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_forms__["a" /* FormBuilder */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["h" /* LoadingController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["h" /* LoadingController */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_4__providers_api_userProvider__["a" /* UserProvider */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__providers_api_userProvider__["a" /* UserProvider */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["j" /* NavParams */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["j" /* NavParams */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["i" /* NavController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["i" /* NavController */]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_6__providers_encryptProvider__["a" /* EncryptProvider */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_6__providers_encryptProvider__["a" /* EncryptProvider */]) === "function" && _f || Object, typeof (_g = typeof __WEBPACK_IMPORTED_MODULE_5__providers_notifications__["a" /* NotificationProvider */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__providers_notifications__["a" /* NotificationProvider */]) === "function" && _g || Object, typeof (_h = typeof __WEBPACK_IMPORTED_MODULE_3__app_app_config__["ApplicationConfig"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__app_app_config__["ApplicationConfig"]) === "function" && _h || Object])
     ], ProfileEditPasswordPage);
     return ProfileEditPasswordPage;
-    var ProfileEditPasswordPage_1, _a, _b, _c, _d, _e, _f, _g;
+    var ProfileEditPasswordPage_1, _a, _b, _c, _d, _e, _f, _g, _h;
 }());
 
 //# sourceMappingURL=profileEditPassword.js.map
@@ -2885,7 +2890,7 @@ var EncryptProvider = (function () {
     }
     EncryptProvider.prototype.encryptPassword = function (password) {
         var shaObj = new __WEBPACK_IMPORTED_MODULE_1_jssha___default.a("SHA-256", "TEXT");
-        shaObj.update("This is a test");
+        shaObj.update(password);
         var hash = shaObj.getHash("HEX");
         return hash;
     };
