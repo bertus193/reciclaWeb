@@ -184,7 +184,7 @@ export class LoginPage {
             id: -1,
             email: this.config.debugUserEmail,
             password: password,
-            username: Math.random().toString(),
+            username: this.config.debugUserEmail,
             fullName: 'Debug user',
             profilePicture: 'https://keluro.com/images/Blog/Debug.jpg',
             accessToken: 'DEBUG_MODE',

@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
-import { App } from 'ionic-angular';
+import { App, NavController } from 'ionic-angular';
 import { SessionProvider } from '../../providers/session';
 import { LoginPage } from '../login/login';
 import { User } from '../../models/user';
+import { ProfileEditPage } from './profile_edit/profileEdit';
 
 @Component({
     selector: 'page-profile',
@@ -14,7 +15,8 @@ export class ProfilePage {
 
     constructor(
         private sessionProvider: SessionProvider,
-        private app: App
+        private app: App,
+        private navCtrl: NavController
     ) {
         sessionProvider.getSession().then(res => {
             this.user = res
@@ -31,7 +33,9 @@ export class ProfilePage {
     }
 
     goEditProfile() {
-
+        this.navCtrl.push(ProfileEditPage, {
+            user: this.user
+        })
     }
 
 }

@@ -1,0 +1,66 @@
+<ion-header>
+    <ion-navbar>
+        <ion-title>Editar perfil</ion-title>
+    </ion-navbar>
+    <ion-toolbar>
+        <ion-segment [(ngModel)]="defaultPage" style="margin-bottom: -15px">
+            <ion-segment-button value="profileEdit">
+                <div class="segmentName">Datos del perfil</div>
+            </ion-segment-button>
+            <ion-segment-button value="profileEditPassword">
+                <div class="segmentName">Contraseña</div>
+            </ion-segment-button>
+        </ion-segment>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <div [ngSwitch]="defaultPage" style="height: 97%">
+        <ion-list *ngSwitchCase="'profileEdit'" style="height: 100%;">
+            <ion-grid style="height: 100%">
+
+                <ion-row align-items-center text-center style="height: 100%">
+                    <ion-col>
+                        <form [formGroup]="profileEditForm" (ngSubmit)="editProfile_Button()">
+
+                            <ion-grid style="height: 150px;">
+                                <ion-row>
+                                    <ion-col col-5>
+                                        <ion-thumbnail item-left>
+                                            <img [src]="image" onError="this.src = 'assets/imgs/quieroReciclar.png'">
+                                        </ion-thumbnail>
+                                    </ion-col>
+                                    <ion-col style="padding-top: 15px;">
+                                        <ion-row>
+                                            <ion-item style="padding-left: 0;">
+                                                <ion-input type="text" placeholder="Email" formControlName="email" [value]="user.email" required></ion-input>
+                                            </ion-item>
+                                        </ion-row>
+                                        <ion-row>
+                                            <ion-item style="padding-left: 0;">
+                                                <ion-input type="text" placeholder="Nombre completo" formControlName="fullName" [value]="user.fullName" required></ion-input>
+                                            </ion-item>
+                                        </ion-row>
+
+                                    </ion-col>
+
+                                </ion-row>
+                                <hr class="style14" />
+                            </ion-grid>
+                            <button ion-button clear (tap)="editProfilePicture()">Seleccionar imagen de perfil</button>
+
+                            <ion-row>
+                                <ion-col class="signup-col">
+                                    <button ion-button class="submit-btn" full type="submit" [disabled]="!profileEditForm.valid">Modificar perfil</button>
+                                </ion-col>
+                            </ion-row>
+                        </form>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+        </ion-list>
+        <ion-list *ngSwitchCase="'profileEditPassword'" style="height: 100%">
+            <page-profileEditPassword></page-profileEditPassword>
+        </ion-list>
+    </div>
+</ion-content>

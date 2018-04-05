@@ -9,6 +9,8 @@ import { PopoverMap } from './recycle/recycle_map/popover_map/popoverMap';
 import { recycleItemInfoPage } from './profile/profile_recycledItems/profile_recycledItems_info/recycleItemInfo';
 import { NormalLoginPage } from './login/normalLogin/normalLogin';
 import { NormalRegisterPage } from './login/normalRegister/normalRegister';
+import { ProfileEditPage } from './profile/profile_edit/profileEdit';
+import { ProfileEditPasswordPage } from './profile/profile_edit/profile_edit_password/profileEditPassword';
 
 export const APP_PAGES = [
     RecyclePage,
@@ -21,5 +23,7 @@ export const APP_PAGES = [
     MapPage,
     PopoverMap,
     NormalLoginPage,
-    NormalRegisterPage
+    NormalRegisterPage,
+    ProfileEditPage,
+    ProfileEditPasswordPage
 ];

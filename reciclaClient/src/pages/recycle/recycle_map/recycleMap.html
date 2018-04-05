@@ -8,11 +8,11 @@
             <div class="iconsRight">
                 <div *ngIf="!recycledAlready; else onlymap">
                     <ion-buttons right>
-                        <button ion-button icon-only color="royal" (click)="recycleFinish()">
+                        <button ion-button icon-only color="royal" (tap)="recycleFinish()">
                             <ion-icon name="checkmark"></ion-icon>
                         </button>
 
-                        <button ion-button icon-only color="royal" (click)="presentPopover($event)">
+                        <button ion-button icon-only color="royal" (tap)="presentPopover($event)">
                             <ion-icon name="md-create"></ion-icon>
                         </button>
                     </ion-buttons>
@@ -20,7 +20,7 @@
 
                 <ng-template #onlymap>
                     <ion-buttons right>
-                        <button ion-button icon-only (click)="viewOnExtenalMap()">
+                        <button ion-button icon-only (tap)="viewOnExtenalMap()">
                             <ion-icon name="md-map"></ion-icon>
                         </button>
                     </ion-buttons>

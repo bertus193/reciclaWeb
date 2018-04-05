@@ -25817,6 +25817,23 @@ page-profile .editButton {
   padding: 0;
 }
 
+page-profileEdit .segmentName {
+  font-size: 14px;
+}
+
+page-profileEdit .scroll-content {
+  padding-bottom: 0 !important;
+}
+
+page-profileEditPassword .registerSuccessMsg {
+  margin: 45px;
+  font-size: 16px;
+}
+
+page-profileEditPassword .scroll-content {
+  padding-bottom: 0 !important;
+}
+
 page-myRecycledItems .recycleItemIonItem:hover {
   background-color: #e7e7e7;
 }

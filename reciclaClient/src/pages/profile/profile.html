@@ -21,7 +21,7 @@
                             <ion-card-header>
                                 <span style="float: left;">{{ user.fullName }}</span>
                                 <span style="float: right;" *ngIf="user.type == 'Normal'">
-                                    <button color="dark" ion-button clear class="editButton" (click)="goEditProfile()">
+                                    <button color="dark" ion-button clear class="editButton" (tap)="goEditProfile()">
                                         <ion-icon name="md-create"></ion-icon>
                                     </button>
                                 </span>
@@ -29,7 +29,7 @@
                             <img [src]="user.profilePicture" onError="this.src = 'assets/imgs/quieroReciclar.png'" />
                             <ion-card-content>
                                 <span *ngIf="user.type == 'Normal'; else showUsername">
-                                    <p>Email: {{ user.email }}</p>
+                                    <p>Email: {{ user.username }}</p>
                                 </span>
                                 <ng-template #showUsername>
                                     <p>Usuario: {{ user.username }}</p>
@@ -37,7 +37,7 @@
                                 <p>Fecha registro: {{ user.createdDate | date: 'dd/MM/yyyy H:mm'}}</p>
                             </ion-card-content>
                         </ion-card>
-                        <button ion-button block (click)="goToLogout()">Cerrar sesión</button>
+                        <button ion-button block (tap)="goToLogout()">Cerrar sesión</button>
                     </ion-col>
                 </ion-row>
             </ion-grid>

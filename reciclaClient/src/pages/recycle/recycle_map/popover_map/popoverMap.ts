@@ -5,9 +5,9 @@ import { MapPage } from '../recycleMap';
 @Component({
     template: `
       <ion-list style="height: 125px;">
-        <button ion-item (click)="viewOnExtenalMap()">Abrir en Mapas</button>
-        <button ion-item (click)="showRadioModifyItemType()">Modificar el tipo</button>
-        <button ion-item (click)="modifyRecycleName()">Modificar el nombre</button>
+        <button ion-item (tap)="viewOnExtenalMap()">Abrir en Mapas</button>
+        <button ion-item (tap)="showRadioModifyItemType()">Modificar el tipo</button>
+        <button ion-item (tap)="modifyRecycleName()">Modificar el nombre</button>
       </ion-list>
     `
 })
