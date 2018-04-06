@@ -5,7 +5,6 @@ import { Camera, CameraOptions } from '@ionic-native/camera';
 import { NotificationProvider } from '../../../providers/notifications';
 import { Crop } from '@ionic-native/crop';
 import { User } from '../../../models/user';
-import { SessionProvider } from '../../../providers/session';
 import { UserProvider } from '../../../providers/api/userProvider';
 import { APP_CONFIG_TOKEN, ApplicationConfig } from '../../../app/app-config';
 import { FileUploadOptions, TransferObject, Transfer } from '@ionic-native/transfer';
@@ -30,7 +29,6 @@ export class ProfileEditPage {
         private loadingCtrl: LoadingController,
         private notificationProvider: NotificationProvider,
         private crop: Crop,
-        private sessionProvider: SessionProvider,
         private navParams: NavParams,
         private userProvider: UserProvider,
         private navCtrl: NavController,

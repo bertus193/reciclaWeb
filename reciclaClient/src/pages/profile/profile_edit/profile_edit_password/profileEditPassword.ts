@@ -1,7 +1,6 @@
-import { Component, Output, EventEmitter, Inject } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, AbstractControl } from '@angular/forms';
 import { Loading, LoadingController, NavParams, NavController } from 'ionic-angular';
-import { APP_CONFIG_TOKEN, ApplicationConfig } from '../../../../app/app-config';
 import { UserProvider } from '../../../../providers/api/userProvider';
 import { User } from '../../../../models/user';
 import { NotificationProvider } from '../../../../providers/notifications';
@@ -27,8 +26,7 @@ export class ProfileEditPasswordPage {
         private navParams: NavParams,
         private navCtrl: NavController,
         private encryptProvider: EncryptProvider,
-        private notificationProvider: NotificationProvider,
-        @Inject(APP_CONFIG_TOKEN) private config: ApplicationConfig,
+        private notificationProvider: NotificationProvider
     ) {
         this.profileEditPasswordForm = this.formBuilder.group({
             prev_password: [''],

@@ -5,7 +5,7 @@ import { ApplicationConfig, APP_CONFIG_TOKEN } from '../app/app-config';
 import { StoragePoint } from '../models/storagePoint';
 import { Position } from '../models/position';
 import { ItemType } from '../models/itemType';
-import { Observable } from 'rxjs/Rx'
+import { Observable, TimeoutError } from 'rxjs/Rx'
 import { TypeRecycle } from '../models/typeRecicle';
 
 
@@ -81,5 +81,15 @@ export class UtilsProvider {
             out = TypeRecycle[itemTypeId]
         }
         return out
+    }
+
+    public timeoutPromise(timeout, promise) {
+        var wrapPromise = new Promise(function (resolve, reject) {
+            setTimeout(function () {
+                reject(new TimeoutError());
+            }, timeout);
+        });
+
+        return Promise.race([promise, wrapPromise]);
     }
 }

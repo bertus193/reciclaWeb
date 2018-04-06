@@ -283,7 +283,10 @@ export class RecyclePage {
 
         const fileTransfer: TransferObject = this.transfer.create();
 
-        this.upload(targetPath, urlUpload, options, fileTransfer, urlUploadedFiles)
+        this.upload(targetPath, urlUpload, options, fileTransfer, urlUploadedFiles).catch(error => {
+            this.loading.dismiss()
+            this.notificationProvider.presentAlertError('Error de conexión con el servidor de imágenes.')
+        })
 
     }
 
@@ -301,43 +304,49 @@ export class RecyclePage {
 
     public upload(targetPath, urlUpload, options, fileTransfer, urlUploadedFiles) {
         // Use the FileTransfer to upload the image
-        fileTransfer.upload(targetPath, urlUpload, options).then(data => {
-            this.googleCloudServiceProvider.getLabels(urlUploadedFiles).timeout(this.config.defaultTimeoutTime).subscribe((result: any) => {
-                var labelResponseList: LabelResponse[];
-                labelResponseList = result.json().responses[0].labelAnnotations;
-                if (labelResponseList.length > 0) {
-                    this.temporalName = labelResponseList[0].description
+        return this.utilsProvider.timeoutPromise(this.config.defaultTimeoutTime,
+            fileTransfer.upload(targetPath, urlUpload, options).then(data => {
+                this.googleCloudServiceProvider.getLabels(urlUploadedFiles).timeout(this.config.defaultTimeoutTime).subscribe((result: any) => {
+                    var labelResponseList: LabelResponse[];
+                    labelResponseList = result.json().responses[0].labelAnnotations;
+                    if (labelResponseList.length > 0) {
+                        this.temporalName = labelResponseList[0].description
 
-                    this.getTypeFromDB(labelResponseList).subscribe((res: boolean) => {
-                        if (res == true) {
-                            this.googleCloudServiceProvider.translateToSpanish(this.temporalName).subscribe(res => {
-                                this.recycleItem.name = res.json().data.translations[0].translatedText
-                                this.recycleItem.name = this.recycleItem.name.charAt(0).toUpperCase() + this.recycleItem.name.substr(1).toLowerCase()
-                                this.loading.setContent("Obteniendo la ubicación del usuario...")
-                                this.getUserPosition()
-                            }, err => { // translate
+                        this.getTypeFromDB(labelResponseList).subscribe((res: boolean) => {
+                            if (res == true) {
+                                this.googleCloudServiceProvider.translateToSpanish(this.temporalName).subscribe(res => {
+                                    this.recycleItem.name = res.json().data.translations[0].translatedText
+                                    this.recycleItem.name = this.recycleItem.name.charAt(0).toUpperCase() + this.recycleItem.name.substr(1).toLowerCase()
+                                    this.loading.setContent("Obteniendo la ubicación del usuario...")
+                                    this.getUserPosition()
+                                }, err => { // translate
+                                    this.loading.dismiss()
+                                    this.notificationProvider.presentTopToast("Error interno en la obtención del nombre.")
+                                })
+                            }
+                            else {
                                 this.loading.dismiss()
-                                this.notificationProvider.presentTopToast("Error interno en la obtención del nombre.")
-                            })
-                        }
-                        else {
+                            }
+                        }, error => { // this.getTypeFromDB
                             this.loading.dismiss()
-                        }
-                    }, error => { // this.getTypeFromDB
-                        this.loading.dismiss()
-                        this.notificationProvider.presentTopToast("Error obteniendo el tipo de objeto")
-                    })
-                }
+                            this.notificationProvider.presentTopToast("Error obteniendo el tipo de objeto")
+                        })
+                    }
 
-            }, err => { // Vision
-                this.loading.dismiss()
-                this.notificationProvider.presentTopToast("Error a la hora de utilizar la imagen.")
+                }, err => { // Vision
+                    this.loading.dismiss()
+                    this.notificationProvider.presentTopToast("Error a la hora de utilizar la imagen.")
+                })
+
             })
+        )
 
-        }).catch(error => { // fileTransfer.upload
+        /*
+        catch(error => { // fileTransfer.upload
             this.loading.dismiss()
             this.notificationProvider.presentTopToast('Error de conexión con el servidor de imágenes.')
-        })
+        }
+        */
     }
 
 
