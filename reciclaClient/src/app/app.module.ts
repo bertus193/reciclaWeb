@@ -25,6 +25,7 @@ import { LocationAccuracy } from '@ionic-native/location-accuracy';
 import { GoogleMaps } from '@ionic-native/google-maps'
 
 import { APP_PROVIDERS } from '../providers';
+import { Keyboard } from '@ionic-native/keyboard';
 
 @NgModule({
     declarations: [
@@ -56,7 +57,8 @@ import { APP_PROVIDERS } from '../providers';
         Geolocation,
         LocationAccuracy,
         GoogleMaps,
-        Crop
+        Crop,
+        Keyboard
     ]
 })
 export class AppModule { }

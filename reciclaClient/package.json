@@ -29,6 +29,7 @@
     "@ionic-native/file-path": "4.5.3",
     "@ionic-native/geolocation": "^4.5.3",
     "@ionic-native/google-maps": "^4.5.3",
+    "@ionic-native/keyboard": "^4.6.0",
     "@ionic-native/launch-navigator": "^4.5.3",
     "@ionic-native/local-notifications": "^4.5.3",
     "@ionic-native/location-accuracy": "^4.5.3",

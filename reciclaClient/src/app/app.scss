@@ -33,3 +33,15 @@ ion-card-content{
     padding: 13px 16px 11px 16px !important;
 }
 
+body.keyboard-is-open .tabbar{
+    display: none;
+}
+
+body.keyboard-is-open .scroll-content {
+    margin-bottom: 0 !important;
+}
+
+body.keyboard-is-open .fixed-content {
+    margin-bottom: 0 !important;
+}
+  

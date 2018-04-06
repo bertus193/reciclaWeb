@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, AbstractControl } from '@angular/forms';
 import { Loading, LoadingController, NavParams, NavController } from 'ionic-angular';
 import { UserProvider } from '../../../../providers/api/userProvider';

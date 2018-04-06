@@ -7,6 +7,7 @@ import { TabsPage } from '../pages/tabs/tabs';
 import { SessionProvider } from '../providers/session';
 import { LoginPage } from '../pages/login/login';
 import { Platform } from 'ionic-angular/platform/platform';
+import { Keyboard } from '@ionic-native/keyboard';
 
 @Component({
     templateUrl: 'app.html'
@@ -14,7 +15,13 @@ import { Platform } from 'ionic-angular/platform/platform';
 export class MyApp {
     rootPage: any;
 
-    constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, public sessionProvider: SessionProvider) {
+    constructor(
+        private platform: Platform,
+        private statusBar: StatusBar,
+        private splashScreen: SplashScreen,
+        private sessionProvider: SessionProvider,
+        private keyboard: Keyboard
+    ) {
 
         this.sessionProvider.getSession().then(res => {
             if (res == null) {
@@ -29,6 +36,13 @@ export class MyApp {
             // Here you can do any higher level native things you might need.
             statusBar.styleDefault();
             splashScreen.hide();
+
+            this.keyboard.onKeyboardShow().subscribe(() => {
+                document.body.classList.add('keyboard-is-open');
+            });
+            this.keyboard.onKeyboardHide().subscribe(() => {
+                document.body.classList.remove('keyboard-is-open');
+            });
         });
     }
 }
