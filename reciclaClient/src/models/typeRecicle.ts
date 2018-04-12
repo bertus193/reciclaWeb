@@ -3,7 +3,7 @@ export enum TypeRecycle {
     'Plástico' = 2,
     'Cristal' = 3,
     'Papel' = 4,
-    'Material de Oficina' = 5
+    'Material de oficina' = 5
 }
 
 export enum TypeRecycle_EN {

@@ -6,12 +6,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reciclaServer.models.RecycleItem;
+import reciclaServer.models.RecycleItems_Users;
+import reciclaServer.models.User;
 import reciclaServer.models.exceptions.ItemTypeNotFoundException;
 import reciclaServer.models.exceptions.StorageNotFoundException;
 import reciclaServer.models.exceptions.UserNotFoundException;
 import reciclaServer.services.RecycleItemService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -45,17 +48,30 @@ public class RecycleItemController {
     }
 
 
-    @RequestMapping(value = "/recycleItems/latest/", method = RequestMethod.GET)
+    @RequestMapping(value = "/recycleItems/latest", method = RequestMethod.GET)
     public ResponseEntity<?> getLatestRecycleItems(@RequestParam("page") int page, @RequestParam("perPage") int perPage) {
 
+        RecycleItems_Users recycleItem_userList = new RecycleItems_Users();
         try {
             Page<RecycleItem> recycleItems = recycleItemService.findLatest(page, perPage);
+
+            recycleItem_userList.recycleItemList = recycleItems;
+
+            recycleItem_userList.userList = new ArrayList();
+            for (int i = 0; i < recycleItems.getContent().size(); i++) {
+                User user = recycleItems.getContent().get(i).getRecycleUser();
+                user.setPassword(null);
+                if (!recycleItem_userList.userList.contains(user)) {
+                    recycleItem_userList.userList.add(user);
+                }
+
+            }
 
             if (recycleItems == null || recycleItems.getContent().isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
 
-            return new ResponseEntity<>(recycleItems, HttpStatus.OK);
+            return new ResponseEntity<>(recycleItem_userList, HttpStatus.OK);
         } catch (IllegalArgumentException ex) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }

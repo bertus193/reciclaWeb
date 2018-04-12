@@ -1,15 +1,62 @@
 <ion-header>
     <ion-navbar>
-        <ion-title>ReciclaUA</ion-title>
+        <ion-title style="text-align: center;">ReciclaUA</ion-title>
     </ion-navbar>
 </ion-header>
 
 <ion-content>
     <ion-grid style="height: 100%">
-        <ion-row align-items-center text-center style="height: 100%">
-            <ion-col>
-                <h5>ReciclaUA</h5>
-            </ion-col>
-        </ion-row>
+        <div *ngIf="recycleItems?.length > 0;else recycleItemsNotFound">
+            <ion-row justify-content-center align-items-center style="height: 100%">
+                <div *ngFor="let recycleItem of recycleItems" style="width: 100%;">
+                    <ion-card>
+                        <ion-item class="recycleItemIonItem">
+                            <ion-avatar item-start>
+                                <img src="{{recycleItem.recycleUser.profilePicture}}" onError="this.src = 'assets/imgs/quieroReciclar.png'">
+                            </ion-avatar>
+                            {{recycleItem.recycleUser.fullName}}
+                            <p>{{ recycleItem.createdDate | date: 'dd/MM/yyyy H:mm'}}</p>
+                        </ion-item>
+
+                        <img src="{{recycleItem.image}}">
+
+                        <ion-card-content>
+                            <p>{{getItemType(recycleItem.itemType.id)}}</p>
+                            <p class="recycleItemName" *ngIf="getItemType(recycleItem.itemType.id) != recycleItem.name">
+                                {{recycleItem.name}}
+                            </p>
+                        </ion-card-content>
+                    </ion-card>
+                </div>
+
+                <ion-infinite-scroll (ionInfinite)="doInfinite($event)" *ngIf="page < totalPages">
+                    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Cargando más datos..."></ion-infinite-scroll-content>
+                </ion-infinite-scroll>
+            </ion-row>
+        </div>
     </ion-grid>
 </ion-content>
+
+<ng-template #recycleItemsNotFound>
+    <ion-row align-items-center text-center style="height: 100%">
+        <ion-col>
+            <div *ngIf="showLoadingMsg == true; else showLoadingResult">
+                <h5>Cargando...</h5>
+            </div>
+            <ng-template #showLoadingResult>
+                <div *ngIf="errorLoadingContent == true; else showNoRecycledItemsFound">
+                    <div>
+                        <p>Ha habido algún problema</p>
+                        <h5 style="font-weight: bold">Intentalo de nuevo en unos minutos</h5>
+                    </div>
+                </div>
+                <ng-template #showNoRecycledItemsFound>
+                    <div>
+                        <p>Todavía no has reciclado nada</p>
+                        <h5 style="font-weight: bold">¡A qué esperas!</h5>
+                    </div>
+                </ng-template>
+            </ng-template>
+        </ion-col>
+    </ion-row>
+</ng-template>

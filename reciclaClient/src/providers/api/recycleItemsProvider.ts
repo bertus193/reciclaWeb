@@ -25,4 +25,8 @@ export class RecycleItemsProvider {
     public getRecycleItemById(id: number, accessToken: string) {
         return this.http.get(this.config.apiEndpoint + "/recycleItems/private/" + id + "?token=" + accessToken).timeout(this.config.defaultTimeoutTime)
     }
+
+    public getLatestRecycleItems(page: number, perPage: number) {
+        return this.http.get(this.config.apiEndpoint + "/recycleItems/latest?page=" + page + "&perPage=" + perPage).timeout(this.config.defaultTimeoutTime)
+    }
 }

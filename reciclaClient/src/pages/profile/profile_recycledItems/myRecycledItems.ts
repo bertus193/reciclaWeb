@@ -1,6 +1,5 @@
 import { Component, Inject } from '@angular/core';
 import { RecycleItem } from '../../../models/recycleItem';
-import { TypeRecycle } from '../../../models/typeRecicle';
 
 import { APP_CONFIG_TOKEN, ApplicationConfig } from '../../../app/app-config';
 import { SessionProvider } from '../../../providers/session';
@@ -9,6 +8,7 @@ import { User } from '../../../models/user';
 import { NavController } from 'ionic-angular';
 import { recycleItemInfoPage } from './profile_recycledItems_info/recycleItemInfo';
 import { UserProvider } from '../../../providers/api/userProvider';
+import { UtilsProvider } from '../../../providers/utils';
 
 @Component({
     selector: 'page-myRecycledItems',
@@ -30,7 +30,8 @@ export class myRecycledItemsPage {
         @Inject(APP_CONFIG_TOKEN) private config: ApplicationConfig,
         private navCtrl: NavController,
         private sessionProvider: SessionProvider,
-        private userProvider: UserProvider
+        private userProvider: UserProvider,
+        private utilsProvider: UtilsProvider
     ) {
         this.perPage = this.config.itemsPerPage
 
@@ -52,11 +53,7 @@ export class myRecycledItemsPage {
     }
 
     public getItemType(itemTypeId: number): string {
-        var out: string = "Desconocido"
-        if (TypeRecycle[itemTypeId]) {
-            out = TypeRecycle[itemTypeId]
-        }
-        return out
+        return this.utilsProvider.getItemType(itemTypeId).toString()
     }
 
     getRecycleItems() {
