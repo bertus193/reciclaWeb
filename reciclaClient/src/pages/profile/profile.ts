@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { App, NavController } from 'ionic-angular';
+import { Component, ViewChild } from '@angular/core';
+import { App, NavController, Content } from 'ionic-angular';
 import { SessionProvider } from '../../providers/session';
 import { LoginPage } from '../login/login';
 import { User } from '../../models/user';
@@ -12,6 +12,8 @@ import { ProfileEditPage } from './profile_edit/profileEdit';
 export class ProfilePage {
     user: User
     profileSegment: string
+
+    @ViewChild(Content) content: Content
 
     constructor(
         private sessionProvider: SessionProvider,
@@ -36,6 +38,10 @@ export class ProfilePage {
         this.navCtrl.push(ProfileEditPage, {
             user: this.user
         })
+    }
+
+    ionSelected() {
+        this.content.scrollToTop()
     }
 
 }

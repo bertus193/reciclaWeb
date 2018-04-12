@@ -1,10 +1,11 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, ViewChild } from '@angular/core';
 import { RecycleItemsProvider } from '../../providers/api/recycleItemsProvider';
 import { APP_CONFIG_TOKEN, ApplicationConfig } from '../../app/app-config';
 import { SessionProvider } from '../../providers/session';
 import { User } from '../../models/user';
 import { RecycleItem } from '../../models/recycleItem';
 import { UtilsProvider } from '../../providers/utils';
+import { Content } from 'ionic-angular';
 
 @Component({
     selector: 'page-home',
@@ -23,7 +24,10 @@ export class HomePage {
     private showLoadingMsg: boolean = true
     private errorLoadingContent: boolean = false
 
+    @ViewChild(Content) content: Content
+
     constructor(
+
         private recycleItemsProvider: RecycleItemsProvider,
         @Inject(APP_CONFIG_TOKEN) private config: ApplicationConfig,
         private sessionProvider: SessionProvider,
@@ -34,7 +38,7 @@ export class HomePage {
 
         this.sessionProvider.getSession().then((user: User) => {
             this.user = user
-            this.getLatestRecycleItems().then((res: boolean) => {
+            this.getLatestRecycleItems("infinite").then((res: boolean) => {
                 this.showLoadingMsg = false
                 if (res == false) {
                     this.errorLoadingContent = true
@@ -50,7 +54,7 @@ export class HomePage {
 
     }
 
-    private getLatestRecycleItems() {
+    private getLatestRecycleItems(refreshType: string) {
         var status: number
 
         return new Promise(resolve => {
@@ -64,7 +68,15 @@ export class HomePage {
                     var tempRecycleList = this.readRecycleItems(resJson.recycleItemList.content, resJson.userList)
 
                     for (var i = 0; i < tempRecycleList.length; i++) {
-                        this.recycleItems.push(tempRecycleList[i])
+                        if (refreshType == "refresh") {
+                            if (this.recycleItems.find(x => x.id == tempRecycleList[i].id) == null) {
+                                this.recycleItems.unshift(tempRecycleList[i])
+                            }
+                        }
+                        else {
+                            this.recycleItems.push(tempRecycleList[i])
+                        }
+
                     }
                     console.log(this.recycleItems)
                     resolve(true)
@@ -100,13 +112,27 @@ export class HomePage {
 
     doInfinite(infiniteScroll: any) {
         this.page += 1;
-        this.getLatestRecycleItems().then((res: boolean) => {
+        var refreshType = "infinite"
+        this.getLatestRecycleItems(refreshType).then((res: boolean) => {
             infiniteScroll.complete();
         });
 
     }
 
+    doRefresh(refresher: any) {
+        var temporalPage = this.page
+        this.page = 0;
+        this.getLatestRecycleItems("refresh").then((res: boolean) => {
+            refresher.complete();
+        });
+        this.page = temporalPage
+    }
+
     public getItemType(itemTypeId: number): string {
         return this.utilsProvider.getItemType(itemTypeId).toString()
+    }
+
+    ionSelected() {
+        this.content.scrollToTop()
     }
 }
