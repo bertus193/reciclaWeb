@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { NavParams, AlertController, Platform, LoadingController, Loading } from 'ionic-angular';
+import { NavParams, AlertController, Platform, LoadingController, Loading, Events, NavController } from 'ionic-angular';
 import { PopoverController } from 'ionic-angular';
 import {
     GoogleMaps,
@@ -48,6 +48,8 @@ export class MapPage {
         private utilsProvider: UtilsProvider,
         private loadingCtrl: LoadingController,
         private recycleItemsProvider: RecycleItemsProvider,
+        private events: Events,
+        private navCtrl: NavController,
         @Inject(APP_CONFIG_TOKEN) private config: ApplicationConfig) {
 
         this.recycleItem = this.navParams.get("recycleItem");
@@ -132,6 +134,8 @@ export class MapPage {
                 if (status === 201) {
                     this.recycledAlready = true
                     this.notificationProvider.presentAlertOk('Se ha guardadado correctamente este reciclado!')
+                    this.navCtrl.pop()
+                    this.events.publish('change-tab', 2, "history")
                 }
                 else {
                     this.notificationProvider.presentTopToast("Los datos insertados son incorrectos.")
@@ -179,13 +183,31 @@ export class MapPage {
     }
 
     viewOnExtenalMap() {
-        if (this.platform.is('ios')) {
-            window.open('maps://?q=Yo&saddr=' + this.myPosition.latitude + ',' + this.myPosition.longitude + '&daddr=' + this.recycleItem.storage.position.latitude + ',' + this.recycleItem.storage.position.longitude, '_system');
-        }
-        else if (this.platform.is('android')) {
-            var url = 'http://maps.google.com/?saddr=' + this.myPosition.latitude + ',' + this.myPosition.longitude + '&daddr=' + this.recycleItem.storage.position.latitude + ',' + this.recycleItem.storage.position.longitude
-            window.open(url, '_system', 'location=yes'), !1;
-        }
+        let prompt = this.alertCtrl.create({
+            title: 'Mostrar la mejor ruta',
+            message: "Se abrirá la aplicación de mapas, después podrás volver para finalizar el reciclaje.",
+            buttons: [
+                {
+                    text: 'Cancelar',
+                    handler: data => {
+                        return null
+                    }
+                },
+                {
+                    text: 'Ver ruta',
+                    handler: data => {
+                        if (this.platform.is('ios')) {
+                            window.open('maps://?q=Yo&saddr=' + this.myPosition.latitude + ',' + this.myPosition.longitude + '&daddr=' + this.recycleItem.storage.position.latitude + ',' + this.recycleItem.storage.position.longitude, '_system');
+                        }
+                        else if (this.platform.is('android')) {
+                            var url = 'http://maps.google.com/?saddr=' + this.myPosition.latitude + ',' + this.myPosition.longitude + '&daddr=' + this.recycleItem.storage.position.latitude + ',' + this.recycleItem.storage.position.longitude
+                            window.open(url, '_system', 'location=yes'), !1;
+                        }
+                    }
+                }
+            ]
+        });
+        prompt.present()
     }
 
 

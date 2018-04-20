@@ -17,6 +17,10 @@ ion-icon {
         mask-image: url("../assets/imgs/icons/recycle.svg");
     }
 
+    &[class*="reciclaUA-directions"] {
+        mask-image: url("../assets/imgs/icons/directions_48px.svg");
+    }
+
     padding-top: 2px !important;
     height: 22px;   
 }

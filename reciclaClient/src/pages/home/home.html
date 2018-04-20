@@ -21,7 +21,7 @@
                             <p>{{ recycleItem.createdDate | date: 'dd/MM/yyyy H:mm'}}</p>
                         </ion-item>
 
-                        <img src="{{recycleItem.image}}">
+                        <img src="{{recycleItem.image}}" onError="this.src = 'assets/imgs/quieroReciclar.png'">
 
                         <ion-card-content>
                             <p>{{getItemType(recycleItem.itemType.id)}}</p>

@@ -67,6 +67,10 @@ export class HomePage {
 
                     var tempRecycleList = this.readRecycleItems(resJson.recycleItemList.content, resJson.userList)
 
+                    if (refreshType == "refresh") {
+                        tempRecycleList = tempRecycleList.reverse()
+                    }
+
                     for (var i = 0; i < tempRecycleList.length; i++) {
                         if (refreshType == "refresh") {
                             if (this.recycleItems.find(x => x.id == tempRecycleList[i].id) == null) {
@@ -78,7 +82,6 @@ export class HomePage {
                         }
 
                     }
-                    console.log(this.recycleItems)
                     resolve(true)
                 } else {
                     resolve(false)

@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { App, NavController, Content } from 'ionic-angular';
+import { App, NavController, Content, NavParams, Events } from 'ionic-angular';
 import { SessionProvider } from '../../providers/session';
 import { LoginPage } from '../login/login';
 import { User } from '../../models/user';
@@ -18,7 +18,9 @@ export class ProfilePage {
     constructor(
         private sessionProvider: SessionProvider,
         private app: App,
-        private navCtrl: NavController
+        private navCtrl: NavController,
+        private navParams: NavParams,
+        private events: Events
     ) {
         sessionProvider.getSession().then(res => {
             this.user = res
@@ -26,7 +28,11 @@ export class ProfilePage {
                 this.user.profilePicture = "assets/imgs/quieroReciclar.png"
             }
         })
-        this.profileSegment = "profile"
+        this.profileSegment = this.navParams.get("profileSegment")
+
+        this.events.subscribe('change-tab', (tab, profileSegment) => {
+            this.profileSegment = profileSegment;
+        });
     }
 
     goToLogout() {
