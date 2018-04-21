@@ -7,7 +7,6 @@ import reciclaServer.services.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 public class AppInterceptor extends HandlerInterceptorAdapter {
 
@@ -16,10 +15,8 @@ public class AppInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-
-
-        String token = request.getParameter("token");
-
+        
+        String token = request.getHeader("x-auth-token");
 
         if (token != null && !token.isEmpty()) {
 

@@ -6,6 +6,8 @@ import { UserProvider } from "./api/userProvider";
 import { RecycleItemsProvider } from "./api/recycleItemsProvider";
 import { EncryptProvider } from "./encryptProvider";
 import { InstagramProvider } from "./instagramProvider";
+import { ItemTypeProvider } from "./api/itemTypeProvider";
+import { StoragesProvider } from "./api/storagesProvider";
 
 export const APP_PROVIDERS = [
     SessionProvider,
@@ -15,5 +17,7 @@ export const APP_PROVIDERS = [
     UserProvider,
     RecycleItemsProvider,
     EncryptProvider,
-    InstagramProvider
+    InstagramProvider,
+    StoragesProvider,
+    ItemTypeProvider
 ];

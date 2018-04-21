@@ -22,7 +22,8 @@ export class UserProvider {
     public saveUser(user: User, token: string) {
         this.sessionProvider.updateSession(user)
         user.recycleItems = null
-        return this.http.put(this.config.apiEndpoint + "/users/private/" + user.id + "?token=" + token, JSON.stringify(user), this.requestJsonOptions).timeout(this.config.defaultTimeoutTime)
+        this.requestJsonOptions.headers.set('X-Auth-Token', token)
+        return this.http.put(this.config.apiEndpoint + "/users/private/" + user.id, JSON.stringify(user), this.requestJsonOptions).timeout(this.config.defaultTimeoutTime)
     }
 
     public createUser(user: User) {
@@ -33,8 +34,9 @@ export class UserProvider {
         return this.http.get(this.config.apiEndpoint + "/users/email/" + email)
     }
 
-    public getUserRecycleItems(id: number, accessToken: string, page: number, perPage: number) {
-        return this.http.get(this.config.apiEndpoint + "/users/private/" + id + "/recycleItems?page=" + page + "&perPage=" + perPage + "&token=" + accessToken).timeout(this.config.defaultTimeoutTime)
+    public getUserRecycleItems(id: number, token: string, page: number, perPage: number) {
+        this.requestJsonOptions.headers.set('X-Auth-Token', token)
+        return this.http.get(this.config.apiEndpoint + "/users/private/" + id + "/recycleItems?page=" + page + "&perPage=" + perPage, this.requestJsonOptions).timeout(this.config.defaultTimeoutTime)
     }
 
     public login(user: User) {

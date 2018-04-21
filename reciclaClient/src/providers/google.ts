@@ -1,6 +1,7 @@
 import { Injectable, Inject } from '@angular/core';
 import { Http, RequestOptions, Headers } from '@angular/http';
 import { ApplicationConfig, APP_CONFIG_TOKEN } from '../app/app-config';
+import { ItemTypeProvider } from './api/itemTypeProvider';
 
 
 @Injectable()
@@ -14,6 +15,7 @@ export class GoogleCloudServiceProvider {
 
     constructor(
         public http: Http,
+        private itemTypeProvider: ItemTypeProvider,
         @Inject(APP_CONFIG_TOKEN) private config: ApplicationConfig) { }
 
     getLabels(imageUrl: string) {
@@ -42,6 +44,6 @@ export class GoogleCloudServiceProvider {
     }
 
     getLabelAnnotations(labelResponseList) {
-        return this.http.post(this.config.apiEndpoint + '/itemTypeName/labelAnnotations', JSON.stringify(labelResponseList), this.requestJsonOptions).timeout(this.config.defaultTimeoutTime)
+        return this.itemTypeProvider.getRecycleItemItemTypeBylabelAnnotations(labelResponseList)
     }
 }

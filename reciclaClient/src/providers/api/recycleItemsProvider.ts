@@ -18,12 +18,14 @@ export class RecycleItemsProvider {
         @Inject(APP_CONFIG_TOKEN) private config: ApplicationConfig) { }
 
 
-    public saveRecycleItem(recycleItem: RecycleItem, accessToken: string) {
-        return this.http.post(this.config.apiEndpoint + "/recycleItems/private?token=" + accessToken, JSON.stringify(recycleItem), this.requestJsonOptions).timeout(this.config.defaultTimeoutTime)
+    public saveRecycleItem(recycleItem: RecycleItem, token: string) {
+        this.requestJsonOptions.headers.set('X-Auth-Token', token)
+        return this.http.post(this.config.apiEndpoint + "/recycleItems/private", JSON.stringify(recycleItem), this.requestJsonOptions).timeout(this.config.defaultTimeoutTime)
     }
 
-    public getRecycleItemById(id: number, accessToken: string) {
-        return this.http.get(this.config.apiEndpoint + "/recycleItems/private/" + id + "?token=" + accessToken).timeout(this.config.defaultTimeoutTime)
+    public getRecycleItemById(id: number, token: string) {
+        this.requestJsonOptions.headers.set('X-Auth-Token', token)
+        return this.http.get(this.config.apiEndpoint + "/recycleItems/private/" + id, this.requestJsonOptions).timeout(this.config.defaultTimeoutTime)
     }
 
     public getLatestRecycleItems(page: number, perPage: number) {

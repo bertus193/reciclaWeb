@@ -30,7 +30,7 @@ public class ItemTypeNameController {
     }
 
     @RequestMapping(value = "/itemTypeName/labelAnnotations", method = RequestMethod.POST)
-    public ResponseEntity<?> GetsRecycleItemItemTypeBylabelAnnotations(@RequestBody List<LabelAnnotations> labelAnnotations) {
+    public ResponseEntity<?> getRecycleItemItemTypeBylabelAnnotations(@RequestBody List<LabelAnnotations> labelAnnotations) {
         ItemTypeName itemTypeName;
         LabelAnnotations labelAnnotation;
 

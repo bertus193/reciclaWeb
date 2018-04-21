@@ -1,26 +1,25 @@
-import { Injectable, Inject } from '@angular/core';
-import { Http } from '@angular/http';
+import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map';
-import { ApplicationConfig, APP_CONFIG_TOKEN } from '../app/app-config';
 import { StoragePoint } from '../models/storagePoint';
 import { Position } from '../models/position';
 import { ItemType } from '../models/itemType';
 import { Observable, TimeoutError } from 'rxjs/Rx'
 import { TypeRecycle } from '../models/typeRecicle';
+import { StoragesProvider } from './api/storagesProvider';
 
 
 @Injectable()
 export class UtilsProvider {
 
     constructor(
-        public http: Http,
-        @Inject(APP_CONFIG_TOKEN) private config: ApplicationConfig) { }
+        private storagesProvider: StoragesProvider
+    ) { }
 
     public getNearestStoragePointByItemType(currentPosition: Position, itemType: ItemType): Observable<{ storagePoint: StoragePoint, status: number }> {
         var status: number
         var storagePointList: StoragePoint[]
         var storagePoint: StoragePoint
-        return this.http.get(this.config.apiEndpoint + "/storages/itemType/" + itemType + '/storagePoints').map(res => {
+        return this.storagesProvider.getStoragePointsByItemType(itemType).map(res => {
             status = res.status
             if (status === 200) {
                 storagePointList = res.json();

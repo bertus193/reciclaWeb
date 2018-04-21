@@ -22,31 +22,29 @@ public class StorageController {
 
     @Autowired
     public StorageController(StorageService storageService,
-                             ItemTypeService itemTypeService){
+                             ItemTypeService itemTypeService) {
         this.storageService = storageService;
         this.itemTypeService = itemTypeService;
     }
 
 
     @RequestMapping(value = "/storages/itemType/{itemType}/storagePoints", method = RequestMethod.GET)
-    public ResponseEntity<?> GetsStoragePointsByItemType(@PathVariable("itemType") long itemTypeId){
+    public ResponseEntity<?> getStoragePointsByItemType(@PathVariable("itemType") long itemTypeId) {
 
         ItemType itemType = itemTypeService.getItemTypeById(itemTypeId);
         List<StoragePoint> storagePoints = new ArrayList();
 
-        if(itemType != null){
+        if (itemType != null) {
             List<Storage> storageList = storageService.getStoragesByItemType(itemType);
-            for(int i = 0; i < storageList.size(); i++){
+            for (int i = 0; i < storageList.size(); i++) {
                 storagePoints.add(storageList.get(i).getStoragePoint());
             }
-            if(storageList != null){
+            if (storageList != null) {
                 return new ResponseEntity<>(storagePoints, HttpStatus.OK);
-            }
-            else{
+            } else {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-        }
-        else{
+        } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
