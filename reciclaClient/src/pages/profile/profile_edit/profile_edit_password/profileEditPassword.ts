@@ -53,7 +53,6 @@ export class ProfileEditPasswordPage {
         this.userProvider.login(this.user).subscribe(res => {
 
             password = this.profileEditPasswordForm.get("password").value
-            console.log(password)
             this.user.password = this.encryptProvider.encryptPassword(password)
 
             this.userProvider.saveUser(this.user, this.user.accessToken).subscribe(res => {

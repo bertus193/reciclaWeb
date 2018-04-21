@@ -19,7 +19,7 @@ export interface ApplicationConfig {
 export const APP_CONFIG: ApplicationConfig = {
     appName: 'ReciclaWeb App',
     // https://reciclaweb-server.herokuapp.com || http://127.0.0.1:8080
-    apiEndpoint: 'https://reciclaweb-server.herokuapp.com',
+    apiEndpoint: 'http://127.0.0.1:8080',
     uploadFilesUrl: 'https://reciclaweb.000webhostapp.com',
     DEBUG_MODE: true,
     defaultTimeoutTime: 10000,

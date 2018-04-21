@@ -5,6 +5,7 @@ import { ProfilePage } from '../profile/profile';
 import { HomePage } from '../home/home';
 import { IonicPage, Events, Tabs } from 'ionic-angular';
 import { RankingPage } from '../ranking/ranking';
+import { GamePage } from '../game/game';
 
 @IonicPage()
 @Component({
@@ -15,7 +16,7 @@ export class TabsPage {
     @ViewChild(Tabs) tabs: Tabs;
 
     tabHomeRoot = HomePage;
-    tabGameRoot = ""
+    tabGameRoot = GamePage
     tabRecycleRoot = RecyclePage;
     tabRankingRoot = RankingPage;
     tabProfileRoot = ProfilePage;

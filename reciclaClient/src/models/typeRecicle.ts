@@ -19,5 +19,5 @@ export enum TypeRecycle_Color_EN {
     'yellow' = 2,
     'green' = 3,
     'blue' = 4,
-    'lightblue' = 5
+    'assets/imgs/icons/ltblack-dot.png' = 5
 }

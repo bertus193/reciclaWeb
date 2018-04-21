@@ -36,7 +36,7 @@ public class AppLogController {
         AppLog appLog = new AppLog(status, ex.getClass().getName(), ex.getMessage(), path);
         appLog = this.appLogService.saveAppLog(appLog);
 
-        return new ResponseEntity<Object>(appLog, status);
+        return new ResponseEntity<>(appLog, status);
     }
 
 
@@ -46,9 +46,12 @@ public class AppLogController {
             appLogService.saveAppLog(appLog);
             return new ResponseEntity<>(appLog, HttpStatus.CREATED);
         } else {
-            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+    }
 
-
+    @RequestMapping(value = "/time", method = RequestMethod.GET)
+    public ResponseEntity<?> getTimestamp() {
+        return new ResponseEntity<>(new java.util.Date(), HttpStatus.OK);
     }
 }
