@@ -1,7 +1,6 @@
 import { Injectable, Inject } from '@angular/core';
 import { Http, RequestOptions, Headers } from '@angular/http';
 import { ApplicationConfig, APP_CONFIG_TOKEN } from '../../app/app-config';
-import { RecycleItem } from '../../models/recycleItem';
 import { ItemType } from '../../models/itemType';
 
 

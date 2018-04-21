@@ -71,7 +71,8 @@ export class NormalLoginPage {
             recycleItems: null,
             createdDate: null,
             lastPosition: null,
-            type: TypeUser.Normal
+            type: TypeUser.Normal,
+            points: 0
         }
 
         this.userProvider.login(user).subscribe(res => {

@@ -79,6 +79,8 @@ export class MapPage {
         this.map.one(GoogleMapsEvent.MAP_READY)
             .then(() => {
                 this.initMarkers(this.recycleItem.storage.position, "Punto más cercano", TypeRecycle_Color_EN[this.recycleItem.itemType])
+
+                this.notificationProvider.presentBottomToast("Puedes ver la ruta más rápida desde el menú superior")
             })
             .catch(error => {
                 this.notificationProvider.presentTopToast("Parece que ha habido algún problema")
@@ -135,7 +137,7 @@ export class MapPage {
                     this.recycledAlready = true
                     this.notificationProvider.presentAlertOk('Se ha guardadado correctamente este reciclado!')
                     this.navCtrl.pop()
-                    this.events.publish('change-tab', 2, "history")
+                    this.events.publish('change-tab', "profile", "history")
                 }
                 else {
                     this.notificationProvider.presentTopToast("Los datos insertados son incorrectos.")

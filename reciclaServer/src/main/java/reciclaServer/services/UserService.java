@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import reciclaServer.models.DAO.UserDAO;
 import reciclaServer.models.User;
 
+import java.util.List;
+
 
 @Service("userService")
 public class UserService {
@@ -39,5 +41,9 @@ public class UserService {
 
     public User findFirstByEmailAndPassword(String email, String password) {
         return userDAO.findFirstByEmailAndPassword(email, password);
+    }
+
+    public List<User> findTop10ByPoints() {
+        return this.userDAO.findTop10ByOrderByPointsDesc();
     }
 }

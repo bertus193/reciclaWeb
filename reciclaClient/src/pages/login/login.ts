@@ -71,8 +71,7 @@ export class LoginPage {
 
 
     createNewInstagramUser(instagramUser: any, access_token: string) {
-        var user: User
-        user = {
+        var user: User = {
             id: -1,
             email: instagramUser.data.id,
             password: null,
@@ -83,7 +82,8 @@ export class LoginPage {
             recycleItems: [],
             createdDate: new Date(),
             lastPosition: null,
-            type: TypeUser.Instagram
+            type: TypeUser.Instagram,
+            points: 0
         }
         this.userProvider.createUser(user).subscribe(res => {
             this.sessionProvider.updateSession(res.json())
@@ -95,13 +95,11 @@ export class LoginPage {
 
     loginFb(): Promise<Observable<User>> {
 
-        var user: User
-
         return this.fb.login(['public_profile', 'email'])
             .then((fbUser: FacebookLoginResponse) =>
                 this.fb.api('me?fields=id,name,email,first_name,picture.width(720).height(720).as(picture_large)', []).then(profile => {
 
-                    user = {
+                    var user: User = {
                         id: -1,
                         email: profile['id'],
                         password: null,
@@ -112,7 +110,8 @@ export class LoginPage {
                         recycleItems: [],
                         createdDate: new Date(),
                         lastPosition: null,
-                        type: TypeUser.Facebook
+                        type: TypeUser.Facebook,
+                        points: 0
                     }
                     return this.findAndUpdateOrCreateUser(user).timeout(this.config.defaultTimeoutTime).map((res: any) => {
                         if (res.value != null) {
@@ -138,9 +137,8 @@ export class LoginPage {
         this.instagramProvider.login().then(tokenRes => {
             this.instagramProvider.getInstagramUserInfo(tokenRes.access_token).subscribe(res => {
                 var instagramUser = res.json()
-                var user: User
 
-                user = {
+                var user: User = {
                     id: -1,
                     email: instagramUser.data.id,
                     password: null,
@@ -151,7 +149,8 @@ export class LoginPage {
                     recycleItems: [],
                     createdDate: new Date(),
                     lastPosition: null,
-                    type: TypeUser.Instagram
+                    type: TypeUser.Instagram,
+                    points: 0
                 }
 
                 this.findAndUpdateOrCreateUser(user).timeout(this.config.defaultTimeoutTime).subscribe((res: any) => {
@@ -191,7 +190,8 @@ export class LoginPage {
             recycleItems: [],
             createdDate: new Date(),
             lastPosition: null,
-            type: TypeUser.Normal
+            type: TypeUser.Normal,
+            points: 0
         }
 
         return this.findAndUpdateOrCreateUser(user).timeout(this.config.defaultTimeoutTime).map((res: any) => {
@@ -238,7 +238,8 @@ export class LoginPage {
                         return this.userProvider.saveUser(loginUser, foundUser.user.accessToken).subscribe(_ => {
                             return loginUser
                         }, error => {
-                            this.notificationProvider.presentTopToast("Error guardando el usuario.")
+                            this.notificationProvider.presentAlertError(JSON.stringify(error))
+                            //this.notificationProvider.presentTopToast("Error guardando el usuario.")
                         })
                     }
                     else {

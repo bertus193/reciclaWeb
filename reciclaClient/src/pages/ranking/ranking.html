@@ -1,0 +1,51 @@
+<ion-header>
+    <ion-navbar>
+        <ion-title>Ranking</ion-title>
+    </ion-navbar>
+</ion-header>
+
+<ion-content>
+    <ion-refresher (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+    <ion-grid style="height: 100%">
+        <div *ngIf="users?.length > 0;else usersNotFound">
+            <ion-row justify-content-center align-items-center style="height: 100%">
+                <div *ngFor="let user of users" style="width: 100%;">
+                    <ion-item>
+                        <ion-avatar item-start>
+                            <img src="{{user.profilePicture}}" onError="this.src = 'assets/imgs/quieroReciclar.png'">
+                        </ion-avatar>
+                        {{user.fullName}}
+
+                        <ion-badge item-end> {{user.points}}
+                            <span *ngIf="user.points > 1 || user.points == 0; else only1Point">puntos</span>
+                        </ion-badge>
+
+                    </ion-item>
+                </div>
+            </ion-row>
+        </div>
+    </ion-grid>
+</ion-content>
+
+<ng-template #usersNotFound>
+    <ion-row align-items-center text-center style="height: 100%">
+        <ion-col>
+            <div *ngIf="showLoadingMsg == true; else showLoadingResult">
+                <h5>Cargando...</h5>
+            </div>
+        </ion-col>
+    </ion-row>
+</ng-template>
+
+<ng-template #showLoadingResult>
+    <div>
+        <p>Ha habido algún problema</p>
+        <h5 style="font-weight: bold">Intentalo de nuevo en unos minutos</h5>
+    </div>
+</ng-template>
+
+<ng-template #only1Point>
+    punto
+</ng-template>

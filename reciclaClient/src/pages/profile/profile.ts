@@ -30,7 +30,7 @@ export class ProfilePage {
         })
         this.profileSegment = this.navParams.get("profileSegment")
 
-        this.events.subscribe('change-tab', (tab, profileSegment) => {
+        this.events.subscribe('change-tab', (tabName, profileSegment) => {
             this.profileSegment = profileSegment;
         });
     }

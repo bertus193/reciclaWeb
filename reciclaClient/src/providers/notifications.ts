@@ -49,4 +49,13 @@ export class NotificationProvider {
         alert.present();
     }
 
+    public presentBottomToast(text) {
+        let toast = this.toastCtrl.create({
+            message: text,
+            duration: 5000,
+            position: 'bottom'
+        });
+        toast.present();
+    }
+
 }

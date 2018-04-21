@@ -31,7 +31,7 @@ export class UserProvider {
     }
 
     public findUserByEmail(email: string) {
-        return this.http.get(this.config.apiEndpoint + "/users/email/" + email)
+        return this.http.get(this.config.apiEndpoint + "/users/email/" + email).timeout(this.config.defaultTimeoutTime)
     }
 
     public getUserRecycleItems(id: number, token: string, page: number, perPage: number) {
@@ -41,5 +41,9 @@ export class UserProvider {
 
     public login(user: User) {
         return this.http.post(this.config.apiEndpoint + "/users/login", JSON.stringify(user), this.requestJsonOptions).timeout(this.config.defaultTimeoutTime)
+    }
+
+    public getTopRankedUsers() {
+        return this.http.get(this.config.apiEndpoint + "/users/topRanked/").timeout(this.config.defaultTimeoutTime)
     }
 }

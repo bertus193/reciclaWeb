@@ -13,4 +13,5 @@ export class User {
     createdDate: Date;
     lastPosition: any
     type: TypeUser
+    points: number
 }

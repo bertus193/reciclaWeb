@@ -31,10 +31,8 @@
                                 <span *ngIf="user.type == 'Normal'; else showUsername">
                                     <p>Email: {{ user.username }}</p>
                                 </span>
-                                <ng-template #showUsername>
-                                    <p>Usuario: {{ user.username }}</p>
-                                </ng-template>
                                 <p>Fecha registro: {{ user.createdDate | date: 'dd/MM/yyyy H:mm'}}</p>
+                                <p>Puntos: {{ user.points}}</p>
                             </ion-card-content>
                         </ion-card>
                         <button ion-button block (tap)="goToLogout()">Cerrar sesión</button>
@@ -48,3 +46,7 @@
     </div>
 
 </ion-content>
+
+<ng-template #showUsername>
+    <p>Usuario: {{ user.username }}</p>
+</ng-template>

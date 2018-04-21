@@ -4,6 +4,7 @@ import { RecyclePage } from '../recycle/recycle';
 import { ProfilePage } from '../profile/profile';
 import { HomePage } from '../home/home';
 import { IonicPage, Events, Tabs } from 'ionic-angular';
+import { RankingPage } from '../ranking/ranking';
 
 @IonicPage()
 @Component({
@@ -13,18 +14,40 @@ export class TabsPage {
 
     @ViewChild(Tabs) tabs: Tabs;
 
-    tab1Root = HomePage;
-    tab2Root = RecyclePage;
-    tab3Root = ProfilePage;
-    tab3Params = { profileSegment: "profile" };
+    tabHomeRoot = HomePage;
+    tabGameRoot = ""
+    tabRecycleRoot = RecyclePage;
+    tabRankingRoot = RankingPage;
+    tabProfileRoot = ProfilePage;
+    tabProfileRootParams = { profileSegment: "profile" };
 
     constructor(
         private events: Events
     ) {
-        events.subscribe('change-tab', (tab, profileSegment = '') => {
+        this.events.subscribe('change-tab', (tabName, profileSegment = '') => {
             if (profileSegment != '') {
-                this.tab3Params.profileSegment = profileSegment;
+                this.tabProfileRootParams.profileSegment = profileSegment;
             }
+
+            var tab = 0
+            switch (tabName) {
+                case "home":
+                    tab = 0
+                    break
+                case "game":
+                    tab = 1
+                    break
+                case "recycle":
+                    tab = 2
+                    break
+                case "ranking":
+                    tab = 3
+                    break
+                case "profile":
+                    tab = 4
+                    break
+            }
+
             this.tabs.select(tab);
         });
     }

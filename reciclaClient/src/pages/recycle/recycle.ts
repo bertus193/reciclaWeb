@@ -75,8 +75,10 @@ export class RecyclePage {
 
     public getUserPositionButton() {
         this.loading = this.loadingCtrl.create({
-            content: 'Obteniendo la ubicación del usuario...'
+            content: 'Obteniendo la ubicación del usuario...',
+            enableBackdropDismiss: true
         });
+
         this.loading.present()
         this.getUserPosition()
     }
@@ -338,6 +340,9 @@ export class RecyclePage {
                     this.notificationProvider.presentTopToast("Error a la hora de utilizar la imagen.")
                 })
 
+            }, err => { //upload
+                this.loading.dismiss()
+                this.notificationProvider.presentTopToast("Error a la hora de subir la imagen.")
             })
         )
 

@@ -13,6 +13,8 @@ import reciclaServer.services.RecycleItemService;
 import reciclaServer.services.UserService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -128,6 +130,29 @@ public class UserController {
             }
         } else {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+    }
+
+    @RequestMapping(value = "/users/topRanked", method = RequestMethod.GET)
+    public ResponseEntity<?> getTopRankedUsers() {
+
+        List<User> users = new ArrayList<>();
+        User user;
+
+        List<User> userList = this.userService.findTop10ByPoints();
+
+        for (int i = 0; i < userList.size(); i++) {
+            user = new User();
+            user.setFullName(userList.get(i).getFullName());
+            user.setProfilePicture(userList.get(i).getProfilePicture());
+            user.setPoints(userList.get(i).getPoints());
+            users.add(user);
+        }
+
+        if (userList == null || userList.isEmpty()) {
+            return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<Object>(users, HttpStatus.OK);
         }
 
 

@@ -1,5 +1,7 @@
 <ion-tabs icon-only>
-    <ion-tab [root]="tab1Root" tabTitle="Inicio" tabIcon="home"></ion-tab>
-    <ion-tab [root]="tab2Root" tabTitle="Reciclar!" tabIcon="reciclaUA-recyle"></ion-tab>
-    <ion-tab [root]="tab3Root" [rootParams]="tab3Params" tabTitle="Perfil" tabIcon="contact"></ion-tab>
+    <ion-tab [root]="tabHomeRoot" tabTitle="Inicio" tabIcon="home"></ion-tab>
+    <ion-tab [root]="tabGameRoot" tabTitle="Jugar" tabIcon="md-game-controller-b"></ion-tab>
+    <ion-tab [root]="tabRecycleRoot" tabTitle="Reciclar!" tabIcon="reciclaUA-recyle"></ion-tab>
+    <ion-tab [root]="tabRankingRoot" tabTitle="Ranking" tabIcon="md-trophy"></ion-tab>
+    <ion-tab [root]="tabProfileRoot" [rootParams]="tabProfileRootParams" tabTitle="Perfil" tabIcon="contact"></ion-tab>
 </ion-tabs>

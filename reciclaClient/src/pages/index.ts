@@ -11,6 +11,7 @@ import { NormalLoginPage } from './login/normalLogin/normalLogin';
 import { NormalRegisterPage } from './login/normalRegister/normalRegister';
 import { ProfileEditPage } from './profile/profile_edit/profileEdit';
 import { ProfileEditPasswordPage } from './profile/profile_edit/profile_edit_password/profileEditPassword';
+import { RankingPage } from './ranking/ranking';
 
 export const APP_PAGES = [
     RecyclePage,
@@ -25,5 +26,6 @@ export const APP_PAGES = [
     NormalLoginPage,
     NormalRegisterPage,
     ProfileEditPage,
-    ProfileEditPasswordPage
+    ProfileEditPasswordPage,
+    RankingPage
 ];

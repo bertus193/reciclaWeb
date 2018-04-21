@@ -12,6 +12,7 @@ import reciclaServer.models.exceptions.ItemTypeNotFoundException;
 import reciclaServer.models.exceptions.StorageNotFoundException;
 import reciclaServer.models.exceptions.UserNotFoundException;
 import reciclaServer.services.RecycleItemService;
+import reciclaServer.services.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -22,10 +23,12 @@ public class RecycleItemController {
 
 
     private RecycleItemService recycleItemService;
+    private UserService userService;
 
     @Autowired
-    public RecycleItemController(RecycleItemService recycleItemService) {
+    public RecycleItemController(RecycleItemService recycleItemService, UserService userService) {
         this.recycleItemService = recycleItemService;
+        this.userService = userService;
     }
 
     @RequestMapping(value = "/recycleItems/private", method = RequestMethod.POST)
@@ -37,6 +40,11 @@ public class RecycleItemController {
 
             try {
                 recycleItemService.saveRecycleItem(recycleItem);
+
+                User user = userService.findById(userId);
+                user.setPoints(user.getPoints() + recycleItem.getItemType().getRecycleValue());
+                this.userService.saveUser(user);
+
             } catch (UserNotFoundException | StorageNotFoundException | ItemTypeNotFoundException e) {
                 return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
             }

@@ -51,6 +51,8 @@ public class User {
     @JsonIdentityReference(alwaysAsId = true)
     private List<RecycleItem> recycleItems;
 
+    private int points;
+
     public User() { //Needed for JPA
 
     }
@@ -141,5 +143,13 @@ public class User {
 
     public void setType(TypeUser type) {
         this.type = type;
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
     }
 }

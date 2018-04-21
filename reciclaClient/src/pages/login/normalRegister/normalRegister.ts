@@ -65,13 +65,14 @@ export class NormalRegisterPage {
             email: emailForm.value,
             password: password,
             username: emailForm.value,
-            fullName: 'Nombre Completo',
+            fullName: 'Mi nombre',
             profilePicture: 'assets/imgs/quieroReciclar.png',
             accessToken: uuid.toString(),
             recycleItems: null,
             createdDate: new Date(),
             lastPosition: null,
-            type: TypeUser.Normal
+            type: TypeUser.Normal,
+            points: 0
         }
 
         this.userProvider.createUser(user).subscribe(res => {

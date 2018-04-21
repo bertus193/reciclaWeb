@@ -9,7 +9,7 @@ import java.util.List;
 @Transactional
 public interface UserDAO extends CrudRepository<User, Long> {
 
-    List<User> findAll();
+    List<User> findTop10ByOrderByPointsDesc();
 
     User findFirstByEmail(String email);
 
