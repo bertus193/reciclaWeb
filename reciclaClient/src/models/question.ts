@@ -4,4 +4,5 @@ export class Question {
     questionValue: number;
     correctReply: any;
     replies: any;
+    users: any
 }

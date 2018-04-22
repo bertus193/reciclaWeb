@@ -57,15 +57,8 @@ public class User {
 
     private Timestamp lastGameDate;
 
-    @ManyToMany(cascade = {CascadeType.ALL})
-    @JoinTable(
-            name = "user_question",
-            joinColumns = {@JoinColumn(name = "user")},
-            inverseJoinColumns = {@JoinColumn(name = "question")}
-    )
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-    @JsonIdentityReference(alwaysAsId = true)
-    private List<Question> questionsDone;
+    @OneToMany(mappedBy = "user")
+    private List<UserQuestion> questionsDone;
 
 
     public User() { //Needed for JPA
@@ -184,11 +177,11 @@ public class User {
         this.lastGameDate = lastGameDate;
     }
 
-    public List<Question> getQuestionsDone() {
+    public List<UserQuestion> getQuestionsDone() {
         return questionsDone;
     }
 
-    public void setQuestionsDone(List<Question> questionsDone) {
+    public void setQuestionsDone(List<UserQuestion> questionsDone) {
         this.questionsDone = questionsDone;
     }
 }

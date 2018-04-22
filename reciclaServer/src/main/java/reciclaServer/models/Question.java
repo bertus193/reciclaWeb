@@ -1,7 +1,6 @@
 package reciclaServer.models;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import reciclaServer.config.EntityIdResolver;
 
@@ -35,15 +34,9 @@ public class Question {
     private List<Reply> replies;
 
 
-    @ManyToMany(cascade = {CascadeType.ALL})
-    @JoinTable(
-            name = "user_question",
-            joinColumns = {@JoinColumn(name = "question")},
-            inverseJoinColumns = {@JoinColumn(name = "user")}
-    )
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-    @JsonIdentityReference(alwaysAsId = true)
-    private List<User> users;
+    @OneToMany(mappedBy = "question")
+    @Transient
+    private List<UserQuestion> users;
 
 
     public Question() {
@@ -90,11 +83,11 @@ public class Question {
         this.replies = replies;
     }
 
-    public List<User> getUsers() {
+    public List<UserQuestion> getUsers() {
         return users;
     }
 
-    public void setUsers(List<User> users) {
+    public void setUsers(List<UserQuestion> users) {
         this.users = users;
     }
 }

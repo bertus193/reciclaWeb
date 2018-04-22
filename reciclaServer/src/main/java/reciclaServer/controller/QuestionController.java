@@ -87,4 +87,9 @@ public class QuestionController {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
+
+    @RequestMapping(value = "/private/questions/{question_id}/user/{user_id}", method = RequestMethod.POST)
+    public ResponseEntity<?> saveUserReply(HttpServletRequest request, @PathVariable("question_id") long question_id, @PathVariable("user_id") long user_id) {
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

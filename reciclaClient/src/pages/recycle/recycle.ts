@@ -120,7 +120,8 @@ export class RecyclePage {
 
     public takePicture(sourceType) {
         this.loading = this.loadingCtrl.create({
-            content: 'Cargando...'
+            content: 'Cargando...',
+            enableBackdropDismiss: true
         });
         this.loading.present()
 
@@ -260,7 +261,6 @@ export class RecyclePage {
 
     public uploadImage(targetPath) {
         this.loading.setContent('Subiendo la imagen...')
-        this.loading.setDuration(this.config.defaultTimeoutTime * 4)
 
         var date = new Date()
         var filename = this.user.id + "_" + date.getTime() + ".png";
@@ -307,7 +307,7 @@ export class RecyclePage {
 
     public upload(targetPath, urlUpload, options, fileTransfer, urlUploadedFiles) {
         // Use the FileTransfer to upload the image
-        return this.utilsProvider.timeoutPromise(this.config.defaultTimeoutTime * 4,
+        return this.utilsProvider.timeoutPromise(this.config.defaultTimeoutTime * 2,
             fileTransfer.upload(targetPath, urlUpload, options).then(data => {
                 this.googleCloudServiceProvider.getLabels(urlUploadedFiles).timeout(this.config.defaultTimeoutTime).subscribe((result: any) => {
                     var labelResponseList: LabelResponse[];

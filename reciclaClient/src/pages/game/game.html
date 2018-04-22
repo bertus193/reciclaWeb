@@ -12,7 +12,30 @@
         <ion-row align-items-center text-center style="height: 100%">
             <ion-col>
                 <div *ngIf="question != null;else questionNotFound">
-                    adsasd {{question.name}}
+                    <div class="questionTitle" align="center">
+                        {{question.name}}
+                    </div>
+                    <div>
+                        <ion-grid style="width: 70%;">
+                            <ion-row>
+                                <ion-col>
+                                    <button ion-button>{{question.replies[0].name}}</button>
+                                </ion-col>
+                                <ion-col>
+                                    <button ion-button>{{question.replies[1].name}}</button>
+                                </ion-col>
+                            </ion-row>
+                            <ion-row>
+                                <ion-col>
+                                    <button ion-button>{{question.replies[2].name}}</button>
+                                </ion-col>
+                                <ion-col>
+                                    <button ion-button>{{question.replies[3].name}}</button>
+                                </ion-col>
+                            </ion-row>
+                        </ion-grid>
+                    </div>
+
                 </div>
             </ion-col>
         </ion-row>
@@ -26,10 +49,18 @@
 </ng-template>
 
 <ng-template #showLoadingResult>
-    <div *ngIf="oneDayLeftAlready == true; else errorFound">
+    <div *ngIf="oneDayLeftAlready == true; else checkSurvey">
         <p>¡Aún no ha pasado un día!</p>
         <h5 style="font-weight: bold">Quedan {{hoursLeft}} horas</h5>
     </div>
+</ng-template>
+
+<ng-template #checkSurvey>
+    <div *ngIf="incorrectSurvey == true; else errorFound">
+        <p>Esta encuesta es incorrecta</p>
+        <p style="font-weight: bold">Desliza hacia abajo para que te aparezca una nueva encuesta</p>
+    </div>
+
 </ng-template>
 
 <ng-template #errorFound>
