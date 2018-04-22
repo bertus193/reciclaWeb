@@ -32,7 +32,21 @@
                                     <p>Email: {{ user.username }}</p>
                                 </span>
                                 <p>Fecha registro: {{ user.createdDate | date: 'dd/MM/yyyy H:mm'}}</p>
-                                <p>Puntos: {{ user.points}}</p>
+                                <ion-row class="pointsBox">
+                                    <ion-col>
+                                        <p>Puntos reciclando</p>
+                                        <p>
+                                            <ion-badge item-end>{{ user.points}}</ion-badge>
+                                        </p>
+                                    </ion-col>
+                                    <ion-col>
+                                        <p>Puntos jugando</p>
+                                        <p>
+                                            <ion-badge item-end>{{ user.gamePoints}}</ion-badge>
+                                        </p>
+                                    </ion-col>
+                                </ion-row>
+
                             </ion-card-content>
                         </ion-card>
                         <button ion-button block (tap)="goToLogout()">Cerrar sesión</button>

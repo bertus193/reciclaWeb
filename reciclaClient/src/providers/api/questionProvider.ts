@@ -17,7 +17,8 @@ export class QuestionProvider {
         @Inject(APP_CONFIG_TOKEN) private config: ApplicationConfig) { }
 
 
-    public getRandomQuestion() {
-        return this.http.get(this.config.apiEndpoint + '/questions/random').timeout(this.config.defaultTimeoutTime)
+    public getRandomQuestion(id: number, token: string) {
+        this.requestJsonOptions.headers.set('X-Auth-Token', token)
+        return this.http.get(this.config.apiEndpoint + '/private/questions/user/' + id + '/random', this.requestJsonOptions).timeout(this.config.defaultTimeoutTime)
     }
 }

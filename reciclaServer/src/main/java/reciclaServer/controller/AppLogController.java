@@ -23,7 +23,7 @@ public class AppLogController {
     }
 
     @ExceptionHandler({Exception.class})
-    public ResponseEntity<Object> handleException(
+    public ResponseEntity<?> handleException(
             Exception ex, WebRequest request) {
 
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;

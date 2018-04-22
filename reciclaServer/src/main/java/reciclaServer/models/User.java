@@ -53,6 +53,21 @@ public class User {
 
     private int points;
 
+    private int gamePoints;
+
+    private Timestamp lastGameDate;
+
+    @ManyToMany(cascade = {CascadeType.ALL})
+    @JoinTable(
+            name = "user_question",
+            joinColumns = {@JoinColumn(name = "user")},
+            inverseJoinColumns = {@JoinColumn(name = "question")}
+    )
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
+    private List<Question> questionsDone;
+
+
     public User() { //Needed for JPA
 
     }
@@ -151,5 +166,29 @@ public class User {
 
     public void setPoints(int points) {
         this.points = points;
+    }
+
+    public int getGamePoints() {
+        return gamePoints;
+    }
+
+    public void setGamePoints(int gamePoints) {
+        this.gamePoints = gamePoints;
+    }
+
+    public Timestamp getLastGameDate() {
+        return lastGameDate;
+    }
+
+    public void setLastGameDate(Timestamp lastGameDate) {
+        this.lastGameDate = lastGameDate;
+    }
+
+    public List<Question> getQuestionsDone() {
+        return questionsDone;
+    }
+
+    public void setQuestionsDone(List<Question> questionsDone) {
+        this.questionsDone = questionsDone;
     }
 }

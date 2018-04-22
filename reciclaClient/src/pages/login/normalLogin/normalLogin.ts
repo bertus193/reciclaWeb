@@ -60,20 +60,12 @@ export class NormalLoginPage {
 
         var password = this.encryptProvider.encryptPassword(passwordForm.value)
 
-        var user: User = {
-            id: null,
-            email: emailForm.value,
-            password: password,
-            username: null,
-            fullName: null,
-            profilePicture: null,
-            accessToken: null,
-            recycleItems: null,
-            createdDate: null,
-            lastPosition: null,
-            type: TypeUser.Normal,
-            points: 0
-        }
+
+        var user: User = new User()
+
+        user.email = emailForm.value
+        user.password = password
+        user.type = TypeUser.Normal
 
         this.userProvider.login(user).subscribe(res => {
             this.loading.dismiss()

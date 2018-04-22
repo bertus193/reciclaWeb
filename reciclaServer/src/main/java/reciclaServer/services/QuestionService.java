@@ -22,7 +22,7 @@ public class QuestionService {
         return questionDAO.save(question);
     }
 
-    public List<Question> findAll() {
-        return this.questionDAO.findAll();
+    public List<Question> findQuestionsNotDidAlreadyByUser(int userId) {
+        return this.questionDAO.findQuestionsNotDidAlreadyByUser(userId);
     }
 }

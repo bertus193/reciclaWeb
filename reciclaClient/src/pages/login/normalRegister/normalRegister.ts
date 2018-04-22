@@ -60,20 +60,14 @@ export class NormalRegisterPage {
 
         let uuid = UUID.UUID();
 
-        var user: User = {
-            id: null,
-            email: emailForm.value,
-            password: password,
-            username: emailForm.value,
-            fullName: 'Mi nombre',
-            profilePicture: 'assets/imgs/quieroReciclar.png',
-            accessToken: uuid.toString(),
-            recycleItems: null,
-            createdDate: new Date(),
-            lastPosition: null,
-            type: TypeUser.Normal,
-            points: 0
-        }
+        var user: User = new User()
+
+        user.email = emailForm.value
+        user.password = password
+        user.fullName = 'Mi nombre'
+        user.profilePicture = 'assets/imgs/quieroReciclar.png'
+        user.accessToken = uuid.toString()
+        user.type = TypeUser.Normal
 
         this.userProvider.createUser(user).subscribe(res => {
             this.loading.dismiss()

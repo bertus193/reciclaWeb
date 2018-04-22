@@ -9,27 +9,30 @@
         <ion-refresher-content></ion-refresher-content>
     </ion-refresher>
     <ion-grid style="height: 100%">
-        <div *ngIf="question != null;else questionNotFound">
-            <ion-row justify-content-center align-items-center style="height: 100%">
-                <ion-item>
-                    {{question.name}}
-                </ion-item>
-            </ion-row>
-        </div>
+        <ion-row align-items-center text-center style="height: 100%">
+            <ion-col>
+                <div *ngIf="question != null;else questionNotFound">
+                    adsasd {{question.name}}
+                </div>
+            </ion-col>
+        </ion-row>
     </ion-grid>
 </ion-content>
 
 <ng-template #questionNotFound>
-    <ion-row align-items-center text-center style="height: 100%">
-        <ion-col>
-            <div *ngIf="showLoadingMsg == true; else showLoadingResult">
-                <h5>Cargando...</h5>
-            </div>
-        </ion-col>
-    </ion-row>
+    <div *ngIf="showLoadingMsg == true; else showLoadingResult">
+        <h5>Cargando...</h5>
+    </div>
 </ng-template>
 
 <ng-template #showLoadingResult>
+    <div *ngIf="oneDayLeftAlready == true; else errorFound">
+        <p>¡Aún no ha pasado un día!</p>
+        <h5 style="font-weight: bold">Quedan {{hoursLeft}} horas</h5>
+    </div>
+</ng-template>
+
+<ng-template #errorFound>
     <div>
         <p>Ha habido algún problema</p>
         <h5 style="font-weight: bold">Intentalo de nuevo en unos minutos</h5>

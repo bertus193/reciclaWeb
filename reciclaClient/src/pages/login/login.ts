@@ -68,51 +68,21 @@ export class LoginPage {
         })
     }
 
-
-
-    createNewInstagramUser(instagramUser: any, access_token: string) {
-        var user: User = {
-            id: -1,
-            email: instagramUser.data.id,
-            password: null,
-            username: instagramUser.data.username,
-            fullName: instagramUser.data.full_name,
-            profilePicture: instagramUser.data.profile_picture,
-            accessToken: access_token,
-            recycleItems: [],
-            createdDate: new Date(),
-            lastPosition: null,
-            type: TypeUser.Instagram,
-            points: 0
-        }
-        this.userProvider.createUser(user).subscribe(res => {
-            this.sessionProvider.updateSession(res.json())
-            this.app.getRootNavs()[0].setRoot(TabsPage)
-        }, error => {
-            this.notificationProvider.presentTopToast(this.config.defaultTimeoutMsg)
-        })
-    }
-
     loginFb(): Promise<Observable<User>> {
 
         return this.fb.login(['public_profile', 'email'])
             .then((fbUser: FacebookLoginResponse) =>
                 this.fb.api('me?fields=id,name,email,first_name,picture.width(720).height(720).as(picture_large)', []).then(profile => {
 
-                    var user: User = {
-                        id: -1,
-                        email: profile['id'],
-                        password: null,
-                        username: profile['email'],
-                        fullName: profile['name'],
-                        profilePicture: profile['picture_large']['data']['url'],
-                        accessToken: fbUser.authResponse.accessToken,
-                        recycleItems: [],
-                        createdDate: new Date(),
-                        lastPosition: null,
-                        type: TypeUser.Facebook,
-                        points: 0
-                    }
+                    var user: User = new User()
+
+                    user.email = profile['id']
+                    user.username = profile['email']
+                    user.fullName = profile['name']
+                    user.profilePicture = profile['picture_large']['data']['url']
+                    user.accessToken = fbUser.authResponse.accessToken
+                    user.type = TypeUser.Facebook
+
                     return this.findAndUpdateOrCreateUser(user).timeout(this.config.defaultTimeoutTime).map((res: any) => {
                         if (res.value != null) {
                             user = res.value
@@ -138,20 +108,14 @@ export class LoginPage {
             this.instagramProvider.getInstagramUserInfo(tokenRes.access_token).subscribe(res => {
                 var instagramUser = res.json()
 
-                var user: User = {
-                    id: -1,
-                    email: instagramUser.data.id,
-                    password: null,
-                    username: instagramUser.data.username,
-                    fullName: instagramUser.data.full_name,
-                    profilePicture: instagramUser.data.profile_picture,
-                    accessToken: tokenRes.access_token,
-                    recycleItems: [],
-                    createdDate: new Date(),
-                    lastPosition: null,
-                    type: TypeUser.Instagram,
-                    points: 0
-                }
+                var user: User = new User()
+
+                user.email = instagramUser.data.id
+                user.username = instagramUser.data.username
+                user.fullName = instagramUser.data.full_name
+                user.profilePicture = instagramUser.data.profile_picture
+                user.accessToken = tokenRes.access_token
+                user.type = TypeUser.Instagram
 
                 this.findAndUpdateOrCreateUser(user).timeout(this.config.defaultTimeoutTime).subscribe((res: any) => {
                     if (res.value != null) {
@@ -179,20 +143,15 @@ export class LoginPage {
     loginInDebugMode() {
         var password = this.encryptProvider.encryptPassword(this.config.debugUserPassword)
 
-        var user: User = {
-            id: -1,
-            email: this.config.debugUserEmail,
-            password: password,
-            username: this.config.debugUserEmail,
-            fullName: 'Debug user',
-            profilePicture: 'https://keluro.com/images/Blog/Debug.jpg',
-            accessToken: 'DEBUG_MODE',
-            recycleItems: [],
-            createdDate: new Date(),
-            lastPosition: null,
-            type: TypeUser.Normal,
-            points: 0
-        }
+        var user: User = new User()
+
+        user.email = this.config.debugUserEmail
+        user.password = password
+        user.username = this.config.debugUserEmail
+        user.fullName = 'Debug user'
+        user.profilePicture = 'assets/imgs/debugProfilePicture.jpg'
+        user.accessToken = 'DEBUG_MODE'
+        user.type = TypeUser.Normal
 
         return this.findAndUpdateOrCreateUser(user).timeout(this.config.defaultTimeoutTime).map((res: any) => {
             if (res.value != null) {
