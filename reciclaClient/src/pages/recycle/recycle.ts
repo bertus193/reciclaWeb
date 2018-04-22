@@ -91,7 +91,7 @@ export class RecyclePage {
             if (this.user.lastPosition != null) {
                 myPosition.id = this.user.lastPosition.id
             }
-            this.user.lastPosition = position
+            this.user.lastPosition = myPosition
             this.userProvider.saveUser(this.user, this.user.accessToken).subscribe(res => {
                 this.goToMapPage(myPosition)
             }, error => { //saveUserPosition
@@ -260,6 +260,7 @@ export class RecyclePage {
 
     public uploadImage(targetPath) {
         this.loading.setContent('Subiendo la imagen...')
+        this.loading.setDuration(this.config.defaultTimeoutTime * 4)
 
         var date = new Date()
         var filename = this.user.id + "_" + date.getTime() + ".png";
@@ -306,7 +307,7 @@ export class RecyclePage {
 
     public upload(targetPath, urlUpload, options, fileTransfer, urlUploadedFiles) {
         // Use the FileTransfer to upload the image
-        return this.utilsProvider.timeoutPromise(this.config.defaultTimeoutTime,
+        return this.utilsProvider.timeoutPromise(this.config.defaultTimeoutTime * 4,
             fileTransfer.upload(targetPath, urlUpload, options).then(data => {
                 this.googleCloudServiceProvider.getLabels(urlUploadedFiles).timeout(this.config.defaultTimeoutTime).subscribe((result: any) => {
                     var labelResponseList: LabelResponse[];

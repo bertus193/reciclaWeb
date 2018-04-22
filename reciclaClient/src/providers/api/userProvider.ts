@@ -22,6 +22,7 @@ export class UserProvider {
     public saveUser(user: User, token: string) {
         this.sessionProvider.updateSession(user)
         user.recycleItems = null
+        user.questionsDone = null
         this.requestJsonOptions.headers.set('X-Auth-Token', token)
         return this.http.put(this.config.apiEndpoint + "/users/private/" + user.id, JSON.stringify(user), this.requestJsonOptions).timeout(this.config.defaultTimeoutTime)
     }

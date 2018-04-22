@@ -187,21 +187,22 @@ export class LoginPage {
     }
 
     findAndUpdateOrCreateUser(loginUser: User): Observable<User> {
+
         return this.findUserByEmail(loginUser.email).map(
-            foundUser => {
-                if (foundUser.status == 200) {
-                    if (this.usersAreDifferent(loginUser, foundUser.user) == true) {
-                        loginUser.id = foundUser.user.id
-                        loginUser.lastPosition = foundUser.user.lastPosition
-                        loginUser.createdDate = foundUser.user.createdDate
-                        return this.userProvider.saveUser(loginUser, foundUser.user.accessToken).subscribe(_ => {
+            res => {
+                if (res.status == 200) {
+                    if (loginUser.usersAreDifferent(res.user) == true) {
+                        var accessToken = res.user.accessToken
+                        var foundUser: User = res.user
+                        foundUser = this.copyToFoundUser(foundUser, loginUser)
+                        return this.userProvider.saveUser(foundUser, accessToken).subscribe(_ => {
                             return loginUser
                         }, error => {
                             this.notificationProvider.presentTopToast("Error guardando el usuario.")
                         })
                     }
                     else {
-                        return foundUser.user
+                        return res.user
                     }
                 } else {
                     return null
@@ -226,15 +227,15 @@ export class LoginPage {
             });
     }
 
-    usersAreDifferent(fbUser: User, foundUser: User): boolean {
-        var out = false
-        if (fbUser.email != foundUser.email || fbUser.username != foundUser.username ||
-            fbUser.fullName != foundUser.fullName || fbUser.profilePicture != foundUser.profilePicture ||
-            fbUser.accessToken != foundUser.accessToken ||
-            (fbUser.password != foundUser.password) && fbUser.password != '' && fbUser.password != null) {
-            out = true
-        }
-        return out
+    public copyToFoundUser(foundUser: User, user: User): User {
+        foundUser.email = user.email
+        foundUser.username = user.username
+        foundUser.fullName = user.fullName
+        foundUser.profilePicture = user.profilePicture
+        foundUser.accessToken = user.accessToken
+        foundUser.password = user.password
+
+        return foundUser
     }
 
     findUserByEmail(email: string): Observable<{ user: User, status: number }> {
