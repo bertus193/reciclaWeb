@@ -5,11 +5,22 @@
 </ion-header>
 
 <ion-content>
-    <ion-refresher (ionRefresh)="doRefresh($event)">
+    <div *ngIf="recycleItems?.length> 0;">
+        <ion-toolbar>
+            <div class=" lastUsersTitle ">Últimos usuarios reciclando</div>
+            <div class="lastUsersBody">
+                <span *ngFor="let user of users " style="width: 100%; ">
+                    <img class="lastUsersAvatar " src="{{user.profilePicture}} " onError="this.src='assets/imgs/quieroReciclar.png' " />
+                </span>
+            </div>
+        </ion-toolbar>
+    </div>
+
+    <ion-refresher (ionRefresh)="doRefresh($event) ">
         <ion-refresher-content></ion-refresher-content>
     </ion-refresher>
-    <ion-grid style="height: 100%">
-        <div *ngIf="recycleItems?.length > 0;else recycleItemsNotFound">
+    <ion-grid style="height: 100% ">
+        <div *ngIf="recycleItems?.length> 0;else recycleItemsNotFound">
             <ion-row justify-content-center align-items-center style="height: 100%">
                 <div *ngFor="let recycleItem of recycleItems" style="width: 100%;">
                     <ion-card>

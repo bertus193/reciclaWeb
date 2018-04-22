@@ -14,6 +14,7 @@ import { Content } from 'ionic-angular';
 export class HomePage {
 
     private recycleItems: RecycleItem[] = []
+    private users: User[] = []
     private user: User
 
     private page: number = 0
@@ -64,6 +65,7 @@ export class HomePage {
                     var resJson = res.json()
                     this.totalPages = resJson.recycleItemList.totalPages
                     this.totalElements = resJson.recycleItemList.totalElements
+                    this.users = resJson.userList
 
                     var tempRecycleList = this.readRecycleItems(resJson.recycleItemList.content, resJson.userList)
 
