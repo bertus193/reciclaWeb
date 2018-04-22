@@ -197,8 +197,7 @@ export class LoginPage {
                         return this.userProvider.saveUser(loginUser, foundUser.user.accessToken).subscribe(_ => {
                             return loginUser
                         }, error => {
-                            this.notificationProvider.presentAlertError(JSON.stringify(error))
-                            //this.notificationProvider.presentTopToast("Error guardando el usuario.")
+                            this.notificationProvider.presentTopToast("Error guardando el usuario.")
                         })
                     }
                     else {

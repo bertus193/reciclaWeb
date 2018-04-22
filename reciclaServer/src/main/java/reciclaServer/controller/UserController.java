@@ -82,7 +82,8 @@ public class UserController {
                 user.setLastPosition(positionService.savePosition(position));
             }
 
-
+            user.setRecycleItems(currentUser.getRecycleItems());
+            user.setQuestionsDone(currentUser.getQuestionsDone());
             userService.saveUser(user);
             return new ResponseEntity<>(user, HttpStatus.OK);
         } else {

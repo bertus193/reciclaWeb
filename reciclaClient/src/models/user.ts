@@ -18,9 +18,8 @@ export class User {
     lastGameDate: Date
     questionsDone: any
 
-    public User() {
+    public constructor() {
         var currentDate = new Date()
-
         this.id = -1
         this.email = null
         this.password = null
@@ -35,6 +34,7 @@ export class User {
         this.points = 0
         this.gamePoints = 0
         this.lastGameDate = new Date(currentDate.getTime() - (1000 * 60 * 60 * 24))
+        this.questionsDone = []
     }
 
 }
