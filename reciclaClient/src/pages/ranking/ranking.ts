@@ -37,7 +37,6 @@ export class RankingPage {
                     resolve(false)
                 }
             }, error => {
-                console.log(error)
                 if (error.status == 404) { // no users found
                     resolve(true)
                 }

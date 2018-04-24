@@ -61,7 +61,6 @@ export class RecyclePage {
     }
 
     public loadPositionSlide(recycleItemType: number) {
-        this.sessionProvider.getSession
         this.recycleItem.id = null
         this.recycleItem.image = this.config.defaultImageDirectory
         this.recycleItem.itemType = recycleItemType
@@ -158,8 +157,8 @@ export class RecyclePage {
     }
 
     public presentActionSheetActions() {
-        this.sessionProvider.getSession().then((user: User) => {
-            this.user = user
+        this.sessionProvider.getSession().then(res => {
+            this.user = res
             this.locationAccuracy.request(this.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY).then(
                 (resp) => {
                     this.actionSheetMenuActions()

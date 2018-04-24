@@ -65,24 +65,42 @@ export class HomePage {
                     var resJson = res.json()
                     this.totalPages = resJson.recycleItemList.totalPages
                     this.totalElements = resJson.recycleItemList.totalElements
-                    this.users = resJson.userList
 
+                    /* TOP BAR USER LIST */
+                    var tempUserList = resJson.userList
+                    if (refreshType == "refresh") {
+                        tempUserList = tempUserList.reverse()
+                    }
+
+                    for (var i = 0; i < tempUserList.length; i++) {
+                        if (refreshType == "refresh") {
+                            if (this.users.find(x => x.id == tempUserList[i].id) == null) {
+                                this.users.unshift(tempUserList[i])
+                            }
+                        }
+                        else {
+                            if (this.users.find(x => x.id == tempUserList[i].id) == null) {
+                                this.users.push(tempUserList[i])
+                            }
+                        }
+                    }
+
+                    /* RECYCLEITEM LIST */
                     var tempRecycleList = this.readRecycleItems(resJson.recycleItemList.content, resJson.userList)
 
                     if (refreshType == "refresh") {
                         tempRecycleList = tempRecycleList.reverse()
                     }
 
-                    for (var i = 0; i < tempRecycleList.length; i++) {
+                    for (var j = 0; j < tempRecycleList.length; j++) {
                         if (refreshType == "refresh") {
-                            if (this.recycleItems.find(x => x.id == tempRecycleList[i].id) == null) {
-                                this.recycleItems.unshift(tempRecycleList[i])
+                            if (this.recycleItems.find(x => x.id == tempRecycleList[j].id) == null) {
+                                this.recycleItems.unshift(tempRecycleList[j])
                             }
                         }
                         else {
-                            this.recycleItems.push(tempRecycleList[i])
+                            this.recycleItems.push(tempRecycleList[j])
                         }
-
                     }
                     resolve(true)
                 } else {

@@ -20,4 +20,8 @@ export class ItemTypeProvider {
     public getRecycleItemItemTypeBylabelAnnotations(labelResponseList: any) {
         return this.http.post(this.config.apiEndpoint + '/itemTypeName/labelAnnotations', JSON.stringify(labelResponseList), this.requestJsonOptions).timeout(this.config.defaultTimeoutTime)
     }
+
+    public findItemTypeById(id: number) {
+        return this.http.get(this.config.apiEndpoint + "/itemType/" + id).timeout(this.config.defaultTimeoutTime)
+    }
 }

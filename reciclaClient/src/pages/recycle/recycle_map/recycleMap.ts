@@ -1,15 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { NavParams, AlertController, Platform, LoadingController, Loading, Events, NavController } from 'ionic-angular';
 import { PopoverController } from 'ionic-angular';
-import {
-    GoogleMaps,
-    GoogleMapsEvent,
-    GoogleMapOptions,
-    MarkerOptions,
-    Marker,
-    LatLng,
-    GoogleMap,
-} from '@ionic-native/google-maps';
+import { GoogleMaps, GoogleMapsEvent, GoogleMapOptions, MarkerOptions, Marker, LatLng, GoogleMap } from '@ionic-native/google-maps';
 import { Position } from '../../../models/position';
 import { NotificationProvider } from '../../../providers/notifications';
 import { ApplicationConfig, APP_CONFIG_TOKEN } from '../../../app/app-config';
@@ -20,6 +12,7 @@ import { TypeRecycle, TypeRecycle_Color_EN } from '../../../models/typeRecicle';
 import { PopoverMap } from './popover_map/popoverMap';
 import { UtilsProvider } from '../../../providers/utils';
 import { RecycleItemsProvider } from '../../../providers/api/recycleItemsProvider';
+import { ItemTypeProvider } from '../../../providers/api/itemTypeProvider';
 
 @Component({
     selector: 'page-recycleMap',
@@ -38,6 +31,10 @@ export class MapPage {
 
     loading: Loading;
 
+    currentPlatformIsBrowser: boolean = false
+
+    user: User
+
     constructor(
         private navParams: NavParams,
         private notificationProvider: NotificationProvider,
@@ -50,7 +47,12 @@ export class MapPage {
         private recycleItemsProvider: RecycleItemsProvider,
         private events: Events,
         private navCtrl: NavController,
+        private itemTypeProvider: ItemTypeProvider,
         @Inject(APP_CONFIG_TOKEN) private config: ApplicationConfig) {
+
+        if (this.platform.is('mobileweb') || this.platform.is('core')) {
+            this.currentPlatformIsBrowser = true
+        }
 
         this.recycleItem = this.navParams.get("recycleItem");
         this.myPosition = this.navParams.get("myPosition");
@@ -126,33 +128,45 @@ export class MapPage {
     }
 
     public recycleFinish() {
+        this.loading = this.loadingCtrl.create({
+            content: 'Guardando...'
+        });
+        this.loading.present()
 
         var savedStorage: Storage = this.recycleItem.storage
 
-        this.sessionProvider.getSession().then((user: User) => {
+        this.sessionProvider.getSession().then(user => {
             this.recycleItem.storage = this.recycleItem.storage.id
             this.recycleItemsProvider.saveRecycleItem(this.recycleItem, user.accessToken).subscribe(res => {
                 var status = res.status;
                 if (status === 201) {
 
-                    user.points = user.points + this.recycleItem.itemType.recycleValue
-                    this.sessionProvider.updateSession(user)
+                    this.itemTypeProvider.findItemTypeById(this.recycleItem.itemType).subscribe(res => {
 
-                    this.recycledAlready = true
-                    this.notificationProvider.presentAlertOk('Se ha guardadado correctamente este reciclado!')
-                    this.navCtrl.pop()
-                    this.events.publish('change-tab', "profile", "history")
+                        user.points = user.points + res.json().recycleValue
+                        this.sessionProvider.updateSession(user)
+
+                        this.recycledAlready = true
+                        this.loading.dismiss()
+                        this.notificationProvider.presentAlertOk('Se ha guardadado correctamente este reciclado!')
+                        this.navCtrl.pop()
+                        this.events.publish('change-tab', "profile", "history")
+                        this.events.publish('update-user', user)
+                    }, error => {
+                        this.loading.dismiss()
+                        this.notificationProvider.presentTopToast(this.config.defaultTimeoutMsg)
+                    })
                 }
                 else {
+                    this.loading.dismiss()
                     this.notificationProvider.presentTopToast("Los datos insertados son incorrectos.")
                 }
-                this.recycleItem.storage = savedStorage
             }, error => {
-                this.recycleItem.storage = savedStorage
+                this.loading.dismiss()
                 this.notificationProvider.presentTopToast(this.config.defaultTimeoutMsg)
             })
-
         }, err => {
+            this.loading.dismiss()
             this.notificationProvider.presentTopToast('Error obteniendo los datos necesarios.')
         });
     }

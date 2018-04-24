@@ -100,10 +100,17 @@
 
 <ng-template #showLoadingResult>
     <div *ngIf="oneDayLeftAlready == false">
-        <div *ngIf="incorrectSurvey == true; else errorFound">
+        <div *ngIf="incorrectSurvey == true; else checkQuestionTemplate">
             <p>Esta encuesta es incorrecta</p>
             <p style="font-weight: bold">Desliza hacia abajo para que te aparezca una nueva encuesta</p>
         </div>
+    </div>
+</ng-template>
+
+<ng-template #checkQuestionTemplate>
+    <div *ngIf="noQuestionFound == true;else errorFound">
+        <p>¡Ups! No encuentro nada</p>
+        <h5 style="font-weight: bold">Has respondido todas las preguntas</h5>
     </div>
 </ng-template>
 

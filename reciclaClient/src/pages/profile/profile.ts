@@ -33,6 +33,10 @@ export class ProfilePage {
         this.events.subscribe('change-tab', (tabName, profileSegment) => {
             this.profileSegment = profileSegment;
         });
+
+        this.events.subscribe('update-user', (user) => {
+            this.user = user;
+        });
     }
 
     goToLogout() {

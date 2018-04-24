@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { Content, AlertController, Loading, LoadingController } from 'ionic-angular';
+import { Content, AlertController, Loading, LoadingController, Events } from 'ionic-angular';
 import { QuestionProvider } from '../../providers/api/questionProvider';
 import { Question } from '../../models/question';
 import { User } from '../../models/user';
@@ -22,6 +22,7 @@ export class GamePage {
     private showLoadingMsg: boolean
     private oneDayLeftAlready: boolean
     private incorrectSurvey: boolean
+    private noQuestionFound: boolean
 
     private hoursLeft: number
 
@@ -38,7 +39,8 @@ export class GamePage {
         private notificationProvider: NotificationProvider,
         private alertCtrl: AlertController,
         private userQuestionProvider: UserQuestionProvider,
-        private loadingCtrl: LoadingController
+        private loadingCtrl: LoadingController,
+        private events: Events
     ) {
         this.sessionProvider.getSession().then((user: User) => {
             this.user = user
@@ -57,6 +59,7 @@ export class GamePage {
         this.oneDayLeftAlready = false
         this.incorrectSurvey = false
         this.lastQuestionDone = null
+        this.noQuestionFound = false
         this.hoursLeft = 0
 
         var status: number
@@ -76,13 +79,15 @@ export class GamePage {
                     }
                 } else if (status === 206) { //Partial_Content
                     this.lastQuestionDone = res.json()
-                    console.log(this.lastQuestionDone.question)
-                    if (isNumber(this.lastQuestionDone.question.correctReply)) {
-                        this.lastQuestionDoneReply = this.lastQuestionDone.userReply
+                    if (this.lastQuestionDone.question != null) {
+                        if (isNumber(this.lastQuestionDone.question.correctReply)) {
+                            this.lastQuestionDoneReply = this.lastQuestionDone.userReply
+                        }
+                        else {
+                            this.lastQuestionDoneReply = this.lastQuestionDone.question.correctReply
+                        }
                     }
-                    else {
-                        this.lastQuestionDoneReply = this.lastQuestionDone.question.correctReply
-                    }
+
 
                     this.hoursLeft = 24 - this.lastQuestionDone.hours
                     this.oneDayLeftAlready = true
@@ -92,6 +97,7 @@ export class GamePage {
                 }
             }, error => {
                 if (error.status == 404) { // no question found
+                    this.noQuestionFound = true
                     resolve(true)
                 }
                 else {
@@ -156,8 +162,9 @@ export class GamePage {
                         this.userQuestionProvider.saveUserReply(this.user.id, this.question.id, this.question.replies[replyPicked].id, this.user.accessToken).subscribe(res => {
                             this.lastQuestionDoneReply = res.json()
                             if (this.lastQuestionDoneReply.id == this.question.replies[replyPicked].id) {
-                                this.user.points = this.user.points + this.question.questionValue
+                                this.user.gamePoints = this.user.gamePoints + this.question.questionValue
                                 this.sessionProvider.updateSession(this.user)
+                                this.events.publish('update-user', this.user)
                             }
 
                             this.loading.dismiss()

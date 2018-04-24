@@ -84,6 +84,15 @@ public class UserController {
 
             user.setRecycleItems(currentUser.getRecycleItems());
             user.setQuestionsDone(currentUser.getQuestionsDone());
+
+            //Estos valores no deben cambiar, por tanto, se dejan como estaban
+            user.setId(currentUser.getId());
+            user.setEmail(currentUser.getEmail());
+            user.setCreatedDate(currentUser.getCreatedDate());
+            user.setType(currentUser.getType());
+            user.setPoints(currentUser.getPoints());
+            user.setGamePoints(currentUser.getGamePoints());
+
             userService.saveUser(user);
             return new ResponseEntity<>(user, HttpStatus.OK);
         } else {
