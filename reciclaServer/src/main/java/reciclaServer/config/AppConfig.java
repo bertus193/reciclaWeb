@@ -20,7 +20,8 @@ public class AppConfig extends WebMvcConfigurerAdapter {
                 "/recycleItems/private",
                 "/users/private/{id}",
                 "/recycleItems/private/{id}",
-                "/private/questions/user/{id}/random"
+                "/private/questions/user/{id}/random",
+                "/private/userQuestions/{question_id}/user/{user_id}/reply/{reply_id}"
         );
     }
 }

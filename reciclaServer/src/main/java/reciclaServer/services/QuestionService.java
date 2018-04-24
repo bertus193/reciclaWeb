@@ -25,4 +25,8 @@ public class QuestionService {
     public List<Question> findQuestionsNotDidAlreadyByUser(int userId) {
         return this.questionDAO.findQuestionsNotDidAlreadyByUser(userId);
     }
+
+    public Question findById(long id) {
+        return this.questionDAO.findById(id);
+    }
 }

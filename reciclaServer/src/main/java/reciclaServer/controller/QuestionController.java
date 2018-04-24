@@ -4,19 +4,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reciclaServer.models.LastQuestionDone;
 import reciclaServer.models.Question;
 import reciclaServer.models.User;
+import reciclaServer.models.UserQuestion;
 import reciclaServer.services.QuestionService;
+import reciclaServer.services.UserQuestionService;
 import reciclaServer.services.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.SecureRandom;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -26,13 +24,16 @@ public class QuestionController {
 
     private QuestionService questionService;
     private UserService userService;
+    private UserQuestionService userQuestionService;
 
     @Autowired
     public QuestionController(
             QuestionService questionService,
-            UserService userService) {
+            UserService userService,
+            UserQuestionService userQuestionService) {
         this.questionService = questionService;
         this.userService = userService;
+        this.userQuestionService = userQuestionService;
     }
 
 
@@ -45,20 +46,7 @@ public class QuestionController {
             User user = this.userService.findById(id);
 
             if (user != null) {
-
-                LocalDateTime ldt = LocalDateTime.now();
-                ZonedDateTime zdt = ZonedDateTime.of(ldt, ZoneId.systemDefault());
-                ZonedDateTime gmt = zdt.withZoneSameInstant(ZoneId.of("GMT"));
-                Timestamp timeNow = Timestamp.valueOf(gmt.toLocalDateTime());
-
-                ldt = user.getLastGameDate().toLocalDateTime();
-                zdt = ZonedDateTime.of(ldt, ZoneId.systemDefault());
-                gmt = zdt.withZoneSameInstant(ZoneId.of("GMT"));
-                Timestamp timeUser = Timestamp.valueOf(gmt.toLocalDateTime());
-
-
-                long diff = timeNow.getTime() - timeUser.getTime();
-                long hours = TimeUnit.HOURS.convert(diff, TimeUnit.MILLISECONDS);
+                long hours = user.getHoursDifferenceToPlay();
                 if (hours >= 24) {
                     SecureRandom rand = new SecureRandom();
 
@@ -76,7 +64,16 @@ public class QuestionController {
                         }
                     }
                 } else {
-                    return new ResponseEntity<>(hours, HttpStatus.PARTIAL_CONTENT);
+                    LastQuestionDone lastQuestionDone = new LastQuestionDone();
+                    UserQuestion userQuestion = this.userQuestionService.findFirstByUser(user);
+
+                    lastQuestionDone.setHours(hours);
+                    if (userQuestion != null) {
+                        lastQuestionDone.setQuestion(userQuestion.getQuestion());
+                        lastQuestionDone.setUserReply(userQuestion.getUserReply());
+                    }
+
+                    return new ResponseEntity<>(lastQuestionDone, HttpStatus.PARTIAL_CONTENT);
                 }
             } else {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -86,10 +83,5 @@ public class QuestionController {
         } else {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-    }
-
-    @RequestMapping(value = "/private/questions/{question_id}/user/{user_id}", method = RequestMethod.POST)
-    public ResponseEntity<?> saveUserReply(HttpServletRequest request, @PathVariable("question_id") long question_id, @PathVariable("user_id") long user_id) {
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

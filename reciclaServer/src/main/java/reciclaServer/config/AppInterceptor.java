@@ -15,7 +15,7 @@ public class AppInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        
+
         String token = request.getHeader("x-auth-token");
 
         if (token != null && !token.isEmpty()) {

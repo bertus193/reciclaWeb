@@ -9,6 +9,7 @@ import { InstagramProvider } from "./instagramProvider";
 import { ItemTypeProvider } from "./api/itemTypeProvider";
 import { StoragesProvider } from "./api/storagesProvider";
 import { QuestionProvider } from "./api/questionProvider";
+import { UserQuestionProvider } from "./api/userQuestionProvider";
 
 export const APP_PROVIDERS = [
     SessionProvider,
@@ -21,5 +22,6 @@ export const APP_PROVIDERS = [
     InstagramProvider,
     StoragesProvider,
     ItemTypeProvider,
-    QuestionProvider
+    QuestionProvider,
+    UserQuestionProvider
 ];

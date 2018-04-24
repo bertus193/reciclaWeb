@@ -2,13 +2,18 @@ package reciclaServer.models;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import reciclaServer.config.EntityIdResolver;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Entity
 @Table(name = "users")
@@ -58,11 +63,29 @@ public class User {
     private Timestamp lastGameDate;
 
     @OneToMany(mappedBy = "user")
+    @Transient
     private List<UserQuestion> questionsDone;
 
 
     public User() { //Needed for JPA
 
+    }
+
+    @JsonIgnore
+    public long getHoursDifferenceToPlay() {
+        LocalDateTime ldt = LocalDateTime.now();
+        ZonedDateTime zdt = ZonedDateTime.of(ldt, ZoneId.systemDefault());
+        ZonedDateTime gmt = zdt.withZoneSameInstant(ZoneId.of("GMT"));
+        Timestamp timeNow = Timestamp.valueOf(gmt.toLocalDateTime());
+
+        ldt = this.getLastGameDate().toLocalDateTime();
+        zdt = ZonedDateTime.of(ldt, ZoneId.systemDefault());
+        gmt = zdt.withZoneSameInstant(ZoneId.of("GMT"));
+        Timestamp timeUser = Timestamp.valueOf(gmt.toLocalDateTime());
+
+
+        long diff = timeNow.getTime() - timeUser.getTime();
+        return TimeUnit.HOURS.convert(diff, TimeUnit.MILLISECONDS);
     }
 
     public long getId() {

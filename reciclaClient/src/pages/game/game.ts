@@ -1,12 +1,14 @@
 import { Component, ViewChild } from '@angular/core';
-import { Content } from 'ionic-angular';
+import { Content, AlertController, Loading, LoadingController } from 'ionic-angular';
 import { QuestionProvider } from '../../providers/api/questionProvider';
 import { Question } from '../../models/question';
 import { User } from '../../models/user';
 import { SessionProvider } from '../../providers/session';
 import { NotificationProvider } from '../../providers/notifications';
-import { isTrueProperty } from 'ionic-angular/util/util';
 import { Reply } from '../../models/reply';
+import { UserQuestionProvider } from '../../providers/api/userQuestionProvider';
+import { LastQuestionDone } from '../../models/lastQuestionDone';
+import { isNumber } from 'ionic-angular/util/util';
 
 @Component({
     selector: 'page-game',
@@ -17,18 +19,26 @@ export class GamePage {
     private question: Question
     private user: User
 
-    private showLoadingMsg: boolean = true
-    private oneDayLeftAlready: boolean = false
-    private incorrectSurvey: boolean = false
+    private showLoadingMsg: boolean
+    private oneDayLeftAlready: boolean
+    private incorrectSurvey: boolean
 
-    private hoursLeft: number = 0
+    private hoursLeft: number
+
+    private loading: Loading
+
+    private lastQuestionDone: LastQuestionDone
+    private lastQuestionDoneReply: Reply
 
     @ViewChild(Content) content: Content
 
     constructor(
         private questionProvider: QuestionProvider,
         private sessionProvider: SessionProvider,
-        private notificationProvider: NotificationProvider
+        private notificationProvider: NotificationProvider,
+        private alertCtrl: AlertController,
+        private userQuestionProvider: UserQuestionProvider,
+        private loadingCtrl: LoadingController
     ) {
         this.sessionProvider.getSession().then((user: User) => {
             this.user = user
@@ -39,11 +49,16 @@ export class GamePage {
         }, err => {
             this.notificationProvider.presentTopToast('Error obteniendo los datos necesarios.')
         });
-
-
     }
 
     private getQuestion() {
+        this.question = null
+        this.showLoadingMsg = true
+        this.oneDayLeftAlready = false
+        this.incorrectSurvey = false
+        this.lastQuestionDone = null
+        this.hoursLeft = 0
+
         var status: number
 
         return new Promise(resolve => {
@@ -60,9 +75,18 @@ export class GamePage {
                         resolve(false)
                     }
                 } else if (status === 206) { //Partial_Content
-                    this.hoursLeft = 24 - res.json()
+                    this.lastQuestionDone = res.json()
+                    console.log(this.lastQuestionDone.question)
+                    if (isNumber(this.lastQuestionDone.question.correctReply)) {
+                        this.lastQuestionDoneReply = this.lastQuestionDone.userReply
+                    }
+                    else {
+                        this.lastQuestionDoneReply = this.lastQuestionDone.question.correctReply
+                    }
+
+                    this.hoursLeft = 24 - this.lastQuestionDone.hours
                     this.oneDayLeftAlready = true
-                    resolve(isTrueProperty)
+                    resolve(true)
                 } else {
                     resolve(false)
                 }
@@ -100,11 +124,59 @@ export class GamePage {
 
     doRefresh(refresher: any) {
         this.getQuestion().then((res: boolean) => {
+            this.showLoadingMsg = false
             refresher.complete();
         });
     }
 
     ionSelected() {
         this.content.scrollToTop()
+    }
+
+    saveUserReply(replyPicked: number) {
+        let prompt = this.alertCtrl.create({
+            title: 'Elegir respuesta',
+            message: "Al elegir una respuesta no podrás volver atrás.",
+            buttons: [
+                {
+                    text: 'Cancelar',
+                    handler: data => {
+                        return null
+                    }
+                },
+                {
+                    text: 'Aceptar',
+                    handler: data => {
+                        this.loading = this.loadingCtrl.create({
+                            content: 'Cargando...',
+                            enableBackdropDismiss: true
+                        });
+                        this.loading.present()
+
+                        this.userQuestionProvider.saveUserReply(this.user.id, this.question.id, this.question.replies[replyPicked].id, this.user.accessToken).subscribe(res => {
+                            this.lastQuestionDoneReply = res.json()
+                            if (this.lastQuestionDoneReply.id == this.question.replies[replyPicked].id) {
+                                this.user.points = this.user.points + this.question.questionValue
+                                this.sessionProvider.updateSession(this.user)
+                            }
+
+                            this.loading.dismiss()
+                            this.getQuestion().then((res: boolean) => {
+                                this.showLoadingMsg = false
+                            });
+                        }, error => {
+                            this.loading.dismiss()
+                            if (error.status == 404) {
+                                this.notificationProvider.presentTopToast("Parece que ha habido un error, prueba más tarde")
+                            }
+                            else {
+                                this.notificationProvider.presentTopToast("La pregunta parece tener errores, prueba más tarde")
+                            }
+                        })
+                    }
+                }
+            ]
+        });
+        prompt.present()
     }
 }

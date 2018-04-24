@@ -9,36 +9,37 @@
         <ion-refresher-content></ion-refresher-content>
     </ion-refresher>
     <ion-grid style="height: 100%">
-        <ion-row align-items-center text-center style="height: 100%">
-            <ion-col>
-                <div *ngIf="question != null;else questionNotFound">
-                    <div class="questionTitle" align="center">
-                        {{question.name}}
+        <div *ngIf="oneDayLeftAlready == false;else oneDayLeftTemplate" style="height: 100%">
+            <ion-row align-items-center text-center style="height: 100%">
+                <ion-col>
+                    <div *ngIf="question != null;else questionNotFound">
+                        <div class="questionTitle currentQuestion" align="center">
+                            {{question.name}}
+                        </div>
+                        <div>
+                            <ion-grid style="width: 70%;">
+                                <ion-row>
+                                    <ion-col>
+                                        <button (tap)="saveUserReply(0)" ion-button>{{question.replies[0].name}}</button>
+                                    </ion-col>
+                                    <ion-col>
+                                        <button (tap)="saveUserReply(1)" ion-button>{{question.replies[1].name}}</button>
+                                    </ion-col>
+                                </ion-row>
+                                <ion-row>
+                                    <ion-col>
+                                        <button (tap)="saveUserReply(2)" ion-button>{{question.replies[2].name}}</button>
+                                    </ion-col>
+                                    <ion-col>
+                                        <button (tap)="saveUserReply(3)" ion-button>{{question.replies[3].name}}</button>
+                                    </ion-col>
+                                </ion-row>
+                            </ion-grid>
+                        </div>
                     </div>
-                    <div>
-                        <ion-grid style="width: 70%;">
-                            <ion-row>
-                                <ion-col>
-                                    <button ion-button>{{question.replies[0].name}}</button>
-                                </ion-col>
-                                <ion-col>
-                                    <button ion-button>{{question.replies[1].name}}</button>
-                                </ion-col>
-                            </ion-row>
-                            <ion-row>
-                                <ion-col>
-                                    <button ion-button>{{question.replies[2].name}}</button>
-                                </ion-col>
-                                <ion-col>
-                                    <button ion-button>{{question.replies[3].name}}</button>
-                                </ion-col>
-                            </ion-row>
-                        </ion-grid>
-                    </div>
-
-                </div>
-            </ion-col>
-        </ion-row>
+                </ion-col>
+            </ion-row>
+        </div>
     </ion-grid>
 </ion-content>
 
@@ -48,19 +49,62 @@
     </div>
 </ng-template>
 
-<ng-template #showLoadingResult>
-    <div *ngIf="oneDayLeftAlready == true; else checkSurvey">
-        <p>¡Aún no ha pasado un día!</p>
-        <h5 style="font-weight: bold">Quedan {{hoursLeft}} horas</h5>
+<ng-template #oneDayLeftTemplate>
+    <div *ngIf="lastQuestionDone != null && lastQuestionDone.question != null; else lastQuestionNotFoundTemplate" class="lastQuestionBox">
+        <ion-row align-items-center text-center style="height: 50%">
+            <ion-col>
+                <p>¡Aún no ha pasado un día!</p>
+                <h5 style="font-weight: bold">Quedan {{hoursLeft}} horas</h5>
+            </ion-col>
+        </ion-row>
+        <ion-row text-center>
+            <ion-col>
+                Última pregunta
+                <div class="questionTitle" align="center">
+                    <p>{{lastQuestionDone.question.name}}</p>
+                </div>
+                <div style="margin-top: 10px;">
+                    Tu respuesta
+                    <div class="questionTitle" align="center">
+                        <p>{{lastQuestionDone.userReply.name}}</p>
+                    </div>
+                </div>
+                <div style="margin-top: 10px;height: 70px;">
+                    <div *ngIf="lastQuestionDone.userReply.id == lastQuestionDoneReply.id; else incorrectReplyTemplate" style="font-size: 18px;font-weight: bold;line-height: 30px;">
+                        ¡Felicidades, has acertado!
+                        <br>
+                        <ion-badge>puntuación: {{lastQuestionDone.question.questionValue}}</ion-badge>
+                    </div>
+                </div>
+
+            </ion-col>
+        </ion-row>
     </div>
 </ng-template>
 
-<ng-template #checkSurvey>
-    <div *ngIf="incorrectSurvey == true; else errorFound">
-        <p>Esta encuesta es incorrecta</p>
-        <p style="font-weight: bold">Desliza hacia abajo para que te aparezca una nueva encuesta</p>
-    </div>
+<ng-template #lastQuestionNotFoundTemplate>
+    <ion-row align-items-center text-center style="height: 100%">
+        <ion-col>
+            <p>¡Aún no ha pasado un día!</p>
+            <h5 style="font-weight: bold">Quedan {{hoursLeft}} horas</h5>
+        </ion-col>
+    </ion-row>
+</ng-template>
 
+<ng-template #incorrectReplyTemplate>
+    La respuesta correcta es
+    <div class="questionTitle" align="center">
+        <p>{{lastQuestionDoneReply.name}}</p>
+    </div>
+</ng-template>
+
+<ng-template #showLoadingResult>
+    <div *ngIf="oneDayLeftAlready == false">
+        <div *ngIf="incorrectSurvey == true; else errorFound">
+            <p>Esta encuesta es incorrecta</p>
+            <p style="font-weight: bold">Desliza hacia abajo para que te aparezca una nueva encuesta</p>
+        </div>
+    </div>
 </ng-template>
 
 <ng-template #errorFound>

@@ -134,6 +134,10 @@ export class MapPage {
             this.recycleItemsProvider.saveRecycleItem(this.recycleItem, user.accessToken).subscribe(res => {
                 var status = res.status;
                 if (status === 201) {
+
+                    user.points = user.points + this.recycleItem.itemType.recycleValue
+                    this.sessionProvider.updateSession(user)
+
                     this.recycledAlready = true
                     this.notificationProvider.presentAlertOk('Se ha guardadado correctamente este reciclado!')
                     this.navCtrl.pop()

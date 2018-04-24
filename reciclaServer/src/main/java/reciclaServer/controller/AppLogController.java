@@ -22,7 +22,7 @@ public class AppLogController {
         this.appLogService = appLogService;
     }
 
-    @ExceptionHandler({Exception.class})
+    //@ExceptionHandler({Exception.class})
     public ResponseEntity<?> handleException(
             Exception ex, WebRequest request) {
 
