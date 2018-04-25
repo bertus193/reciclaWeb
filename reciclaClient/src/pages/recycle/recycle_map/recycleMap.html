@@ -25,22 +25,18 @@
 </ion-header>
 
 <ion-content>
-    <div *ngIf="currentPlatformIsBrowser == false;else currentPlatformIsBrowserTemplate">
-        <div #map id="map_canvas">
+    <div #map id="map_canvas">
+        <div *ngIf="currentPlatformIsBrowser == true;" style="height: 100%">
+            <ion-grid justify-content-center align-items-center style="height: 100%">
+                <ion-row align-items-center text-center style="height: 100%">
+                    <ion-col>
+                        <div>
+                            <p>Puedes utilizar las opciones del menú superior</p>
+                            <h5 style="font-weight: bold">Mapa no disponible en versión web</h5>
+                        </div>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
         </div>
     </div>
 </ion-content>
-
-<ng-template #currentPlatformIsBrowserTemplate>
-    <ion-grid justify-content-center align-items-center style="height: 100%">
-        <ion-row align-items-center text-center style="height: 100%">
-            <ion-col>
-                <div>
-                    <p>Puedes utilizar las opciones del menú superior</p>
-                    <h5 style="font-weight: bold">Mapa no disponible en versión web</h5>
-                </div>
-            </ion-col>
-        </ion-row>
-    </ion-grid>
-
-</ng-template>

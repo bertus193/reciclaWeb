@@ -15,6 +15,21 @@ export class UtilsProvider {
         private storagesProvider: StoragesProvider
     ) { }
 
+    private calculateDistance(position1: Position, position2: Position): number {
+        var R = 6371e3; // metres
+        var φ1 = this.rad(position1.latitude);
+        var φ2 = this.rad(position2.latitude);
+        var Δφ = this.rad(position2.latitude - position1.latitude);
+        var Δλ = this.rad(position2.longitude - position1.longitude);
+
+        var a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+            Math.cos(φ1) * Math.cos(φ2) *
+            Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        return R * c;
+    }
+
     public getNearestStoragePointByItemType(currentPosition: Position, itemType: ItemType): Observable<{ storagePoint: StoragePoint, status: number }> {
         var status: number
         var storagePointList: StoragePoint[]
@@ -25,10 +40,8 @@ export class UtilsProvider {
                 storagePointList = res.json();
                 storagePoint = storagePointList[0];
                 for (let currentSPoint of storagePointList) {
-                    if ((currentPosition.latitude - currentSPoint.position.latitude) < (currentPosition.latitude - storagePoint.position.latitude)) {
-                        if ((currentPosition.longitude - currentSPoint.position.longitude) < (currentPosition.longitude - storagePoint.position.longitude)) {
-                            storagePoint = currentSPoint
-                        }
+                    if (this.calculateDistance(currentPosition, currentSPoint.position) < this.calculateDistance(currentPosition, storagePoint.position)) {
+                        storagePoint = currentSPoint
                     }
                 }
             }
@@ -41,25 +54,6 @@ export class UtilsProvider {
     rad = function (x) {
         return x * Math.PI / 180;
     };
-
-    public calculateDistance(StartP: Position, EndP: Position) {
-        var Radius = 6371;// radius of earth in Km
-        var lat1 = StartP.latitude;
-        var lat2 = EndP.latitude;
-        var lon1 = StartP.longitude;
-        var lon2 = EndP.longitude;
-        var dLat = this.rad(lat2 - lat1);
-        var dLon = this.rad(lon2 - lon1);
-        var a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
-            + Math.cos(this.rad(lat1))
-            * Math.cos(this.rad(lat2)) * Math.sin(dLon / 2)
-            * Math.sin(dLon / 2);
-        var c = 2 * Math.asin(Math.sqrt(a));
-        var valueResult = Radius * c;
-        var meter = valueResult * 1000;
-
-        return Math.round(meter);
-    }
 
     public getZoomLevel(distance: number) {
         var radius = distance / 2;
