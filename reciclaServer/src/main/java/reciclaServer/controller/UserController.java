@@ -35,7 +35,7 @@ public class UserController {
         this.recycleItemService = recycleItemService;
     }
 
-    @RequestMapping(value = "/users/email/{email:.+}", method = RequestMethod.GET)
+    @RequestMapping(value = "/private/users/email/{email:.+}", method = RequestMethod.GET)
     public ResponseEntity<?> getUserByEmail(@PathVariable("email") String email) {
         User user = userService.findByEmail(email);
 
@@ -58,7 +58,7 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = "/users/private/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/private/users/{id}", method = RequestMethod.PUT)
     public ResponseEntity<?> updateUser(HttpServletRequest request, @PathVariable("id") long id, @RequestBody User user) {
 
         long userId = (long) request.getAttribute("userId");
@@ -102,7 +102,7 @@ public class UserController {
 
     }
 
-    @RequestMapping(value = "/users/private/{id}/recycleItems", method = RequestMethod.GET)
+    @RequestMapping(value = "/private/users/{id}/recycleItems", method = RequestMethod.GET)
     public ResponseEntity<?> getUserRecycleItems(HttpServletRequest request, @PathVariable("id") long id, @RequestParam("page") int page, @RequestParam("perPage") int perPage) {
 
         long userId = (long) request.getAttribute("userId");

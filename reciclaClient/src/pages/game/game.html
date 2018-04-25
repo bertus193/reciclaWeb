@@ -16,25 +16,21 @@
                         <div class="questionTitle currentQuestion" align="center">
                             {{question.name}}
                         </div>
-                        <div>
-                            <ion-grid style="width: 70%;">
-                                <ion-row>
-                                    <ion-col>
-                                        <button (tap)="saveUserReply(0)" ion-button>{{question.replies[0].name}}</button>
-                                    </ion-col>
-                                    <ion-col>
-                                        <button (tap)="saveUserReply(1)" ion-button>{{question.replies[1].name}}</button>
-                                    </ion-col>
-                                </ion-row>
-                                <ion-row>
-                                    <ion-col>
-                                        <button (tap)="saveUserReply(2)" ion-button>{{question.replies[2].name}}</button>
-                                    </ion-col>
-                                    <ion-col>
-                                        <button (tap)="saveUserReply(3)" ion-button>{{question.replies[3].name}}</button>
-                                    </ion-col>
-                                </ion-row>
-                            </ion-grid>
+                        <div style="margin-top: 50px;">
+
+                            <p>
+                                <button style="width: 300px;" (tap)="saveUserReply(0)" ion-button>{{question.replies[0].name}}</button>
+                            </p>
+                            <p>
+                                <button style="width: 300px;" (tap)="saveUserReply(1)" ion-button>{{question.replies[1].name}}</button>
+                            </p>
+                            <p>
+                                <button style="width: 300px;" (tap)="saveUserReply(2)" ion-button>{{question.replies[2].name}}</button>
+                            </p>
+                            <p>
+                                <button style="width: 300px;" (tap)="saveUserReply(3)" ion-button>{{question.replies[3].name}}</button>
+                            </p>
+
                         </div>
                     </div>
                 </ion-col>

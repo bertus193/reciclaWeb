@@ -133,8 +133,6 @@ export class MapPage {
         });
         this.loading.present()
 
-        var savedStorage: Storage = this.recycleItem.storage
-
         this.sessionProvider.getSession().then(user => {
             this.recycleItem.storage = this.recycleItem.storage.id
             this.recycleItemsProvider.saveRecycleItem(this.recycleItem, user.accessToken).subscribe(res => {

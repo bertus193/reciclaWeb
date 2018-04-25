@@ -24,20 +24,21 @@ export class UserProvider {
         user.recycleItems = null
         user.questionsDone = null
         this.requestJsonOptions.headers.set('X-Auth-Token', token)
-        return this.http.put(this.config.apiEndpoint + "/users/private/" + user.id, JSON.stringify(user), this.requestJsonOptions).timeout(this.config.defaultTimeoutTime)
+        return this.http.put(this.config.apiEndpoint + "/private/users/" + user.id, JSON.stringify(user), this.requestJsonOptions).timeout(this.config.defaultTimeoutTime)
     }
 
     public createUser(user: User) {
         return this.http.post(this.config.apiEndpoint + "/users", JSON.stringify(user), this.requestJsonOptions).timeout(this.config.defaultTimeoutTime)
     }
 
-    public findUserByEmail(email: string) {
-        return this.http.get(this.config.apiEndpoint + "/users/email/" + email).timeout(this.config.defaultTimeoutTime)
+    public findUserByEmail(email: string, token: string) {
+        this.requestJsonOptions.headers.set('X-Auth-Token', token)
+        return this.http.get(this.config.apiEndpoint + "/private/users/email/" + email, this.requestJsonOptions).timeout(this.config.defaultTimeoutTime)
     }
 
     public getUserRecycleItems(id: number, token: string, page: number, perPage: number) {
         this.requestJsonOptions.headers.set('X-Auth-Token', token)
-        return this.http.get(this.config.apiEndpoint + "/users/private/" + id + "/recycleItems?page=" + page + "&perPage=" + perPage, this.requestJsonOptions).timeout(this.config.defaultTimeoutTime)
+        return this.http.get(this.config.apiEndpoint + "/private/users/" + id + "/recycleItems?page=" + page + "&perPage=" + perPage, this.requestJsonOptions).timeout(this.config.defaultTimeoutTime)
     }
 
     public login(user: User) {

@@ -31,7 +31,7 @@ public class RecycleItemController {
         this.userService = userService;
     }
 
-    @RequestMapping(value = "/recycleItems/private", method = RequestMethod.POST)
+    @RequestMapping(value = "/private/recycleItems", method = RequestMethod.POST)
     public ResponseEntity<?> createRecycleItem(HttpServletRequest request, @RequestBody RecycleItem recycleItem) {
 
         long userId = (long) request.getAttribute("userId");

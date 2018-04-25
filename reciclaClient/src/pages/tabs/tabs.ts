@@ -20,10 +20,7 @@ export class TabsPage {
     tabRecycleRoot = RecyclePage;
     tabRankingRoot = RankingPage;
     tabProfileRoot = ProfilePage;
-    tabProfileRootParams = {
-        profileSegment: "profile",
-        user: null
-    };
+    tabProfileRootParams = { profileSegment: "profile" };
 
     constructor(
         private events: Events
