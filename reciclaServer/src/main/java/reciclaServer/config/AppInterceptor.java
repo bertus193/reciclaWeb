@@ -54,6 +54,9 @@ public class AppInterceptor extends HandlerInterceptorAdapter {
                     user = userService.findByAccessToken(token);
                 }
             }
+            else{
+                user = userService.findByAccessToken(token);
+            }
 
             if (user != null) {
                 request.setAttribute("userId", user.getId());
