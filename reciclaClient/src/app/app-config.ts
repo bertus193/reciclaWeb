@@ -28,7 +28,7 @@ export const APP_CONFIG: ApplicationConfig = {
     googleCloudVisionAPIKey: 'AIzaSyCVl9Ien_9KOFEN197dPqklyIJ7ad1z44k',
     itemsPerPage: 10,
     debugUserEmail: 'debug@debug.com',
-    debugUserPassword: 'debugPassword',
+    debugUserPassword: 'debug',
     instagramAPIKey: '92039beca32246398f5d17847329007a'
 
 };
