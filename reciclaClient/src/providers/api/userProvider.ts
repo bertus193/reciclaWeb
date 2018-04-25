@@ -31,8 +31,9 @@ export class UserProvider {
         return this.http.post(this.config.apiEndpoint + "/users", JSON.stringify(user), this.requestJsonOptions).timeout(this.config.defaultTimeoutTime)
     }
 
-    public findUserByEmail(email: string, token: string) {
+    public findUserByEmail(email: string, token: string, userType: string) {
         this.requestJsonOptions.headers.set('X-Auth-Token', token)
+        this.requestJsonOptions.headers.set('user-type', userType)
         return this.http.get(this.config.apiEndpoint + "/private/users/email/" + email, this.requestJsonOptions).timeout(this.config.defaultTimeoutTime)
     }
 
