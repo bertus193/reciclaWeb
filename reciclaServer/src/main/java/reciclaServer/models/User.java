@@ -1,9 +1,6 @@
 package reciclaServer.models;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import reciclaServer.config.EntityIdResolver;
 
 import javax.persistence.*;
@@ -42,6 +39,7 @@ public class User {
 
     private String accessToken;
 
+    @JsonFormat(pattern="MMM dd, yyyy hh:mm:ss aa") //Formato necesario para panel admin (new Date())
     private Timestamp createdDate;
 
     @Enumerated(EnumType.STRING) //Fix: by default enums are persisted as int using oridinal
@@ -60,6 +58,7 @@ public class User {
 
     private int gamePoints;
 
+    @JsonFormat(pattern="MMM dd, yyyy hh:mm:ss aa") //Formato necesario para panel admin (new Date())
     private Timestamp lastGameDate;
 
     @OneToMany(mappedBy = "user")

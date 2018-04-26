@@ -46,4 +46,11 @@ public class UserService {
     public List<User> findTop10ByPoints() {
         return this.userDAO.findTop10ByOrderByPointsDesc();
     }
+
+
+    //Admin
+
+    public List<User> findAll(){
+        return this.userDAO.findAll();
+    }
 }

@@ -39,5 +39,4 @@ reciclaClient/www
 
 /reciclaServer/src/main/resources/application.properties
 
-/reciclaAdmin
 /reciclaClient-heroku/www/*

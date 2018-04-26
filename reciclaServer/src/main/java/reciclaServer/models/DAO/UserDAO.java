@@ -20,4 +20,9 @@ public interface UserDAO extends CrudRepository<User, Long> {
     User findFirstByAccessToken(String token);
 
     User findFirstByEmailAndPassword(String email, String password);
+
+
+    //Admin
+
+    List<User> findAll();
 }
