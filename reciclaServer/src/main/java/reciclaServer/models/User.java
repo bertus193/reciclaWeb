@@ -39,7 +39,7 @@ public class User {
 
     private String accessToken;
 
-    @JsonFormat(pattern="MMM dd, yyyy hh:mm:ss aa") //Formato necesario para panel admin (new Date())
+    @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss.SSSXXX") //Formato necesario para panel admin (new Date())
     private Timestamp createdDate;
 
     @Enumerated(EnumType.STRING) //Fix: by default enums are persisted as int using oridinal
@@ -58,7 +58,7 @@ public class User {
 
     private int gamePoints;
 
-    @JsonFormat(pattern="MMM dd, yyyy hh:mm:ss aa") //Formato necesario para panel admin (new Date())
+    @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss.SSSXXX") //Formato necesario para panel admin (new Date())
     private Timestamp lastGameDate;
 
     @OneToMany(mappedBy = "user")

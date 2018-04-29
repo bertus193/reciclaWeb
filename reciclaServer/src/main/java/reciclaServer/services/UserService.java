@@ -53,4 +53,8 @@ public class UserService {
     public List<User> findAll(){
         return this.userDAO.findAll();
     }
+
+    public void deleteById(long id){
+        this.userDAO.deleteById(id);
+    }
 }

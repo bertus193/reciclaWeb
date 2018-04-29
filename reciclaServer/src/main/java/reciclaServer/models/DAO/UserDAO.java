@@ -25,4 +25,6 @@ public interface UserDAO extends CrudRepository<User, Long> {
     //Admin
 
     List<User> findAll();
+
+    void deleteById(long id);
 }
