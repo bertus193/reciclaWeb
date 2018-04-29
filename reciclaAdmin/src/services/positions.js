@@ -3,7 +3,7 @@ import { List, Edit, Create, Datagrid, TextField, EditButton, DisabledInput, Lon
 
 export const PositionList = (props) => (
     <List {...props}>
-        <Datagrid>
+        <Datagrid bodyOptions={{ stripedRows: true, showRowHover: true }}>
             <TextField source="id" />
             <TextField source="latitude" />
             <TextField source="longitude" />
