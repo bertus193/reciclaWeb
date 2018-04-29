@@ -7,7 +7,7 @@ export default (type, params) => {
         var username = params.username;
         var password = params.password;
         // accept all username/password combinations
-        if (username == "admin" && password == "admin") {
+        if (username === "admin" && password === "admin") {
             localStorage.setItem('username', username);
             return Promise.resolve();
         }

@@ -1,15 +1,11 @@
 import React from 'react';
-import { Filter, List, Edit, Create, Datagrid, ReferenceField, TextField, EditButton, DisabledInput, LongTextInput, ReferenceInput, required, SelectInput, SimpleForm, TextInput, ChipField, NumberInput, DateField, RadioButtonGroupInput } from 'admin-on-rest';
-import { DependentInput } from 'aor-dependent-input';
+import { List, Edit, Create, Datagrid, TextField, EditButton, DisabledInput, LongTextInput, SimpleForm, TextInput, ChipField, NumberInput, DateField, RadioButtonGroupInput } from 'admin-on-rest';
 import UrlField from '../urlField';
 import DateTimeInput from 'aor-datetime-input';
+import MyReferenceField from '../MyReferenceField'
 
 const UserEditTitle = ({ record }) => {
     return <span>Editar usuario: {record ? `${record.id}` : ''}</span>;
-};
-
-const addLabel = ({ record }) => {
-    console.log(record)
 };
 
 const choices = [
@@ -26,9 +22,9 @@ export const UserList = (props) => (
             <TextField sortable={false} source="fullName" />
             <TextField sortable={false} source="profilePicture" />
             <DateField sortable={false} source="createdDate" showTime locales="es-ES" />
-            <ReferenceField label="Position" source="lastPosition.id || lastPosition" reference="positions">
+            <MyReferenceField label="Position" source="lastPosition" reference="positions">
                 <TextField source="id" />
-            </ReferenceField>
+            </MyReferenceField>
             <TextField sortable={false} source="username" />
             <ChipField sortable={false} source="type" />
             <TextField sortable={false} source="points" />
