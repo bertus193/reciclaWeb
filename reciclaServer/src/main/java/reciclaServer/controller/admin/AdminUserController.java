@@ -3,6 +3,7 @@ package reciclaServer.controller.admin;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,25 +30,39 @@ public class AdminUserController {
 
 
     private UserService userService;
+    private PositionService positionService;
 
     private HttpHeaders headers;
 
     @Autowired
     public AdminUserController(
-            UserService userService) {
+            UserService userService,
+            PositionService positionService) {
         this.userService = userService;
+        this.positionService = positionService;
 
         this.headers = new HttpHeaders();
-        this.headers.add("Access-Control-Expose-Headers", "X-Total-Count");
+        this.headers.set("Content-Type", "application/json");
+        this.headers.set("Access-Control-Expose-Headers", "X-Total-Count");
     }
 
     @JsonIdentityReference(alwaysAsId = true)
     @RequestMapping(value = "/admin/users", method = RequestMethod.GET)
-    public ResponseEntity<?> findAll() {
-        List<User> users = userService.findAll();
+    public ResponseEntity<?> findAll(
+            @RequestParam(value = "_start", defaultValue = "10") int _start, @RequestParam(value = "_end", defaultValue = "0") int _end,
+            @RequestParam(value = "_sort", defaultValue = "id") String _sort, @RequestParam(value = "_order", defaultValue = "DESC") String direction
+    ) {
 
-        this.headers.add("X-Total-Count", String.valueOf(users.size()));
-        return new ResponseEntity<>(users, headers, HttpStatus.OK);
+        Sort.Direction myDirection = Sort.Direction.DESC;
+        if(direction.equals("ASC")){
+            myDirection = Sort.Direction.ASC;
+        }
+        int myPage = (int)(Math.floor(_start / 10));
+
+        Page<User> users = userService.findAll(myPage, 10, _sort, myDirection);
+
+        this.headers.set("X-Total-Count", String.valueOf(users.getTotalElements()));
+        return new ResponseEntity<>(users.getContent(), headers, HttpStatus.OK);
     }
 
 
@@ -71,6 +86,16 @@ public class AdminUserController {
 
         if(!user.getPassword().isEmpty()){
             user.setPassword(this.checkPassword(user.getPassword()));
+        }
+
+        if(user.getLastPosition() != null){
+            Position position = this.positionService.findById(user.getLastPosition().getId());
+            if(position != null){
+                user.setLastPosition(position);
+            }
+            else{
+                user.setLastPosition(null);
+            }
         }
 
         userService.saveUser(user);
@@ -102,6 +127,7 @@ public class AdminUserController {
         User userFound = userService.findById(Long.parseLong(id));
 
         if(userFound != null){
+            userFound.setLastPosition(null);
             userService.deleteById(Long.parseLong(id));
         }
 

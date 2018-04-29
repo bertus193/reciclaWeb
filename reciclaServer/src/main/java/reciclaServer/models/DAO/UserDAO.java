@@ -1,5 +1,7 @@
 package reciclaServer.models.DAO;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
 import reciclaServer.models.User;
 
@@ -24,7 +26,7 @@ public interface UserDAO extends CrudRepository<User, Long> {
 
     //Admin
 
-    List<User> findAll();
+    Page<User> findAll(Pageable pageable);
 
     void deleteById(long id);
 }

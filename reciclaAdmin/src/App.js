@@ -12,7 +12,7 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import './App.css';
 
 const App = () => (
-    <Admin theme={getMuiTheme(myTheme)} authClient={authClient} restClient={jsonServerRestClient('http://127.0.0.1:8080/admin')}>
+    <Admin title="Panel de administración" theme={getMuiTheme(myTheme)} authClient={authClient} restClient={jsonServerRestClient('http://127.0.0.1:8080/admin')}>
         <Resource name="users" list={UserList} edit={UserEdit} create={UserCreate} remove={Delete} />
         <Resource name="positions" list={PositionList} edit={PositionEdit} create={PositionCreate} remove={Delete} />
     </Admin>

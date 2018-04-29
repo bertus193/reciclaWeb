@@ -1,5 +1,5 @@
 import React from 'react';
-import { List, Edit, Create, Datagrid, TextField, EditButton, DisabledInput, LongTextInput, SimpleForm, TextInput, ChipField, NumberInput, DateField, RadioButtonGroupInput } from 'admin-on-rest';
+import { required, ReferenceInput, SelectInput, List, Edit, Create, Datagrid, TextField, EditButton, DisabledInput, LongTextInput, SimpleForm, TextInput, ChipField, NumberInput, DateField, RadioButtonGroupInput } from 'admin-on-rest';
 import UrlField from '../urlField';
 import DateTimeInput from 'aor-datetime-input';
 import MyReferenceField from '../MyReferenceField'
@@ -17,19 +17,17 @@ const choices = [
 export const UserList = (props) => (
     <List title="All users" {...props}>
         <Datagrid bodyOptions={{ stripedRows: true, showRowHover: true }}>
-            <UrlField sortable={false} style={{ textAlign: 'center' }} urlDirection="users" source="id" />
-            <TextField sortable={false} source="email" />
-            <TextField sortable={false} source="fullName" />
-            <TextField sortable={false} source="profilePicture" />
-            <DateField sortable={false} source="createdDate" showTime locales="es-ES" />
+            <UrlField style={{ textAlign: 'center' }} urlDirection="users" source="id" />
+            <TextField source="username" />
+            <TextField source="fullName" />
+            <DateField source="createdDate" showTime locales="es-ES" />
             <MyReferenceField label="Position" source="lastPosition" reference="positions">
                 <TextField source="id" />
             </MyReferenceField>
-            <TextField sortable={false} source="username" />
-            <ChipField sortable={false} source="type" />
-            <TextField sortable={false} source="points" />
-            <TextField sortable={false} source="gamePoints" />
-            <DateField sortable={false} source="lastGameDate" showTime locales="es-ES" />
+            <ChipField source="type" />
+            <TextField source="points" />
+            <TextField source="gamePoints" />
+            <DateField source="lastGameDate" showTime locales="es-ES" />
             <EditButton />
         </Datagrid>
     </List>
@@ -44,6 +42,9 @@ export const UserEdit = (props) => (
             <LongTextInput source="fullName" />
             <LongTextInput source="profilePicture" />
             <DateTimeInput source="createdDate" />
+            <ReferenceInput label="Position" source="lastPosition.id" reference="positions" validate={required}>
+                <SelectInput optionText="id" />
+            </ReferenceInput>
             <LongTextInput source="username" />
             <RadioButtonGroupInput source="type" choices={choices} translateChoice={false} />
             <NumberInput source="points" />
@@ -61,6 +62,9 @@ export const UserCreate = (props) => (
             <LongTextInput source="fullName" />
             <LongTextInput source="profilePicture" />
             <DateTimeInput source="createdDate" />
+            <ReferenceInput label="Position" source="lastPosition.id" reference="positions" validate={required} allowEmpty>
+                <SelectInput optionText="id" />
+            </ReferenceInput>
             <LongTextInput source="username" />
             <RadioButtonGroupInput source="type" choices={choices} translateChoice={false} />
             <NumberInput source="points" />

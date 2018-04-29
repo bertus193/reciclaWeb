@@ -1,6 +1,8 @@
 package reciclaServer.controller.admin;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,15 +25,25 @@ public class AdminPositionController {
     public AdminPositionController() {
 
         this.headers = new HttpHeaders();
-        this.headers.add("Access-Control-Expose-Headers", "X-Total-Count");
+        this.headers.set("Content-Type", "application/json");
+        this.headers.set("Access-Control-Expose-Headers", "X-Total-Count");
     }
 
     @RequestMapping(value = "/admin/positions", method = RequestMethod.GET)
-    public ResponseEntity<?> findAll() {
-        List<Position> positions = positionService.findAll();
+    public ResponseEntity<?> findAll(
+            @RequestParam(value = "_start", defaultValue = "10") int _start, @RequestParam(value = "_end", defaultValue = "0") int _end,
+            @RequestParam(value = "_sort", defaultValue = "id") String _sort, @RequestParam(value = "_order", defaultValue = "DESC") String direction) {
 
-        this.headers.add("X-Total-Count", String.valueOf(positions.size()));
-        return new ResponseEntity<>(positions, headers, HttpStatus.OK);
+
+        Sort.Direction myDirection = Sort.Direction.DESC;
+        if(direction.equals("ASC")){
+            myDirection = Sort.Direction.ASC;
+        }
+        int myPage = (int)(Math.floor(_start / 10));
+        Page<Position> positions = positionService.findAll(myPage, 10, _sort, myDirection);
+
+        this.headers.set("X-Total-Count", String.valueOf(positions.getTotalElements()));
+        return new ResponseEntity<>(positions.getContent(), headers, HttpStatus.OK);
     }
 
 

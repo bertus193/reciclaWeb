@@ -1,5 +1,7 @@
 package reciclaServer.models.DAO;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
 import reciclaServer.models.Position;
 
@@ -11,7 +13,7 @@ public interface PositionDAO extends CrudRepository<Position, Long> {
 
     //Admin
 
-    List<Position> findAll();
+    Page<Position> findAll(Pageable pageable);
 
     Position findById(long id);
 

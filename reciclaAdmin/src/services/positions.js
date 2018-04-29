@@ -16,11 +16,7 @@ const PositionTitle = ({ record }) => {
     return <span>Position {record ? `"${record.id}"` : ''}</span>;
 };
 
-/*
-            <ReferenceInput label="User" source="userId" reference="users" validate={required}>
-                <SelectInput optionText="name" />
-            </ReferenceInput>
-            */
+
 export const PositionEdit = (props) => (
     <Edit title={<PositionTitle />} {...props}>
         <SimpleForm>
@@ -30,11 +26,7 @@ export const PositionEdit = (props) => (
         </SimpleForm>
     </Edit>
 );
-/*
-            <ReferenceInput label="User" source="userId" reference="users" validate={required} allowEmpty>
-                <SelectInput optionText="name" />
-            </ReferenceInput>
-*/
+
 export const PositionCreate = (props) => (
     <Create {...props}>
         <SimpleForm>
