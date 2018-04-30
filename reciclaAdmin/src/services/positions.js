@@ -1,14 +1,25 @@
 import React from 'react';
-import { List, Edit, Create, Datagrid, TextField, EditButton, DisabledInput, LongTextInput, SimpleForm, TextInput } from 'admin-on-rest';
+import { Responsive, SimpleList, List, Edit, Create, Datagrid, TextField, EditButton, DisabledInput, LongTextInput, SimpleForm, TextInput } from 'admin-on-rest';
 
 export const PositionList = (props) => (
     <List {...props}>
-        <Datagrid bodyOptions={{ stripedRows: true, showRowHover: true }}>
-            <TextField source="id" />
-            <TextField source="latitude" />
-            <TextField source="longitude" />
-            <EditButton />
-        </Datagrid>
+        <Responsive
+            small={
+                <SimpleList
+                    primaryText={record => `${record.latitude} / ${record.longitude}`}
+                    tertiaryText={record => record.id}
+                />
+            }
+            medium={
+                <Datagrid bodyOptions={{ stripedRows: true, showRowHover: true }}>
+                    <TextField source="id" />
+                    <TextField source="latitude" />
+                    <TextField source="longitude" />
+                    <EditButton />
+                </Datagrid>
+            }
+        />
+
     </List>
 );
 

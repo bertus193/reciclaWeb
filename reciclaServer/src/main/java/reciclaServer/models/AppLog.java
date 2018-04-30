@@ -1,5 +1,6 @@
 package reciclaServer.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,7 @@ public class AppLog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss.SSSXXX") //Formato necesario para panel admin (new Date())
     private Timestamp timestamp;
 
     private Integer status;

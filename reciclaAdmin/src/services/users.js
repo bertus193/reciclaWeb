@@ -1,5 +1,5 @@
 import React from 'react';
-import { required, ReferenceInput, SelectInput, List, Edit, Create, Datagrid, TextField, EditButton, DisabledInput, LongTextInput, SimpleForm, TextInput, ChipField, NumberInput, DateField, RadioButtonGroupInput } from 'admin-on-rest';
+import { Responsive, SimpleList, required, ReferenceInput, SelectInput, List, Edit, Create, Datagrid, TextField, EditButton, DisabledInput, LongTextInput, SimpleForm, TextInput, ChipField, NumberInput, DateField, RadioButtonGroupInput } from 'admin-on-rest';
 import UrlField from '../urlField';
 import DateTimeInput from 'aor-datetime-input';
 import MyReferenceField from '../MyReferenceField'
@@ -16,20 +16,31 @@ const choices = [
 
 export const UserList = (props) => (
     <List title="All users" {...props}>
-        <Datagrid bodyOptions={{ stripedRows: true, showRowHover: true }}>
-            <UrlField style={{ textAlign: 'center' }} urlDirection="users" source="id" />
-            <TextField source="username" />
-            <TextField source="fullName" />
-            <DateField source="createdDate" showTime locales="es-ES" />
-            <MyReferenceField label="Position" source="lastPosition" reference="positions">
-                <TextField source="id" />
-            </MyReferenceField>
-            <ChipField source="type" />
-            <TextField source="points" />
-            <TextField source="gamePoints" />
-            <DateField source="lastGameDate" showTime locales="es-ES" />
-            <EditButton />
-        </Datagrid>
+        <Responsive
+            small={
+                <SimpleList
+                    primaryText={record => record.username}
+                    secondaryText={record => `Points: ${record.points} - GamePoints: ${record.gamePoints}`}
+                    tertiaryText={record => record.type}
+                />
+            }
+            medium={
+                <Datagrid bodyOptions={{ stripedRows: true, showRowHover: true }}>
+                    <UrlField style={{ textAlign: 'center' }} urlDirection="users" source="id" />
+                    <TextField source="username" />
+                    <TextField source="fullName" />
+                    <DateField source="createdDate" showTime locales="es-ES" />
+                    <MyReferenceField label="Position" source="lastPosition" reference="positions">
+                        <TextField source="id" />
+                    </MyReferenceField>
+                    <ChipField source="type" />
+                    <TextField source="points" />
+                    <TextField source="gamePoints" />
+                    <DateField source="lastGameDate" showTime locales="es-ES" />
+                    <EditButton />
+                </Datagrid>
+            }
+        />
     </List>
 );
 

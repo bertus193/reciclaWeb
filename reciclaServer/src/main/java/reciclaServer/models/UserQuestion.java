@@ -1,5 +1,6 @@
 package reciclaServer.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -39,6 +40,7 @@ public class UserQuestion {
     @JoinColumn(name = "user_reply")
     private Reply userReply;
 
+    @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss.SSSXXX") //Formato necesario para panel admin (new Date())
     private Timestamp createdDate;
 
 

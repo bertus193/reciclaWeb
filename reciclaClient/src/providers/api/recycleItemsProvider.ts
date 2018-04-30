@@ -25,7 +25,7 @@ export class RecycleItemsProvider {
 
     public getRecycleItemById(id: number, token: string) {
         this.requestJsonOptions.headers.set('X-Auth-Token', token)
-        return this.http.get(this.config.apiEndpoint + "/private/recycleItems" + id, this.requestJsonOptions).timeout(this.config.defaultTimeoutTime)
+        return this.http.get(this.config.apiEndpoint + "/private/recycleItems/" + id, this.requestJsonOptions).timeout(this.config.defaultTimeoutTime)
     }
 
     public getLatestRecycleItems(page: number, perPage: number) {

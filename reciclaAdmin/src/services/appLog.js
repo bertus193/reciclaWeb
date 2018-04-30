@@ -1,16 +1,28 @@
 import React from 'react';
-import { List, Edit, Create, Datagrid, TextField, EditButton, DisabledInput, LongTextInput, SimpleForm, TextInput } from 'admin-on-rest';
+import { Responsive, SimpleList, List, Edit, Create, Datagrid, TextField, EditButton, DisabledInput, SimpleForm, TextInput, DateField } from 'admin-on-rest';
+import DateTimeInput from 'aor-datetime-input';
 
 export const AppLogList = (props) => (
     <List {...props}>
-        <Datagrid bodyOptions={{ stripedRows: true, showRowHover: true }}>
-            <TextField source="id" />
-            <TextField source="timestamp" />
-            <TextField source="statusName" />
-            <TextField source="exception" />
-            <TextField source="path" />
-            <EditButton />
-        </Datagrid>
+        <Responsive
+            small={
+                <SimpleList
+                    primaryText={record => record.path}
+                    secondaryText={record => record.exception}
+                    tertiaryText={record => new Date(record.timestamp).toLocaleDateString()}
+                />
+            }
+            medium={
+                <Datagrid bodyOptions={{ stripedRows: true, showRowHover: true }}>
+                    <TextField source="id" />
+                    <DateField source="timestamp" showTime locales="es-ES" />
+                    <TextField source="statusName" />
+                    <TextField source="exception" />
+                    <TextField source="path" />
+                    <EditButton />
+                </Datagrid>
+            }
+        />
     </List>
 );
 
@@ -23,7 +35,7 @@ export const AppLogEdit = (props) => (
     <Edit title={<AppLogTitle />} {...props}>
         <SimpleForm>
             <DisabledInput source="id" />
-            <TextInput source="timestamp" />
+            <DateTimeInput source="timestamp" />
             <TextInput source="status" />
             <TextInput source="statusName" />
             <TextInput source="exception" />
@@ -36,7 +48,7 @@ export const AppLogEdit = (props) => (
 export const AppLogCreate = (props) => (
     <Create {...props}>
         <SimpleForm>
-            <TextInput source="timestamp" />
+            <DateTimeInput source="timestamp" />
             <TextInput source="status" />
             <TextInput source="statusName" />
             <TextInput source="exception" />

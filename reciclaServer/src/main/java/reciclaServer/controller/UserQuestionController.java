@@ -58,7 +58,7 @@ public class UserQuestionController {
                         Reply reply = replyService.findFirstById(reply_id);
 
                         if (reply != null) {
-                            UserQuestion userQuestion = this.userQuestionService.findFirstByQuestion(question);
+                            UserQuestion userQuestion = this.userQuestionService.findFirstByQuestionAndUser(question, user);
 
                             if (userQuestion == null && reply.getQuestion().getId() == question.getId()) {
                                 Timestamp timestamp = new Timestamp(System.currentTimeMillis());

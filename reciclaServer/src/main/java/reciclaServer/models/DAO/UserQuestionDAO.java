@@ -9,7 +9,7 @@ public interface UserQuestionDAO extends CrudRepository<UserQuestion, Long> {
 
     UserQuestion save(UserQuestion question);
 
-    UserQuestion findFirstByQuestion(Question question);
+    UserQuestion findFirstByQuestionAndUser(Question question, User user);
 
     UserQuestion findFirstByUserOrderByCreatedDateDesc(User user);
 }

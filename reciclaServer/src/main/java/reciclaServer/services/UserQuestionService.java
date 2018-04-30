@@ -21,8 +21,8 @@ public class UserQuestionService {
         return userQuestionDAO.save(userQuestion);
     }
 
-    public UserQuestion findFirstByQuestion(Question question) {
-        return this.userQuestionDAO.findFirstByQuestion(question);
+    public UserQuestion findFirstByQuestionAndUser(Question question, User user) {
+        return this.userQuestionDAO.findFirstByQuestionAndUser(question, user);
     }
 
     public UserQuestion findFirstByUser(User user) {
