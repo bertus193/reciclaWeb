@@ -22,8 +22,11 @@ public class ItemType {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private long id;
 
-    @Enumerated(EnumType.STRING) //Fix: by default enums are persisted as int using oridinal
-    private TypeRecycle type;
+    private String type;
+
+    private String typeEs;
+
+    private String typeColor;
 
     @Column(name = "recycle_value")
     private int recycleValue;
@@ -38,7 +41,7 @@ public class ItemType {
 
     }
 
-    public TypeRecycle getType() {
+    public String getType() {
         return type;
     }
 
@@ -48,5 +51,13 @@ public class ItemType {
 
     public long getId() {
         return id;
+    }
+
+    public String getTypeColor() {
+        return typeColor;
+    }
+
+    public String getTypeEs() {
+        return typeEs;
     }
 }

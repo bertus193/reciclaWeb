@@ -3,7 +3,6 @@ import { NavParams } from 'ionic-angular';
 import { RecycleItem } from '../../../../models/recycleItem';
 import { SessionProvider } from '../../../../providers/session';
 import { User } from '../../../../models/user';
-import { UtilsProvider } from '../../../../providers/utils';
 import { RecycleItemsProvider } from '../../../../providers/api/recycleItemsProvider';
 
 @Component({
@@ -21,7 +20,6 @@ export class recycleItemInfoPage {
     constructor(
         private navParams: NavParams,
         private sessionProvider: SessionProvider,
-        private utilsProvider: UtilsProvider,
         private recycleItemsProvider: RecycleItemsProvider
     ) {
         this.recycleItemId = this.navParams.get("recycleItemId");
@@ -46,9 +44,5 @@ export class recycleItemInfoPage {
             this.showLoadingMsg = false
             this.errorLoadingContent = true
         });
-    }
-
-    getItemType(itemTypeId: (number | string)): (number | string) {
-        return this.utilsProvider.getItemType(itemTypeId)
     }
 }

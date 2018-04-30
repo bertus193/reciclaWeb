@@ -2,9 +2,7 @@ import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map';
 import { StoragePoint } from '../models/storagePoint';
 import { Position } from '../models/position';
-import { ItemType } from '../models/itemType';
 import { Observable, TimeoutError } from 'rxjs/Rx'
-import { TypeRecycle } from '../models/typeRecicle';
 import { StoragesProvider } from './api/storagesProvider';
 
 
@@ -30,11 +28,11 @@ export class UtilsProvider {
         return R * c;
     }
 
-    public getNearestStoragePointByItemType(currentPosition: Position, itemType: ItemType): Observable<{ storagePoint: StoragePoint, status: number }> {
+    public getNearestStoragePointByItemType(currentPosition: Position, itemTypeId: number): Observable<{ storagePoint: StoragePoint, status: number }> {
         var status: number
         var storagePointList: StoragePoint[]
         var storagePoint: StoragePoint
-        return this.storagesProvider.getStoragePointsByItemType(itemType).map(res => {
+        return this.storagesProvider.getStoragePointsByItemType(itemTypeId).map(res => {
             status = res.status
             if (status === 200) {
                 storagePointList = res.json();
@@ -66,14 +64,6 @@ export class UtilsProvider {
         var distance = this.calculateDistance(userPosition, storagePosition)
         var zoomLevel = this.getZoomLevel(distance)
         return Observable.of(zoomLevel)
-    }
-
-    public getItemType(itemTypeId: (number | string)): (number | string) {
-        var out: string = "Desconocido"
-        if (TypeRecycle[itemTypeId]) {
-            out = TypeRecycle[itemTypeId]
-        }
-        return out
     }
 
     public timeoutPromise(timeout, promise) {

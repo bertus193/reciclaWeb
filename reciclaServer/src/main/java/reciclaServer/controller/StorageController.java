@@ -28,7 +28,7 @@ public class StorageController {
     }
 
 
-    @RequestMapping(value = "/storages/itemType/{itemType}/storagePoints", method = RequestMethod.GET)
+    @RequestMapping(value = "/storages/itemTypes/{itemType}/storagePoints", method = RequestMethod.GET)
     public ResponseEntity<?> getStoragePointsByItemType(@PathVariable("itemType") long itemTypeId) {
 
         ItemType itemType = itemTypeService.getItemTypeById(itemTypeId);

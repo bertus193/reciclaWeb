@@ -29,7 +29,7 @@ public class ItemTypeNameController {
         this.appLogService = appLogService;
     }
 
-    @RequestMapping(value = "/itemTypeName/labelAnnotations", method = RequestMethod.POST)
+    @RequestMapping(value = "/itemTypeNames/labelAnnotations", method = RequestMethod.POST)
     public ResponseEntity<?> getRecycleItemItemTypeBylabelAnnotations(@RequestBody List<LabelAnnotations> labelAnnotations) {
         ItemTypeName itemTypeName;
         LabelAnnotations labelAnnotation;

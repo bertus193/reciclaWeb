@@ -8,11 +8,11 @@ import { ApplicationConfig, APP_CONFIG_TOKEN } from '../../../app/app-config';
 import { RecycleItem } from '../../../models/recycleItem';
 import { User } from '../../../models/user';
 import { SessionProvider } from '../../../providers/session';
-import { TypeRecycle, TypeRecycle_Color_EN } from '../../../models/typeRecicle';
 import { PopoverMap } from './popover_map/popoverMap';
 import { UtilsProvider } from '../../../providers/utils';
 import { RecycleItemsProvider } from '../../../providers/api/recycleItemsProvider';
 import { ItemTypeProvider } from '../../../providers/api/itemTypeProvider';
+import { ItemType } from '../../../models/itemType';
 
 @Component({
     selector: 'page-recycleMap',
@@ -28,6 +28,7 @@ export class MapPage {
     myPosition: Position;
     isitemTypeName: boolean = false
     modifiedItemName: boolean = false
+    itemTypeList: ItemType[] = []
 
     loading: Loading;
 
@@ -57,6 +58,7 @@ export class MapPage {
         this.recycleItem = this.navParams.get("recycleItem");
         this.myPosition = this.navParams.get("myPosition");
         this.isitemTypeName = this.navParams.get("isitemTypeName")
+        this.itemTypeList = this.navParams.get("itemTypeList")
     }
 
     ionViewDidLoad() {
@@ -80,7 +82,7 @@ export class MapPage {
         // Wait the MAP_READY before using any methods.
         this.map.one(GoogleMapsEvent.MAP_READY)
             .then(() => {
-                this.initMarkers(this.recycleItem.storage.position, "Punto más cercano", TypeRecycle_Color_EN[this.recycleItem.itemType])
+                this.initMarkers(this.recycleItem.storage.position, "Punto más cercano", this.recycleItem.itemType.typeColor)
 
                 this.notificationProvider.presentBottomToast("Puedes ver la ruta más rápida desde el menú superior")
             })
@@ -234,38 +236,36 @@ export class MapPage {
         let alert = this.alertCtrl.create();
         alert.setTitle('Selecciona un tipo');
 
-        for (let type in TypeRecycle) {
-            if (isNaN(Number(type))) {
-                if (this.getItemType(this.recycleItem.itemType) == type) {
-                    alert.addInput({
-                        type: 'radio',
-                        label: type,
-                        value: type,
-                        checked: true
-                    });
-                }
-                else {
-                    alert.addInput({
-                        type: 'radio',
-                        value: type,
-                        label: type,
-                    });
-                }
+        for (let i = 0; i < this.itemTypeList.length; i++) {
+            if (this.recycleItem.itemType.id == this.itemTypeList[i].id) {
+                alert.addInput({
+                    type: 'radio',
+                    label: this.itemTypeList[i].typeEs,
+                    value: i.toString(),
+                    checked: true
+                });
+            }
+            else {
+                alert.addInput({
+                    type: 'radio',
+                    label: this.itemTypeList[i].typeEs,
+                    value: i.toString()
+                });
             }
         }
-
 
         alert.addButton('Cancelar');
         alert.addButton({
             text: 'Cambiar tipo',
             handler: data => {
+                console.log(this.itemTypeList[data])
                 this.loading = this.loadingCtrl.create({
                     content: 'Buscando punto más cercano...'
                 });
                 this.loading.present()
-                this.recycleItem.itemType = this.getItemType(data) // string to number
+                this.recycleItem.itemType = this.itemTypeList[data]
                 if (this.modifiedItemName == false && this.isitemTypeName == true) {
-                    this.recycleItem.name = data
+                    this.recycleItem.name = this.itemTypeList[data].typeEs
                 }
                 this.callGetNearestStoragePointByItemType()
             }
@@ -274,17 +274,17 @@ export class MapPage {
     }
 
     callGetNearestStoragePointByItemType() {
-        this.utilsProvider.getNearestStoragePointByItemType(this.myPosition, this.recycleItem.itemType).timeout(this.config.defaultTimeoutTime).subscribe(result => {
+        this.utilsProvider.getNearestStoragePointByItemType(this.myPosition, this.recycleItem.itemType.id).timeout(this.config.defaultTimeoutTime).subscribe(result => {
             if (result.status == 200) {
                 this.recycleItem.storage.position = result.storagePoint.position
                 this.loading.dismiss()
-                this.initMarkers(result.storagePoint.position, "Punto más cercano", TypeRecycle_Color_EN[this.recycleItem.itemType])
+                this.initMarkers(result.storagePoint.position, "Punto más cercano", this.recycleItem.itemType.typeColor)
             }
             else {
                 this.loading.dismiss()
                 this.notificationProvider.presentTopToast('No hay ningún punto de reciclaje cercano.');
             }
-        }, error => { // Error undefined desde cordova browser /itemType/undefined/storagePoints
+        }, error => { // Error undefined desde cordova browser /itemTypes/undefined/storagePoints
             this.loading.dismiss()
             this.notificationProvider.presentTopToast(this.config.defaultTimeoutMsg)
         })
@@ -298,9 +298,5 @@ export class MapPage {
         popover.present({
             ev: myEvent
         });
-    }
-
-    getItemType(itemTypeId: (number | string)): (number | string) {
-        return this.utilsProvider.getItemType(itemTypeId)
     }
 }

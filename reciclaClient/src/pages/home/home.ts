@@ -4,7 +4,6 @@ import { APP_CONFIG_TOKEN, ApplicationConfig } from '../../app/app-config';
 import { SessionProvider } from '../../providers/session';
 import { User } from '../../models/user';
 import { RecycleItem } from '../../models/recycleItem';
-import { UtilsProvider } from '../../providers/utils';
 import { Content } from 'ionic-angular';
 
 @Component({
@@ -31,8 +30,7 @@ export class HomePage {
 
         private recycleItemsProvider: RecycleItemsProvider,
         @Inject(APP_CONFIG_TOKEN) private config: ApplicationConfig,
-        private sessionProvider: SessionProvider,
-        private utilsProvider: UtilsProvider
+        private sessionProvider: SessionProvider
     ) {
 
         this.perPage = this.config.itemsPerPage
@@ -149,10 +147,6 @@ export class HomePage {
             refresher.complete();
         });
         this.page = temporalPage
-    }
-
-    public getItemType(itemTypeId: number): string {
-        return this.utilsProvider.getItemType(itemTypeId).toString()
     }
 
     ionSelected() {

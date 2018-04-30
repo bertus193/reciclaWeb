@@ -13,7 +13,7 @@
                         <ion-card-header>{{ recycleItem.name }}</ion-card-header>
                         <img [src]="recycleItem.image" onError="this.src = 'assets/imgs/quieroReciclar.png'" style="max-height: 75%;" />
                         <ion-card-content>
-                            <p>Tipo: {{ getItemType(recycleItem.itemType.id) }}</p>
+                            <p>Tipo: {{ recycleItem.itemType.typeEs }}</p>
                             <p>Reciclado el: {{ recycleItem.createdDate | date: 'dd/MM/yyyy H:mm'}}</p>
                         </ion-card-content>
                     </ion-card>

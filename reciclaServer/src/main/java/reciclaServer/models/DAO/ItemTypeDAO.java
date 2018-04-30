@@ -10,7 +10,7 @@ import java.util.List;
 @Transactional
 public interface ItemTypeDAO extends CrudRepository<ItemType, Long> {
 
-    List<ItemType> findAll();
+    List<ItemType> findAllByOrderByIdAsc();
 
     ItemType getItemTypeById(long id);
 }

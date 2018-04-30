@@ -35,8 +35,8 @@
                         <img src="{{recycleItem.image}}" onError="this.src = 'assets/imgs/quieroReciclar.png'">
 
                         <ion-card-content>
-                            <p>{{getItemType(recycleItem.itemType.id)}}</p>
-                            <p class="recycleItemName" *ngIf="getItemType(recycleItem.itemType.id) != recycleItem.name">
+                            <p>{{recycleItem.itemType.typeEs}}</p>
+                            <p class="recycleItemName" *ngIf="recycleItem.itemType.typeEs != recycleItem.name">
                                 {{recycleItem.name}}
                             </p>
                         </ion-card-content>

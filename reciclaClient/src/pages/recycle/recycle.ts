@@ -19,9 +19,10 @@ import { SessionProvider } from '../../providers/session';
 import { User } from '../../models/user';
 import { LabelResponse } from '../../models/labelResponse';
 import { RecycleItem } from '../../models/recycleItem';
-import { TypeRecycle, TypeRecycle_EN } from '../../models/typeRecicle';
 import { UtilsProvider } from '../../providers/utils';
 import { UserProvider } from '../../providers/api/userProvider';
+import { ItemTypeProvider } from '../../providers/api/itemTypeProvider';
+import { ItemType } from '../../models/itemType';
 
 @Component({
     selector: 'page-recycle',
@@ -36,6 +37,8 @@ export class RecyclePage {
     user: User
     temporalName: string = ""
     isitemTypeName: boolean = false
+
+    itemTypeList: ItemType[] = []
 
     constructor(
         @Inject(APP_CONFIG_TOKEN) private config: ApplicationConfig,
@@ -52,19 +55,29 @@ export class RecyclePage {
         private utilsProvider: UtilsProvider,
         private sessionProvider: SessionProvider,
         private userProvider: UserProvider,
+        private itemTypeProvider: ItemTypeProvider,
         private crop: Crop
     ) {
-        this.recycleItem = new RecycleItem();
+        this.recycleItem = new RecycleItem()
+
     }
 
-    ionViewDidLoad() {
+    ionViewCanEnter() {
+        return new Promise((resolve, reject) => {
+            this.itemTypeProvider.getAllItemTypes().subscribe(res => {
+                this.itemTypeList = res.json()
+                resolve(res)
+            }, error => {
+                reject(error)
+            })
+        })
     }
 
-    public loadPositionSlide(recycleItemType: number) {
+    public loadPositionSlide(itemType: ItemType) {
         this.recycleItem.id = null
         this.recycleItem.image = this.config.defaultImageDirectory
-        this.recycleItem.itemType = recycleItemType
-        this.recycleItem.name = TypeRecycle[this.recycleItem.itemType]
+        this.recycleItem.itemType = itemType
+        this.recycleItem.name = itemType.typeEs
         this.recycleItem.recycleUser = this.user.id
         this.recycleItem.createdDate = new Date()
         this.isitemTypeName = true
@@ -208,52 +221,23 @@ export class RecyclePage {
     }
 
     public presentActionSheetTypeRecycle() {
-        var typeRecycle: number;
 
         let actionSheet = this.actionSheetCtrl.create({
-            title: '¿Qué deseas reciclar?',
-            buttons: [
-                {
-                    text: 'Orgánico',
-                    handler: () => {
-                        typeRecycle = 1
-                        this.loadPositionSlide(typeRecycle);
-                    }
-                },
-                {
-                    text: 'Plástico',
-                    handler: () => {
-                        typeRecycle = 2
-                        this.loadPositionSlide(typeRecycle);
-                    }
-                },
-                {
-                    text: 'Cristal',
-                    handler: () => {
-                        typeRecycle = 3
-                        this.loadPositionSlide(typeRecycle);
-                    }
-                },
-                {
-                    text: 'Papel',
-                    handler: () => {
-                        typeRecycle = 4
-                        this.loadPositionSlide(typeRecycle);
-                    }
-                },
-                {
-                    text: 'Material de oficina',
-                    handler: () => {
-                        typeRecycle = 5
-                        this.loadPositionSlide(typeRecycle);
-                    }
-                },
-                {
-                    text: 'Cancelar',
-                    role: 'cancel'
-                }
-            ]
+            title: '¿Qué deseas reciclar?'
         });
+        for (let i = 0; i < this.itemTypeList.length; i++) {
+            actionSheet.addButton({
+                text: this.itemTypeList[i].typeEs,
+                handler: () => {
+                    this.loadPositionSlide(this.itemTypeList[i]);
+                }
+            })
+        }
+
+        actionSheet.addButton({
+            text: 'Cancelar',
+            role: 'cancel'
+        })
         actionSheet.present();
 
     }
@@ -270,7 +254,7 @@ export class RecyclePage {
 
         this.recycleItem.id = null
         this.recycleItem.image = urlUploadedFiles
-        this.recycleItem.name = TypeRecycle[this.recycleItem.itemType]
+        this.recycleItem.name = this.recycleItem.itemType.typeEs
         this.recycleItem.recycleUser = this.user.id
         this.recycleItem.createdDate = new Date()
 
@@ -295,7 +279,7 @@ export class RecyclePage {
     public getTypeFromDB(labelResponseList): Observable<boolean> {
         return this.googleCloudServiceProvider.getLabelAnnotations(labelResponseList).map(res => {
             this.temporalName = res.json().description
-            this.recycleItem.itemType = this.getItemType(res.json().itemType.type, 'EN')
+            this.recycleItem.itemType = res.json().itemType.type
             return true
         }).catch(error => {
             return Observable.fromPromise(this.showRadioModifyItemType()).flatMap(res => {
@@ -363,30 +347,18 @@ export class RecyclePage {
                     {
                         text: 'Cambiar tipo',
                         handler: (data) => {
-                            this.recycleItem.itemType = this.getItemType(data)
+                            this.recycleItem.itemType = this.itemTypeList[data]
                             resolve(true)
                         }
                     }
                 ]
             })
-            for (let type in TypeRecycle) {
-                if (isNaN(Number(type))) {
-                    if (this.getItemType(this.recycleItem.itemType) == type) {
-                        alert.addInput({
-                            type: 'radio',
-                            label: type,
-                            value: type,
-                            checked: true
-                        });
-                    }
-                    else {
-                        alert.addInput({
-                            type: 'radio',
-                            value: type,
-                            label: type,
-                        });
-                    }
-                }
+            for (let i = 0; i < this.itemTypeList.length; i++) {
+                alert.addInput({
+                    type: 'radio',
+                    value: this.itemTypeList[i].type,
+                    label: this.itemTypeList[i].type,
+                });
             }
             alert.present();
         })
@@ -395,7 +367,7 @@ export class RecyclePage {
 
 
     goToMapPage(myPosition: Position) {
-        this.utilsProvider.getNearestStoragePointByItemType(myPosition, this.recycleItem.itemType).timeout(this.config.defaultTimeoutTime).subscribe(
+        this.utilsProvider.getNearestStoragePointByItemType(myPosition, this.recycleItem.itemType.id).timeout(this.config.defaultTimeoutTime).subscribe(
             result => {
                 this.recycleItem.storage = result.storagePoint
                 if (result.status == 200) {
@@ -403,7 +375,8 @@ export class RecyclePage {
                     this.navCtrl.push(MapPage, {
                         isitemTypeName: this.isitemTypeName, // false => If take photo/library || true => recycleByItemType
                         recycleItem: this.recycleItem,
-                        myPosition: myPosition
+                        myPosition: myPosition,
+                        itemTypeList: this.itemTypeList
                     })
                     this.loading.dismiss()
                 }
@@ -416,24 +389,6 @@ export class RecyclePage {
                 this.loading.dismiss()
                 this.notificationProvider.presentTopToast(this.config.defaultTimeoutMsg)
             })
-    }
-
-
-
-    public getItemType(itemTypeId: (number | string), lang = 'ES'): (number | string) {
-        var out: string = "Desconocido"
-        if (lang == 'ES') {
-            if (TypeRecycle[itemTypeId]) {
-                out = TypeRecycle[itemTypeId]
-            }
-        }
-        else if (lang == 'EN') {
-            if (TypeRecycle_EN[itemTypeId]) {
-                out = TypeRecycle_EN[itemTypeId]
-            }
-        }
-
-        return out
     }
 
 }
