@@ -38,6 +38,8 @@ export class RecyclePage {
     temporalName: string = ""
     isitemTypeName: boolean = false
 
+    private showLoadingMsg: boolean = true
+
     itemTypeList: ItemType[] = []
 
     constructor(
@@ -58,28 +60,42 @@ export class RecyclePage {
         private itemTypeProvider: ItemTypeProvider,
         private crop: Crop
     ) {
-        this.recycleItem = new RecycleItem()
 
+        this.getAllItems().then(res => {
+            this.showLoadingMsg = false
+        })
     }
 
-    ionViewCanEnter() {
-        return new Promise((resolve, reject) => {
+    public getAllItems() {
+        var status: number
+
+        return new Promise(resolve => {
             this.itemTypeProvider.getAllItemTypes().subscribe(res => {
-                this.itemTypeList = res.json()
-                resolve(res)
+                status = res.status
+                if (status === 200) {
+                    this.itemTypeList = res.json()
+                    resolve(true)
+                } else {
+                    resolve(false)
+                }
             }, error => {
-                reject(error)
+                if (error.status == 404) { // no users found
+                    resolve(true)
+                }
+                else {
+                    resolve(false)
+                }
+
             })
         })
     }
 
     public loadPositionSlide(itemType: ItemType) {
-        this.recycleItem.id = null
+        this.recycleItem = new RecycleItem()
         this.recycleItem.image = this.config.defaultImageDirectory
         this.recycleItem.itemType = itemType
         this.recycleItem.name = itemType.typeEs
         this.recycleItem.recycleUser = this.user.id
-        this.recycleItem.createdDate = new Date()
         this.isitemTypeName = true
 
         this.getUserPositionButton(); //directly without new button step
@@ -243,7 +259,7 @@ export class RecyclePage {
     }
 
     public uploadImage(targetPath) {
-        this.loading.setContent('Subiendo la imagen...')
+        this.loading.setContent('Subiendo la imagen')
 
         var date = new Date()
         var filename = this.user.id + "_" + date.getTime() + ".png";
@@ -252,9 +268,9 @@ export class RecyclePage {
         var urlUpload = url + "/upload.php"
         var urlUploadedFiles = url + '/uploads/' + filename
 
+        this.recycleItem = new RecycleItem()
         this.recycleItem.id = null
         this.recycleItem.image = urlUploadedFiles
-        this.recycleItem.name = this.recycleItem.itemType.typeEs
         this.recycleItem.recycleUser = this.user.id
         this.recycleItem.createdDate = new Date()
 
@@ -277,9 +293,9 @@ export class RecyclePage {
     }
 
     public getTypeFromDB(labelResponseList): Observable<boolean> {
-        return this.googleCloudServiceProvider.getLabelAnnotations(labelResponseList).map(res => {
+        return this.itemTypeProvider.getRecycleItemItemTypeBylabelAnnotations(labelResponseList).map(res => {
             this.temporalName = res.json().description
-            this.recycleItem.itemType = res.json().itemType.type
+            this.recycleItem.itemType = res.json().itemType
             return true
         }).catch(error => {
             return Observable.fromPromise(this.showRadioModifyItemType()).flatMap(res => {
@@ -329,13 +345,6 @@ export class RecyclePage {
                 this.notificationProvider.presentTopToast("Error a la hora de subir la imagen.")
             })
         )
-
-        /*
-        catch(error => { // fileTransfer.upload
-            this.loading.dismiss()
-            this.notificationProvider.presentTopToast('Error de conexión con el servidor de imágenes.')
-        }
-        */
     }
 
 
@@ -356,8 +365,8 @@ export class RecyclePage {
             for (let i = 0; i < this.itemTypeList.length; i++) {
                 alert.addInput({
                     type: 'radio',
-                    value: this.itemTypeList[i].type,
-                    label: this.itemTypeList[i].type,
+                    value: i.toString(),
+                    label: this.itemTypeList[i].typeEs,
                 });
             }
             alert.present();
@@ -389,6 +398,12 @@ export class RecyclePage {
                 this.loading.dismiss()
                 this.notificationProvider.presentTopToast(this.config.defaultTimeoutMsg)
             })
+    }
+
+    doRefresh(refresher: any) {
+        this.getAllItems().then((res: boolean) => {
+            refresher.complete();
+        });
     }
 
 }

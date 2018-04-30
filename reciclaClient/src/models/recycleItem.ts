@@ -6,4 +6,12 @@ export class RecycleItem {
     storage: any;
     itemType: any;
     createdDate: Date
+
+    public constructor() {
+        this.id = null
+        this.name = ''
+        this.image = 'assets/imgs/quieroReciclar.png'
+        this.createdDate = new Date()
+
+    }
 }

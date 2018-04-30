@@ -7,16 +7,38 @@
 </ion-header>
 
 <ion-content padding>
-    <ion-grid style="height: 100%">
-        <ion-row align-items-center text-center style="height: 100%">
-            <ion-col>
-                <img src="assets/imgs/quieroReciclar.png" />
-                <p>
-                    <button ion-button (tap)="presentActionSheetActions()">
-                        Quiero reciclar
-                    </button>
-                </p>
-            </ion-col>
-        </ion-row>
-    </ion-grid>
+    <ion-refresher (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+    <div *ngIf="itemTypeList?.length > 0;else itemTypeListEmpty" style="height: 100%">
+        <ion-grid style="height: 100%">
+            <ion-row align-items-center text-center style="height: 100%">
+                <ion-col>
+                    <img src="assets/imgs/quieroReciclar.png" />
+                    <p>
+                        <button ion-button (tap)="presentActionSheetActions()">
+                            Quiero reciclar
+                        </button>
+                    </p>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+    </div>
 </ion-content>
+
+<ng-template #itemTypeListEmpty>
+    <ion-row align-items-center text-center style="height: 100%">
+        <ion-col>
+            <div *ngIf="showLoadingMsg == true; else showLoadingResult">
+                <h5>Cargando...</h5>
+            </div>
+        </ion-col>
+    </ion-row>
+</ng-template>
+
+<ng-template #showLoadingResult>
+    <div>
+        <p>Ha habido algún problema</p>
+        <h5 style="font-weight: bold">Intentalo de nuevo en unos minutos</h5>
+    </div>
+</ng-template>

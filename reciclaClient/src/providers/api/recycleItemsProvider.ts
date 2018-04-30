@@ -19,6 +19,7 @@ export class RecycleItemsProvider {
 
 
     public saveRecycleItem(recycleItem: RecycleItem, token: string) {
+        recycleItem.itemType = recycleItem.itemType.id
         this.requestJsonOptions.headers.set('X-Auth-Token', token)
         return this.http.post(this.config.apiEndpoint + "/private/recycleItems", JSON.stringify(recycleItem), this.requestJsonOptions).timeout(this.config.defaultTimeoutTime)
     }

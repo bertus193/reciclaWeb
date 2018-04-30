@@ -131,7 +131,8 @@ export class MapPage {
 
     public recycleFinish() {
         this.loading = this.loadingCtrl.create({
-            content: 'Guardando...'
+            content: 'Guardando...',
+            enableBackdropDismiss: true
         });
         this.loading.present()
 
@@ -163,6 +164,7 @@ export class MapPage {
                 }
             }, error => {
                 this.loading.dismiss()
+                console.log(error)
                 this.notificationProvider.presentTopToast(this.config.defaultTimeoutMsg)
             })
         }, err => {

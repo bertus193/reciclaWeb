@@ -42,8 +42,4 @@ export class GoogleCloudServiceProvider {
     translateToSpanish(text: string) {
         return this.http.get('https://translation.googleapis.com/language/translate/v2?key=' + this.config.googleCloudVisionAPIKey + '&q=' + text + '&target=es').timeout(this.config.defaultTimeoutTime);
     }
-
-    getLabelAnnotations(labelResponseList) {
-        return this.itemTypeProvider.getRecycleItemItemTypeBylabelAnnotations(labelResponseList)
-    }
 }
