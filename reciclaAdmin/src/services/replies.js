@@ -1,6 +1,7 @@
 import React from 'react';
 import { ReferenceInput, required, SelectInput, Responsive, SimpleList, List, Edit, Create, Datagrid, TextField, EditButton, DisabledInput, SimpleForm, TextInput } from 'admin-on-rest';
 import MyReferenceField from '../MyReferenceField'
+import UrlField from '../urlField';
 
 export const ReplyList = (props) => (
     <List {...props}>
@@ -13,7 +14,7 @@ export const ReplyList = (props) => (
             }
             medium={
                 <Datagrid bodyOptions={{ stripedRows: true, showRowHover: true }}>
-                    <TextField source="id" />
+                    <UrlField urlDirection="replies" source="id" />
                     <TextField source="name" />
                     <MyReferenceField label="Question" source="question" reference="questions">
                         <TextField source="name" />

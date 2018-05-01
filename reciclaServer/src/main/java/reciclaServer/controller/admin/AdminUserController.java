@@ -21,6 +21,7 @@ import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,6 +78,10 @@ public class AdminUserController {
             return new ResponseEntity<Void>(HttpStatus.CONFLICT);
         }
 
+        if(user.getType() == null){
+            user.setType(TypeUser.Normal);
+        }
+
         if(user.getType() != TypeUser.Normal){
             user.setPassword("");
         }
@@ -84,6 +89,10 @@ public class AdminUserController {
         if(!user.getPassword().isEmpty()){
             user.setPassword(this.checkPassword(user.getPassword()));
         }
+
+        user.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+        user.setLastGameDate(new Timestamp(System.currentTimeMillis()));
+        user.setEmail(user.getUsername());
 
         userService.saveUser(user);
         return new ResponseEntity<>(user, HttpStatus.CREATED);

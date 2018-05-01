@@ -149,7 +149,6 @@ export class LoginPage {
         user.password = password
         user.username = this.config.debugUserEmail
         user.fullName = 'Debug user'
-        user.profilePicture = 'assets/imgs/debugProfilePicture.jpg'
         user.accessToken = 'DEBUG_MODE'
         user.type = TypeUser.Normal
 

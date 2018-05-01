@@ -22,7 +22,7 @@ public class ItemTypeName {
     private String description;
 
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "item_type")
     private ItemType itemType;
 

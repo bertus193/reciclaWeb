@@ -24,7 +24,7 @@ public class Reply {
 
     private String name;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "question")
     @JsonIdentityReference(alwaysAsId = true)

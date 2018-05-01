@@ -28,12 +28,12 @@ public class Storage {
     @OneToMany(mappedBy = "storage")
     private List<RecycleItem> recycledItems;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @NotNull
     @JoinColumn(name = "item_type")
     private ItemType itemType;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @NotNull
     @JoinColumn(name = "storage_point")
     private StoragePoint storagePoint;

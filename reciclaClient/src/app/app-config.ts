@@ -25,7 +25,6 @@ APP_CONFIG.uploadFilesUrl = 'https://reciclaweb.000webhostapp.com'
 APP_CONFIG.DEBUG_MODE = true
 APP_CONFIG.defaultTimeoutTime = 10000
 APP_CONFIG.defaultTimeoutMsg = 'Parece que ha habido algún problema, prueba en unos minutos.'
-APP_CONFIG.defaultImageDirectory = 'assets/imgs/icons/recycle.png'
 APP_CONFIG.googleCloudVisionAPIKey = 'AIzaSyCVl9Ien_9KOFEN197dPqklyIJ7ad1z44k'
 APP_CONFIG.itemsPerPage = 10
 APP_CONFIG.debugUserEmail = 'debug@debug.com'

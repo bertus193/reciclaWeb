@@ -1,5 +1,6 @@
 import React from 'react';
-import { Responsive, SimpleList, List, Edit, Create, Datagrid, TextField, EditButton, DisabledInput, LongTextInput, SimpleForm, TextInput } from 'admin-on-rest';
+import { Responsive, SimpleList, List, Edit, Create, Datagrid, TextField, EditButton, DisabledInput, SimpleForm, TextInput } from 'admin-on-rest';
+import UrlField from '../urlField';
 
 export const PositionList = (props) => (
     <List {...props}>
@@ -12,7 +13,7 @@ export const PositionList = (props) => (
             }
             medium={
                 <Datagrid bodyOptions={{ stripedRows: true, showRowHover: true }}>
-                    <TextField source="id" />
+                    <UrlField urlDirection="positions" source="id" />
                     <TextField source="latitude" />
                     <TextField source="longitude" />
                     <EditButton />
@@ -33,7 +34,7 @@ export const PositionEdit = (props) => (
         <SimpleForm>
             <DisabledInput source="id" />
             <TextInput source="latitude" />
-            <LongTextInput source="longitude" />
+            <TextInput source="longitude" />
         </SimpleForm>
     </Edit>
 );
@@ -43,7 +44,7 @@ export const PositionCreate = (props) => (
         <SimpleForm>
 
             <TextInput source="latitude" />
-            <LongTextInput source="longitude" />
+            <TextInput source="longitude" />
         </SimpleForm>
     </Create>
 );

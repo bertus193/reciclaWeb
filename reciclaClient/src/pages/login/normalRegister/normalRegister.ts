@@ -65,7 +65,6 @@ export class NormalRegisterPage {
         user.email = emailForm.value
         user.password = password
         user.fullName = 'Mi nombre'
-        user.profilePicture = 'assets/imgs/quieroReciclar.png'
         user.accessToken = uuid.toString()
         user.type = TypeUser.Normal
 

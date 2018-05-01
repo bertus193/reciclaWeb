@@ -45,7 +45,7 @@ public class User {
     @Enumerated(EnumType.STRING) //Fix: by default enums are persisted as int using oridinal
     private TypeUser type;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "last_position")
     private Position lastPosition;
 

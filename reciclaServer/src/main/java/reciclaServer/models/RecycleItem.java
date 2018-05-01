@@ -29,17 +29,17 @@ public class RecycleItem {
 
     private String image;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "recycle_user")
     @JsonIdentityReference(alwaysAsId = true)
     private User recycleUser;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "storage")
     @JsonIdentityReference(alwaysAsId = true)
     private Storage storage;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @NotNull
     @JoinColumn(name = "item_type")
     private ItemType itemType;

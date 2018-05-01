@@ -24,9 +24,6 @@ export class ProfilePage {
     ) {
         sessionProvider.getSession().then(res => {
             this.user = res
-            if (this.user.profilePicture == null) {
-                this.user.profilePicture = "assets/imgs/quieroReciclar.png"
-            }
         })
         this.profileSegment = this.navParams.get("profileSegment")
 

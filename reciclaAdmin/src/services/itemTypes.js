@@ -1,5 +1,6 @@
 import React from 'react';
 import { NumberInput, Responsive, SimpleList, List, Edit, Create, Datagrid, TextField, EditButton, DisabledInput, SimpleForm, TextInput } from 'admin-on-rest';
+import UrlField from '../urlField';
 
 export const ItemTypeList = (props) => (
     <List {...props} title="Recycle Item Type List">
@@ -13,7 +14,7 @@ export const ItemTypeList = (props) => (
             }
             medium={
                 <Datagrid bodyOptions={{ stripedRows: true, showRowHover: true }}>
-                    <TextField source="id" />
+                    <UrlField urlDirection="itemTypes" source="id" />
                     <TextField label="Value" source="recycleValue" />
                     <TextField label="English name" source="type" />
                     <TextField label="Color" source="typeColor" />

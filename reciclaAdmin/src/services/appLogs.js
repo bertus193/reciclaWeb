@@ -1,5 +1,6 @@
 import React from 'react';
 import { LongTextInput, Responsive, SimpleList, List, Edit, Create, Datagrid, TextField, EditButton, DisabledInput, SimpleForm, TextInput, DateField } from 'admin-on-rest';
+import UrlField from '../urlField';
 import DateTimeInput from 'aor-datetime-input';
 
 export const AppLogList = (props) => (
@@ -14,7 +15,7 @@ export const AppLogList = (props) => (
             }
             medium={
                 <Datagrid bodyOptions={{ stripedRows: true, showRowHover: true }}>
-                    <TextField source="id" />
+                    <UrlField urlDirection="appLogs" source="id" />
                     <DateField source="timestamp" showTime locales="es-ES" />
                     <TextField label="Status name" source="statusName" />
                     <TextField source="exception" />

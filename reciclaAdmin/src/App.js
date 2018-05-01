@@ -1,6 +1,6 @@
 // in src/App.js
 import React from 'react';
-import { jsonServerRestClient, Admin, Resource, Delete } from 'admin-on-rest';
+import { fetchUtils, jsonServerRestClient, Admin, Resource, Delete } from 'admin-on-rest';
 
 import { PositionList, PositionEdit, PositionCreate } from './services/positions';
 import { AppLogList, AppLogEdit, AppLogCreate } from './services/appLogs';
@@ -20,23 +20,28 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 import './App.css';
 
-import AppLogIcon from 'material-ui/svg-icons/action/book';
-import UserIcon from 'material-ui/svg-icons/action/account-circle';
-import PositionIcon from 'material-ui/svg-icons/communication/location-on';
+const httpClient = (url, options = {}) => {
+    if (!options.headers) {
+        options.headers = new Headers({ Accept: 'application/json' });
+    }
+    options.headers.set('X-Custom-Header', 'foobar');
+    return fetchUtils.fetchJson(url, options);
+}
+const restClient = jsonServerRestClient('http://127.0.0.1:8080/admin/', httpClient);
 
 const App = () => (
-    <Admin title="Panel de administración" theme={getMuiTheme(myTheme)} authClient={authClient} restClient={jsonServerRestClient('https://reciclaweb-server.herokuapp.com/admin/')}>
-        <Resource name="users" icon={UserIcon} list={UserList} edit={UserEdit} create={UserCreate} remove={Delete} />
-        <Resource name="positions" icon={PositionIcon} list={PositionList} edit={PositionEdit} create={PositionCreate} remove={Delete} />
-        <Resource name="appLogs" options={{ label: 'Logs' }} icon={AppLogIcon} list={AppLogList} edit={AppLogEdit} create={AppLogCreate} remove={Delete} />
-        <Resource name="itemTypes" options={{ label: 'Recycle item types' }} icon={AppLogIcon} list={ItemTypeList} edit={ItemTypeEdit} create={ItemTypeCreate} remove={Delete} />
-        <Resource name="questions" icon={AppLogIcon} list={QuestionList} edit={QuestionEdit} create={QuestionCreate} remove={Delete} />
-        <Resource name="recycleItems" options={{ label: 'Recycle items' }} icon={AppLogIcon} list={RecycleItemList} edit={RecycleItemEdit} create={RecycleItemCreate} remove={Delete} />
-        <Resource name="replies" icon={AppLogIcon} list={ReplyList} edit={ReplyEdit} create={ReplyCreate} remove={Delete} />
-        <Resource name="storagePoints" options={{ label: 'Storage points' }} icon={AppLogIcon} list={StoragePointList} edit={StoragePointEdit} create={StoragePointCreate} remove={Delete} />
-        <Resource name="storages" icon={AppLogIcon} list={StorageList} edit={StorageEdit} create={StorageCreate} remove={Delete} />
-        <Resource name="userQuestions" options={{ label: 'User questions' }} icon={AppLogIcon} list={UserQuestionList} edit={UserQuestionEdit} create={UserQuestionCreate} remove={Delete} />
-        <Resource name="itemTypeNames" options={{ label: 'Item type names' }} icon={AppLogIcon} list={ItemTypeNameList} edit={ItemTypeNameEdit} create={ItemTypeNameCreate} remove={Delete} />
+    <Admin title="Panel de administración" theme={getMuiTheme(myTheme)} authClient={authClient} restClient={restClient}>
+        <Resource name="recycleItems" options={{ label: 'Recycle items' }} list={RecycleItemList} edit={RecycleItemEdit} create={RecycleItemCreate} remove={Delete} />
+        <Resource name="appLogs" options={{ label: 'Logs' }} list={AppLogList} edit={AppLogEdit} create={AppLogCreate} remove={Delete} />
+        <Resource name="users" list={UserList} edit={UserEdit} create={UserCreate} remove={Delete} />
+        <Resource name="storagePoints" options={{ label: 'Storage points' }} list={StoragePointList} edit={StoragePointEdit} create={StoragePointCreate} remove={Delete} />
+        <Resource name="storages" list={StorageList} edit={StorageEdit} create={StorageCreate} remove={Delete} />
+        <Resource name="itemTypeNames" options={{ label: 'Item type names' }} list={ItemTypeNameList} edit={ItemTypeNameEdit} create={ItemTypeNameCreate} remove={Delete} />
+        <Resource name="itemTypes" options={{ label: 'Recycle item types' }} list={ItemTypeList} edit={ItemTypeEdit} create={ItemTypeCreate} remove={Delete} />
+        <Resource name="positions" list={PositionList} edit={PositionEdit} create={PositionCreate} remove={Delete} />
+        <Resource name="questions" list={QuestionList} edit={QuestionEdit} create={QuestionCreate} remove={Delete} />
+        <Resource name="replies" list={ReplyList} edit={ReplyEdit} create={ReplyCreate} remove={Delete} />
+        <Resource name="userQuestions" options={{ label: 'User questions' }} list={UserQuestionList} edit={UserQuestionEdit} create={UserQuestionCreate} remove={Delete} />
     </Admin>
 );
 /*<Resource name="posts" list={PositionList} edit={PositionEdit} create={PositionCreate} remove={Delete} />*/

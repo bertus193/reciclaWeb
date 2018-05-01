@@ -10,7 +10,7 @@ export class RecycleItem {
     public constructor() {
         this.id = null
         this.name = ''
-        this.image = 'assets/imgs/quieroReciclar.png'
+        this.image = null
         this.createdDate = new Date()
 
     }

@@ -28,7 +28,7 @@ public class StoragePoint {
     @OneToMany(mappedBy = "storagePoint")
     private List<Storage> storages;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "position")
     private Position position;
 

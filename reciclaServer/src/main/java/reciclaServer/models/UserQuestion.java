@@ -24,17 +24,17 @@ public class UserQuestion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "\"user\"")
     @JsonIdentityReference(alwaysAsId = true)
     private User user;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "question")
     @JsonIdentityReference(alwaysAsId = true)
     private Question question;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "user_reply")
     private Reply userReply;
 

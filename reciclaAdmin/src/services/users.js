@@ -1,5 +1,5 @@
 import React from 'react';
-import { Responsive, SimpleList, ReferenceInput, SelectInput, List, Edit, Create, Datagrid, TextField, EditButton, DisabledInput, LongTextInput, SimpleForm, TextInput, ChipField, NumberInput, DateField, RadioButtonGroupInput } from 'admin-on-rest';
+import { Responsive, SimpleList, ReferenceInput, SelectInput, List, Edit, Create, Datagrid, TextField, EditButton, DisabledInput, SimpleForm, TextInput, ChipField, NumberInput, DateField, RadioButtonGroupInput } from 'admin-on-rest';
 import UrlField from '../urlField';
 import DateTimeInput from 'aor-datetime-input';
 import MyReferenceField from '../MyReferenceField'
@@ -46,16 +46,15 @@ export const UserList = (props) => (
 export const UserEdit = (props) => (
     <Edit title={<UserEditTitle />} {...props}>
         <SimpleForm>
+            <TextInput source="username" />
             <DisabledInput source="id" />
-            <LongTextInput label="User id" source="email" />
             <TextInput placeholder="" source="password" type="password" />
-            <LongTextInput label="Full name" source="fullName" />
-            <LongTextInput source="profilePicture" />
+            <TextInput label="Full name" source="fullName" />
+            <TextInput label="URL profile picture" source="profilePicture" />
             <DateTimeInput label="Created date" source="createdDate" />
-            <ReferenceInput label="Position" source="lastPosition.id" reference="positions">
+            <ReferenceInput label="Position" source="lastPosition.id" reference="positions" allowEmpty>
                 <SelectInput optionText="id" />
             </ReferenceInput>
-            <LongTextInput source="username" />
             <RadioButtonGroupInput source="type" choices={choices} translateChoice={false} />
             <NumberInput source="points" />
             <NumberInput label="Game points" source="gamePoints" />
@@ -67,18 +66,16 @@ export const UserEdit = (props) => (
 export const UserCreate = (props) => (
     <Create title={"Añadir usuario"} {...props}>
         <SimpleForm>
-            <LongTextInput label="User id" source="email" />
+            <TextInput source="username" />
             <TextInput source="password" type="password" />
-            <LongTextInput label="Full name" source="fullName" />
-            <LongTextInput source="profilePicture" />
-            <DateTimeInput abel="Created date" source="createdDate" />
-            <ReferenceInput label="Position" source="lastPosition.id" reference="positions">
+            <TextInput label="Full name" source="fullName" />
+            <TextInput label="URL profile picture" source="profilePicture" />
+            <ReferenceInput label="Position" source="lastPosition.id" reference="positions" allowEmpty>
                 <SelectInput optionText="id" />
             </ReferenceInput>
-            <LongTextInput source="username" />
             <RadioButtonGroupInput source="type" choices={choices} translateChoice={false} />
             <NumberInput source="points" />
-            <NumberInput label="Created date" source="gamePoints" />
+            <NumberInput label="Game points" source="gamePoints" />
             <DateTimeInput label="Last game date" source="lastGameDate" />
         </SimpleForm>
     </Create>

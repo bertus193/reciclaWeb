@@ -1,5 +1,6 @@
 import React from 'react';
 import { SelectInput, ReferenceInput, Responsive, SimpleList, List, Edit, Create, Datagrid, TextField, EditButton, DisabledInput, SimpleForm, TextInput } from 'admin-on-rest';
+import UrlField from '../urlField';
 import MyReferenceField from '../MyReferenceField'
 
 export const ItemTypeNameList = (props) => (
@@ -13,7 +14,7 @@ export const ItemTypeNameList = (props) => (
             }
             medium={
                 <Datagrid bodyOptions={{ stripedRows: true, showRowHover: true }}>
-                    <TextField source="id" />
+                    <UrlField urlDirection="itemTypeNames" source="id" />
                     <TextField source="description" />
                     <MyReferenceField label="Item type" source="itemType" reference="itemTypes">
                         <TextField source="type" />

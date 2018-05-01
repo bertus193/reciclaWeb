@@ -1,7 +1,8 @@
 import React from 'react';
-import { DateField, ReferenceInput, required, SelectInput, Responsive, SimpleList, List, Edit, Create, Datagrid, TextField, EditButton, DisabledInput, SimpleForm, TextInput } from 'admin-on-rest';
+import { DateField, ReferenceInput, SelectInput, Responsive, SimpleList, List, Edit, Create, Datagrid, TextField, EditButton, DisabledInput, SimpleForm } from 'admin-on-rest';
 import MyReferenceField from '../MyReferenceField'
 import DateTimeInput from 'aor-datetime-input';
+import UrlField from '../urlField';
 
 export const UserQuestionList = (props) => (
     <List {...props} title="User Question List">
@@ -14,7 +15,7 @@ export const UserQuestionList = (props) => (
             }
             medium={
                 <Datagrid bodyOptions={{ stripedRows: true, showRowHover: true }}>
-                    <TextField source="id" />
+                    <UrlField urlDirection="userQuestions" source="id" />
                     <MyReferenceField label="User" source="user" reference="users">
                         <TextField source="username" />
                     </MyReferenceField>

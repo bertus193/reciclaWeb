@@ -92,7 +92,6 @@ export class RecyclePage {
 
     public loadPositionSlide(itemType: ItemType) {
         this.recycleItem = new RecycleItem()
-        this.recycleItem.image = this.config.defaultImageDirectory
         this.recycleItem.itemType = itemType
         this.recycleItem.name = itemType.typeEs
         this.recycleItem.recycleUser = this.user.id
