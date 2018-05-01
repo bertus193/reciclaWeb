@@ -55,7 +55,7 @@ public class UserQuestionController {
                     Question question = this.questionService.findById(question_id);
 
                     if (question != null) {
-                        Reply reply = replyService.findFirstById(reply_id);
+                        Reply reply = replyService.findById(reply_id);
 
                         if (reply != null) {
                             UserQuestion userQuestion = this.userQuestionService.findFirstByQuestionAndUser(question, user);
@@ -68,7 +68,7 @@ public class UserQuestionController {
                                 userQuestion.setQuestion(question);
                                 userQuestion.setUserReply(reply);
 
-                                this.userQuestionService.save(userQuestion);
+                                this.userQuestionService.saveUserQuestion(userQuestion);
 
                                 if (question.getCorrectReply().getId() == reply.getId()) {
                                     user.setGamePoints(user.getGamePoints() + question.getQuestionValue());

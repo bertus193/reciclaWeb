@@ -1,5 +1,5 @@
 import React from 'react';
-import { Responsive, SimpleList, required, ReferenceInput, SelectInput, List, Edit, Create, Datagrid, TextField, EditButton, DisabledInput, LongTextInput, SimpleForm, TextInput, ChipField, NumberInput, DateField, RadioButtonGroupInput } from 'admin-on-rest';
+import { Responsive, SimpleList, ReferenceInput, SelectInput, List, Edit, Create, Datagrid, TextField, EditButton, DisabledInput, LongTextInput, SimpleForm, TextInput, ChipField, NumberInput, DateField, RadioButtonGroupInput } from 'admin-on-rest';
 import UrlField from '../urlField';
 import DateTimeInput from 'aor-datetime-input';
 import MyReferenceField from '../MyReferenceField'
@@ -28,15 +28,14 @@ export const UserList = (props) => (
                 <Datagrid bodyOptions={{ stripedRows: true, showRowHover: true }}>
                     <UrlField style={{ textAlign: 'center' }} urlDirection="users" source="id" />
                     <TextField source="username" />
-                    <TextField source="fullName" />
-                    <DateField source="createdDate" showTime locales="es-ES" />
+                    <TextField label="Full name" source="fullName" />
                     <MyReferenceField label="Position" source="lastPosition" reference="positions">
                         <TextField source="id" />
                     </MyReferenceField>
                     <ChipField source="type" />
                     <TextField source="points" />
-                    <TextField source="gamePoints" />
-                    <DateField source="lastGameDate" showTime locales="es-ES" />
+                    <TextField label="Game points" source="gamePoints" />
+                    <DateField label="Last game date" source="lastGameDate" showTime locales="es-ES" />
                     <EditButton />
                 </Datagrid>
             }
@@ -48,19 +47,19 @@ export const UserEdit = (props) => (
     <Edit title={<UserEditTitle />} {...props}>
         <SimpleForm>
             <DisabledInput source="id" />
-            <LongTextInput source="email" />
+            <LongTextInput label="User id" source="email" />
             <TextInput placeholder="" source="password" type="password" />
-            <LongTextInput source="fullName" />
+            <LongTextInput label="Full name" source="fullName" />
             <LongTextInput source="profilePicture" />
-            <DateTimeInput source="createdDate" />
-            <ReferenceInput label="Position" source="lastPosition.id" reference="positions" validate={required}>
+            <DateTimeInput label="Created date" source="createdDate" />
+            <ReferenceInput label="Position" source="lastPosition.id" reference="positions">
                 <SelectInput optionText="id" />
             </ReferenceInput>
             <LongTextInput source="username" />
             <RadioButtonGroupInput source="type" choices={choices} translateChoice={false} />
             <NumberInput source="points" />
-            <NumberInput source="gamePoints" />
-            <DateTimeInput source="lastGameDate" />
+            <NumberInput label="Game points" source="gamePoints" />
+            <DateTimeInput label="Last game date" source="lastGameDate" />
         </SimpleForm>
     </Edit>
 );
@@ -68,19 +67,19 @@ export const UserEdit = (props) => (
 export const UserCreate = (props) => (
     <Create title={"Añadir usuario"} {...props}>
         <SimpleForm>
-            <LongTextInput source="email" />
+            <LongTextInput label="User id" source="email" />
             <TextInput source="password" type="password" />
-            <LongTextInput source="fullName" />
+            <LongTextInput label="Full name" source="fullName" />
             <LongTextInput source="profilePicture" />
-            <DateTimeInput source="createdDate" />
-            <ReferenceInput label="Position" source="lastPosition.id" reference="positions" validate={required} allowEmpty>
+            <DateTimeInput abel="Created date" source="createdDate" />
+            <ReferenceInput label="Position" source="lastPosition.id" reference="positions">
                 <SelectInput optionText="id" />
             </ReferenceInput>
             <LongTextInput source="username" />
             <RadioButtonGroupInput source="type" choices={choices} translateChoice={false} />
             <NumberInput source="points" />
-            <NumberInput source="gamePoints" />
-            <DateTimeInput source="lastGameDate" />
+            <NumberInput label="Created date" source="gamePoints" />
+            <DateTimeInput label="Last game date" source="lastGameDate" />
         </SimpleForm>
     </Create>
 );

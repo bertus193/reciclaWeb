@@ -1,5 +1,5 @@
 import React from 'react';
-import { Responsive, SimpleList, List, Edit, Create, Datagrid, TextField, EditButton, DisabledInput, SimpleForm, TextInput, DateField } from 'admin-on-rest';
+import { LongTextInput, Responsive, SimpleList, List, Edit, Create, Datagrid, TextField, EditButton, DisabledInput, SimpleForm, TextInput, DateField } from 'admin-on-rest';
 import DateTimeInput from 'aor-datetime-input';
 
 export const AppLogList = (props) => (
@@ -16,7 +16,7 @@ export const AppLogList = (props) => (
                 <Datagrid bodyOptions={{ stripedRows: true, showRowHover: true }}>
                     <TextField source="id" />
                     <DateField source="timestamp" showTime locales="es-ES" />
-                    <TextField source="statusName" />
+                    <TextField label="Status name" source="statusName" />
                     <TextField source="exception" />
                     <TextField source="path" />
                     <EditButton />
@@ -37,9 +37,9 @@ export const AppLogEdit = (props) => (
             <DisabledInput source="id" />
             <DateTimeInput source="timestamp" />
             <TextInput source="status" />
-            <TextInput source="statusName" />
+            <TextInput abel="Status name" source="statusName" />
             <TextInput source="exception" />
-            <TextInput source="message" />
+            <LongTextInput source="message" />
             <TextInput source="path" />
         </SimpleForm>
     </Edit>
@@ -50,9 +50,9 @@ export const AppLogCreate = (props) => (
         <SimpleForm>
             <DateTimeInput source="timestamp" />
             <TextInput source="status" />
-            <TextInput source="statusName" />
+            <TextInput abel="Status name" source="statusName" />
             <TextInput source="exception" />
-            <TextInput source="message" />
+            <LongTextInput source="message" />
             <TextInput source="path" />
         </SimpleForm>
     </Create>

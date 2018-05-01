@@ -25,7 +25,7 @@ public class RecycleItemService {
 
 
     public RecycleItem findById(long id) {
-        return recycleItemDAO.findFirstById(id);
+        return recycleItemDAO.findById(id);
     }
 
     public Page<RecycleItem> findByRecycleUser_Id(long id, int pageNumber, int pageSize) {
@@ -56,5 +56,18 @@ public class RecycleItemService {
             recycleItemDAO.save(recycleItem);
         }
 
+    }
+
+    // Admin
+
+    public Page<RecycleItem> findAll(int pageNumber, int pageSize, String sortByColumn, Sort.Direction direction) {
+        Sort sort = new Sort(new Sort.Order(direction, sortByColumn));
+        Pageable request = new PageRequest(pageNumber, pageSize, sort);
+
+        return this.recycleItemDAO.findAll(request);
+    }
+
+    public void deleteById(long id) {
+        this.recycleItemDAO.deleteById(id);
     }
 }

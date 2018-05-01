@@ -1,5 +1,7 @@
 package reciclaServer.models.DAO;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -15,4 +17,11 @@ public interface QuestionDAO extends CrudRepository<Question, Long> {
     Question save(Question question);
 
     Question findById(long id);
+
+
+    // Admin
+
+    Page<Question> findAll(Pageable pageable);
+
+    void deleteById(long id);
 }

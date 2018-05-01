@@ -7,9 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import reciclaServer.models.ItemType;
 import reciclaServer.services.ItemTypeService;
 
-import java.util.ArrayList;
-import java.util.List;
-
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -37,6 +34,6 @@ public class ItemTypeController {
 
     @RequestMapping(value = "/itemTypes", method = RequestMethod.GET)
     public ResponseEntity<?> getAllItemTypes() {
-        return new ResponseEntity<>(this.itemTypeService.findAll(), HttpStatus.OK);
+        return new ResponseEntity<>(this.itemTypeService.findAllOrderByIdAsc(), HttpStatus.OK);
     }
 }
