@@ -25,7 +25,7 @@ import UserIcon from 'material-ui/svg-icons/action/account-circle';
 import PositionIcon from 'material-ui/svg-icons/communication/location-on';
 
 const App = () => (
-    <Admin title="Panel de administración" theme={getMuiTheme(myTheme)} authClient={authClient} restClient={jsonServerRestClient('http://127.0.0.1:8080/admin/')}>
+    <Admin title="Panel de administración" theme={getMuiTheme(myTheme)} authClient={authClient} restClient={jsonServerRestClient('https://reciclaweb-server.herokuapp.com/admin/')}>
         <Resource name="users" icon={UserIcon} list={UserList} edit={UserEdit} create={UserCreate} remove={Delete} />
         <Resource name="positions" icon={PositionIcon} list={PositionList} edit={PositionEdit} create={PositionCreate} remove={Delete} />
         <Resource name="appLogs" options={{ label: 'Logs' }} icon={AppLogIcon} list={AppLogList} edit={AppLogEdit} create={AppLogCreate} remove={Delete} />

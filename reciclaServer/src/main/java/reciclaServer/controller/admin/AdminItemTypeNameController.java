@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reciclaServer.models.ItemTypeName;
-import reciclaServer.models.Position;
+import reciclaServer.models.ItemTypeName;
 import reciclaServer.services.ItemTypeNameService;
 
 import java.security.NoSuchAlgorithmException;
@@ -56,25 +56,25 @@ public class AdminItemTypeNameController {
     }
 
     @RequestMapping(value = "/admin/itemTypeNames", method = RequestMethod.POST)
-    public ResponseEntity<?> createPosition(@RequestBody ItemTypeName itemTypeName) throws NoSuchAlgorithmException {
+    public ResponseEntity<?> createItemTypeName(@RequestBody ItemTypeName itemTypeName) throws NoSuchAlgorithmException {
 
         itemTypeNameService.saveItemTypeName(itemTypeName);
         return new ResponseEntity<>(itemTypeName, HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/admin/itemTypeNames/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<?> updatePosition(@RequestBody Position position, @PathVariable("id") String id) throws NoSuchAlgorithmException {
+    public ResponseEntity<?> updateItemTypeName(@RequestBody ItemTypeName itemTypeName, @PathVariable("id") String id) throws NoSuchAlgorithmException {
         ItemTypeName itemTypeNameFound = itemTypeNameService.findById(Long.parseLong(id));
 
         if(itemTypeNameFound != null){
-            itemTypeNameService.saveItemTypeName(itemTypeNameFound);
+            itemTypeNameService.saveItemTypeName(itemTypeName);
         }
 
-        return new ResponseEntity<>(position, HttpStatus.OK);
+        return new ResponseEntity<>(itemTypeName, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/admin/itemTypeNames/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<?> deletePosition(@PathVariable("id") String id) {
+    public ResponseEntity<?> deleteItemTypeName(@PathVariable("id") String id) {
         ItemTypeName itemTypeNameFound = itemTypeNameService.findById(Long.parseLong(id));
 
         if(itemTypeNameFound != null){

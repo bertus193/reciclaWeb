@@ -42,13 +42,13 @@ export const UserQuestionEdit = (props) => (
         <SimpleForm>
             <DisabledInput source="id" />
             <ReferenceInput label="User" source="user" reference="users">
-                <TextField source="username" />
+                <SelectInput optionText="username" />
             </ReferenceInput>
             <ReferenceInput label="Question" source="question" reference="questions">
-                <TextField source="name" />
+                <SelectInput optionText="name" />
             </ReferenceInput>
-            <ReferenceInput label="User Reply" source="userReply" reference="replies">
-                <TextField source="name" />
+            <ReferenceInput label="User Reply" source="userReply.id" reference="replies">
+                <SelectInput optionText="name" />
             </ReferenceInput>
             <DateTimeInput source="createdDate" />
         </SimpleForm>
@@ -59,13 +59,13 @@ export const UserQuestionCreate = (props) => (
     <Create {...props}>
         <SimpleForm>
             <ReferenceInput label="User" source="user" reference="users">
-                <TextField source="username" />
+                <SelectInput optionText="name" />
             </ReferenceInput>
             <ReferenceInput label="Question" source="question" reference="questions">
-                <TextField source="name" />
+                <SelectInput optionText="name" />
             </ReferenceInput>
             <ReferenceInput label="User Reply" source="userReply" reference="replies">
-                <TextField source="name" />
+                <SelectInput optionText="name" />
             </ReferenceInput>
             <DateTimeInput source="createdDate" />
         </SimpleForm>

@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reciclaServer.models.RecycleItem;
-import reciclaServer.models.Position;
+import reciclaServer.models.RecycleItem;
 import reciclaServer.models.exceptions.ItemTypeNotFoundException;
 import reciclaServer.models.exceptions.StorageNotFoundException;
 import reciclaServer.models.exceptions.UserNotFoundException;
@@ -59,25 +59,25 @@ public class AdminRecycleItemController {
     }
 
     @RequestMapping(value = "/admin/recycleItems", method = RequestMethod.POST)
-    public ResponseEntity<?> createPosition(@RequestBody RecycleItem recycleItem) throws NoSuchAlgorithmException, UserNotFoundException, StorageNotFoundException, ItemTypeNotFoundException {
+    public ResponseEntity<?> createRecycleItem(@RequestBody RecycleItem recycleItem) throws NoSuchAlgorithmException, UserNotFoundException, StorageNotFoundException, ItemTypeNotFoundException {
 
         recycleItemService.saveRecycleItem(recycleItem);
         return new ResponseEntity<>(recycleItem, HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/admin/recycleItems/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<?> updatePosition(@RequestBody Position position, @PathVariable("id") String id) throws NoSuchAlgorithmException, UserNotFoundException, StorageNotFoundException, ItemTypeNotFoundException {
+    public ResponseEntity<?> updateRecycleItem(@RequestBody RecycleItem recycleItem, @PathVariable("id") String id) throws NoSuchAlgorithmException, UserNotFoundException, StorageNotFoundException, ItemTypeNotFoundException {
         RecycleItem recycleItemFound = recycleItemService.findById(Long.parseLong(id));
 
         if(recycleItemFound != null){
-            recycleItemService.saveRecycleItem(recycleItemFound);
+            recycleItemService.saveRecycleItem(recycleItem);
         }
 
-        return new ResponseEntity<>(position, HttpStatus.OK);
+        return new ResponseEntity<>(recycleItem, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/admin/recycleItems/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<?> deletePosition(@PathVariable("id") String id) {
+    public ResponseEntity<?> deleteRecycleItem(@PathVariable("id") String id) {
         RecycleItem recycleItemFound = recycleItemService.findById(Long.parseLong(id));
 
         if(recycleItemFound != null){

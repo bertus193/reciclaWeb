@@ -50,7 +50,6 @@ public class User {
     private Position lastPosition;
 
     @OneToMany(mappedBy = "recycleUser")
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private List<RecycleItem> recycleItems;
 

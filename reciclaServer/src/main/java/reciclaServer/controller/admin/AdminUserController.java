@@ -8,11 +8,11 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import reciclaServer.models.Position;
+import reciclaServer.models.User;
 import reciclaServer.models.RecycleItem;
 import reciclaServer.models.TypeUser;
 import reciclaServer.models.User;
-import reciclaServer.services.PositionService;
+import reciclaServer.services.UserService;
 import reciclaServer.services.RecycleItemService;
 import reciclaServer.services.UserService;
 
@@ -30,23 +30,20 @@ public class AdminUserController {
 
 
     private UserService userService;
-    private PositionService positionService;
 
     private HttpHeaders headers;
 
     @Autowired
     public AdminUserController(
-            UserService userService,
-            PositionService positionService) {
+            UserService userService) {
         this.userService = userService;
-        this.positionService = positionService;
 
         this.headers = new HttpHeaders();
         this.headers.set("Content-Type", "application/json");
         this.headers.set("Access-Control-Expose-Headers", "X-Total-Count");
     }
 
-    @JsonIdentityReference(alwaysAsId = true)
+
     @RequestMapping(value = "/admin/users", method = RequestMethod.GET)
     public ResponseEntity<?> findAll(
             @RequestParam(value = "_start", defaultValue = "10") int _start, @RequestParam(value = "_end", defaultValue = "0") int _end,
@@ -88,16 +85,6 @@ public class AdminUserController {
             user.setPassword(this.checkPassword(user.getPassword()));
         }
 
-        if(user.getLastPosition() != null){
-            Position position = this.positionService.findById(user.getLastPosition().getId());
-            if(position != null){
-                user.setLastPosition(position);
-            }
-            else{
-                user.setLastPosition(null);
-            }
-        }
-
         userService.saveUser(user);
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
@@ -127,7 +114,6 @@ public class AdminUserController {
         User userFound = userService.findById(Long.parseLong(id));
 
         if(userFound != null){
-            userFound.setLastPosition(null);
             userService.deleteById(Long.parseLong(id));
         }
 

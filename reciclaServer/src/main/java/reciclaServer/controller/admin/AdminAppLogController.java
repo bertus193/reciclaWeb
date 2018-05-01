@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reciclaServer.models.AppLog;
-import reciclaServer.models.Position;
+import reciclaServer.models.AppLog;
 import reciclaServer.services.AppLogService;
 
 import java.security.NoSuchAlgorithmException;
@@ -56,25 +56,25 @@ public class AdminAppLogController {
     }
 
     @RequestMapping(value = "/admin/appLogs", method = RequestMethod.POST)
-    public ResponseEntity<?> createPosition(@RequestBody AppLog appLog) throws NoSuchAlgorithmException {
+    public ResponseEntity<?> createAppLog(@RequestBody AppLog appLog) throws NoSuchAlgorithmException {
 
         appLogService.saveAppLog(appLog);
         return new ResponseEntity<>(appLog, HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/admin/appLogs/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<?> updatePosition(@RequestBody Position position, @PathVariable("id") String id) throws NoSuchAlgorithmException {
+    public ResponseEntity<?> updateAppLog(@RequestBody AppLog appLog, @PathVariable("id") String id) throws NoSuchAlgorithmException {
         AppLog appLogFound = appLogService.findById(Long.parseLong(id));
 
         if(appLogFound != null){
-            appLogService.saveAppLog(appLogFound);
+            appLogService.saveAppLog(appLog);
         }
 
-        return new ResponseEntity<>(position, HttpStatus.OK);
+        return new ResponseEntity<>(appLog, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/admin/appLogs/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<?> deletePosition(@PathVariable("id") String id) {
+    public ResponseEntity<?> deleteAppLog(@PathVariable("id") String id) {
         AppLog appLogFound = appLogService.findById(Long.parseLong(id));
 
         if(appLogFound != null){

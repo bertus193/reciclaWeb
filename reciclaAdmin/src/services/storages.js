@@ -37,12 +37,12 @@ export const StorageEdit = (props) => (
     <Edit title={<StorageTitle />} {...props}>
         <SimpleForm>
             <DisabledInput source="id" />
-            <TextInput source="description" />
-            <ReferenceInput label="Item type" source="itemType" reference="itemTypes" validate={required}>
-                <SelectInput optionText="id" />
+            <TextInput source="name" />
+            <ReferenceInput label="Item type" source="itemType.id" reference="itemTypes" validate={required}>
+                <SelectInput optionText="type" />
             </ReferenceInput>
-            <ReferenceInput label="Storage point" source="storagePoint" reference="storagePoints" validate={required}>
-                <SelectInput optionText="id" />
+            <ReferenceInput label="Storage point" source="storagePoint.id" reference="storagePoints" validate={required}>
+                <SelectInput optionText="name" />
             </ReferenceInput>
         </SimpleForm>
     </Edit>
@@ -51,7 +51,7 @@ export const StorageEdit = (props) => (
 export const StorageCreate = (props) => (
     <Create {...props}>
         <SimpleForm>
-            <TextInput source="description" />
+            <TextInput source="name" />
             <ReferenceInput label="Item type" source="itemType" reference="itemTypes" validate={required}>
                 <SelectInput optionText="id" />
             </ReferenceInput>

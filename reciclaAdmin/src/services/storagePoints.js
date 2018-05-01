@@ -34,7 +34,7 @@ export const StoragePointEdit = (props) => (
     <Edit title={<StoragePointTitle />} {...props}>
         <SimpleForm>
             <DisabledInput source="id" />
-            <TextInput source="description" />
+            <TextInput source="name" />
             <ReferenceInput label="Position" source="position.id" reference="positions">
                 <SelectInput optionText="id" />
             </ReferenceInput>
@@ -45,7 +45,7 @@ export const StoragePointEdit = (props) => (
 export const StoragePointCreate = (props) => (
     <Create {...props}>
         <SimpleForm>
-            <TextInput source="description" />
+            <TextInput source="name" />
             <ReferenceInput label="Position" source="position.id" reference="positions">
                 <SelectInput optionText="id" />
             </ReferenceInput>

@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reciclaServer.models.Reply;
-import reciclaServer.models.Position;
+import reciclaServer.models.Reply;
 import reciclaServer.services.ReplyService;
 
 import java.security.NoSuchAlgorithmException;
@@ -56,25 +56,25 @@ public class AdminReplyController {
     }
 
     @RequestMapping(value = "/admin/replies", method = RequestMethod.POST)
-    public ResponseEntity<?> createPosition(@RequestBody Reply reply) throws NoSuchAlgorithmException {
+    public ResponseEntity<?> createReply(@RequestBody Reply reply) throws NoSuchAlgorithmException {
 
         replyService.saveReply(reply);
         return new ResponseEntity<>(reply, HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/admin/replies/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<?> updatePosition(@RequestBody Position position, @PathVariable("id") String id) throws NoSuchAlgorithmException {
+    public ResponseEntity<?> updateReply(@RequestBody Reply reply, @PathVariable("id") String id) throws NoSuchAlgorithmException {
         Reply replyFound = replyService.findById(Long.parseLong(id));
 
         if(replyFound != null){
-            replyService.saveReply(replyFound);
+            replyService.saveReply(reply);
         }
 
-        return new ResponseEntity<>(position, HttpStatus.OK);
+        return new ResponseEntity<>(reply, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/admin/replies/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<?> deletePosition(@PathVariable("id") String id) {
+    public ResponseEntity<?> deleteReply(@PathVariable("id") String id) {
         Reply replyFound = replyService.findById(Long.parseLong(id));
 
         if(replyFound != null){

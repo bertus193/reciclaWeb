@@ -17,8 +17,7 @@ public class EntityIdResolver implements ObjectIdResolver {
     }
 
     @Override
-    public void bindItem(final ObjectIdGenerator.IdKey id,
-final Object pojo) {
+    public void bindItem(final ObjectIdGenerator.IdKey id, final Object pojo) {
 
     }
 

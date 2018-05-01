@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reciclaServer.models.UserQuestion;
-import reciclaServer.models.Position;
+import reciclaServer.models.UserQuestion;
 import reciclaServer.services.UserQuestionService;
 
 import java.security.NoSuchAlgorithmException;
@@ -56,25 +56,25 @@ public class AdminUserQuestionController {
     }
 
     @RequestMapping(value = "/admin/userQuestions", method = RequestMethod.POST)
-    public ResponseEntity<?> createPosition(@RequestBody UserQuestion userQuestion) throws NoSuchAlgorithmException {
+    public ResponseEntity<?> createUserQuestion(@RequestBody UserQuestion userQuestion) throws NoSuchAlgorithmException {
 
         userQuestionService.saveUserQuestion(userQuestion);
         return new ResponseEntity<>(userQuestion, HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/admin/userQuestions/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<?> updatePosition(@RequestBody Position position, @PathVariable("id") String id) throws NoSuchAlgorithmException {
+    public ResponseEntity<?> updateUserQuestion(@RequestBody UserQuestion userQuestion, @PathVariable("id") String id) throws NoSuchAlgorithmException {
         UserQuestion userQuestionFound = userQuestionService.findById(Long.parseLong(id));
 
         if(userQuestionFound != null){
-            userQuestionService.saveUserQuestion(userQuestionFound);
+            userQuestionService.saveUserQuestion(userQuestion);
         }
 
-        return new ResponseEntity<>(position, HttpStatus.OK);
+        return new ResponseEntity<>(userQuestion, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/admin/userQuestions/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<?> deletePosition(@PathVariable("id") String id) {
+    public ResponseEntity<?> deleteUserQuestion(@PathVariable("id") String id) {
         UserQuestion userQuestionFound = userQuestionService.findById(Long.parseLong(id));
 
         if(userQuestionFound != null){

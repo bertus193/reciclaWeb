@@ -35,8 +35,8 @@ export const ReplyEdit = (props) => (
         <SimpleForm>
             <DisabledInput source="id" />
             <TextInput source="name" />
-            <ReferenceInput label="Question" source="correctReply" reference="questions" validate={required}>
-                <SelectInput optionText="id" />
+            <ReferenceInput label="Question" source="question" reference="questions" validate={required}>
+                <SelectInput optionText="name" />
             </ReferenceInput>
         </SimpleForm>
     </Edit>
@@ -46,8 +46,8 @@ export const ReplyCreate = (props) => (
     <Create {...props}>
         <SimpleForm>
             <TextInput source="name" />
-            <ReferenceInput label="Question" source="correctReply" reference="questions" validate={required}>
-                <SelectInput optionText="id" />
+            <ReferenceInput label="Question" source="question" reference="questions" validate={required}>
+                <SelectInput optionText="name" />
             </ReferenceInput>
         </SimpleForm>
     </Create>

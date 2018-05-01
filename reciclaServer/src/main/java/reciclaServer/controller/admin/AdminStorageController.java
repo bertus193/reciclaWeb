@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reciclaServer.models.Storage;
-import reciclaServer.models.Position;
+import reciclaServer.models.Storage;
 import reciclaServer.services.StorageService;
 
 import java.security.NoSuchAlgorithmException;
@@ -56,25 +56,25 @@ public class AdminStorageController {
     }
 
     @RequestMapping(value = "/admin/storages", method = RequestMethod.POST)
-    public ResponseEntity<?> createPosition(@RequestBody Storage storage) throws NoSuchAlgorithmException {
+    public ResponseEntity<?> createStorage(@RequestBody Storage storage) throws NoSuchAlgorithmException {
 
         storageService.saveStorage(storage);
         return new ResponseEntity<>(storage, HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/admin/storages/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<?> updatePosition(@RequestBody Position position, @PathVariable("id") String id) throws NoSuchAlgorithmException {
+    public ResponseEntity<?> updateStorage(@RequestBody Storage storage, @PathVariable("id") String id) throws NoSuchAlgorithmException {
         Storage storageFound = storageService.findById(Long.parseLong(id));
 
         if(storageFound != null){
-            storageService.saveStorage(storageFound);
+            storageService.saveStorage(storage);
         }
 
-        return new ResponseEntity<>(position, HttpStatus.OK);
+        return new ResponseEntity<>(storage, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/admin/storages/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<?> deletePosition(@PathVariable("id") String id) {
+    public ResponseEntity<?> deleteStorage(@PathVariable("id") String id) {
         Storage storageFound = storageService.findById(Long.parseLong(id));
 
         if(storageFound != null){

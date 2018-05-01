@@ -7,8 +7,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import reciclaServer.models.StoragePoint;
 import reciclaServer.models.Position;
+import reciclaServer.models.StoragePoint;
+import reciclaServer.models.StoragePoint;
+import reciclaServer.services.PositionService;
 import reciclaServer.services.StoragePointService;
 
 import java.security.NoSuchAlgorithmException;
@@ -19,6 +21,9 @@ public class AdminStoragePointController {
 
     @Autowired
     private StoragePointService storagePointService;
+
+    @Autowired
+    private PositionService positionService;
 
     private HttpHeaders headers;
 
@@ -56,25 +61,26 @@ public class AdminStoragePointController {
     }
 
     @RequestMapping(value = "/admin/storagePoints", method = RequestMethod.POST)
-    public ResponseEntity<?> createPosition(@RequestBody StoragePoint storagePoint) throws NoSuchAlgorithmException {
+    public ResponseEntity<?> createStoragePoint(@RequestBody StoragePoint storagePoint) throws NoSuchAlgorithmException {
 
         storagePointService.saveStoragePoint(storagePoint);
         return new ResponseEntity<>(storagePoint, HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/admin/storagePoints/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<?> updatePosition(@RequestBody Position position, @PathVariable("id") String id) throws NoSuchAlgorithmException {
+    public ResponseEntity<?> updateStoragePoint(@RequestBody StoragePoint storagePoint, @PathVariable("id") String id) throws NoSuchAlgorithmException {
         StoragePoint storagePointFound = storagePointService.findById(Long.parseLong(id));
 
         if(storagePointFound != null){
-            storagePointService.saveStoragePoint(storagePointFound);
+
+            storagePointService.saveStoragePoint(storagePoint);
         }
 
-        return new ResponseEntity<>(position, HttpStatus.OK);
+        return new ResponseEntity<>(storagePoint, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/admin/storagePoints/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<?> deletePosition(@PathVariable("id") String id) {
+    public ResponseEntity<?> deleteStoragePoint(@PathVariable("id") String id) {
         StoragePoint storagePointFound = storagePointService.findById(Long.parseLong(id));
 
         if(storagePointFound != null){

@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reciclaServer.models.ItemType;
-import reciclaServer.models.Position;
+import reciclaServer.models.ItemType;
 import reciclaServer.services.ItemTypeService;
 
 import java.security.NoSuchAlgorithmException;
@@ -56,25 +56,25 @@ public class AdminItemTypeController {
     }
 
     @RequestMapping(value = "/admin/itemTypes", method = RequestMethod.POST)
-    public ResponseEntity<?> createPosition(@RequestBody ItemType itemType) throws NoSuchAlgorithmException {
+    public ResponseEntity<?> createItemType(@RequestBody ItemType itemType) throws NoSuchAlgorithmException {
 
         itemTypeService.saveItemType(itemType);
         return new ResponseEntity<>(itemType, HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/admin/itemTypes/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<?> updatePosition(@RequestBody Position position, @PathVariable("id") String id) throws NoSuchAlgorithmException {
+    public ResponseEntity<?> updateItemType(@RequestBody ItemType itemType, @PathVariable("id") String id) throws NoSuchAlgorithmException {
         ItemType itemTypeFound = itemTypeService.findById(Long.parseLong(id));
 
         if(itemTypeFound != null){
-            itemTypeService.saveItemType(itemTypeFound);
+            itemTypeService.saveItemType(itemType);
         }
 
-        return new ResponseEntity<>(position, HttpStatus.OK);
+        return new ResponseEntity<>(itemType, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/admin/itemTypes/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<?> deletePosition(@PathVariable("id") String id) {
+    public ResponseEntity<?> deleteItemType(@PathVariable("id") String id) {
         ItemType itemTypeFound = itemTypeService.findById(Long.parseLong(id));
 
         if(itemTypeFound != null){
