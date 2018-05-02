@@ -1,19 +1,34 @@
 import { AUTH_LOGIN, AUTH_LOGOUT, AUTH_ERROR, AUTH_CHECK } from 'admin-on-rest';
+import axios from 'axios';
+import AppConfig from './config/config'
+import sha256 from 'sha256'
 
 export default (type, params) => {
     // called when the user attempts to log in
     if (type === AUTH_LOGIN) {
-        console.log(params)
         var username = params.username;
-        var password = params.password;
-        // accept all username/password combinations
-        if (username === "admin" && password === "admin") {
-            localStorage.setItem('username', username);
-            return Promise.resolve();
+        var password = sha256(params.password);
+
+        const data = {
+            "email": username,
+            "password": password
+        };
+
+        var headers = {
+            'Content-Type': 'application/json',
         }
-        else {
+
+        return axios.post(AppConfig.apiEndPoint + '/users/login', data, headers).then(function (response) {
+            if (response.data.type === "Admin") {
+                localStorage.setItem('username', username);
+                return Promise.resolve();
+            }
+            else {
+                return Promise.reject();
+            }
+        }).catch(function (error) {
             return Promise.reject();
-        }
+        });
     }
     // called when the user clicks on the logout button
     if (type === AUTH_LOGOUT) {

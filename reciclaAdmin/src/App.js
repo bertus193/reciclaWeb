@@ -18,6 +18,8 @@ import authClient from './authClient';
 import myTheme from './myTheme';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
+import AppConfig from './config/config'
+
 import './App.css';
 
 const httpClient = (url, options = {}) => {
@@ -28,7 +30,7 @@ const httpClient = (url, options = {}) => {
     options.headers.set('x-admin-token', 'c772e65a-4afe-4d70-a61b-eeaabe93cc53')
     return fetchUtils.fetchJson(url, options);
 }
-const restClient = jsonServerRestClient('https://reciclaweb-server.herokuapp.com/admin/', httpClient);
+const restClient = jsonServerRestClient(AppConfig.apiEndPoint + AppConfig.apiEndPointSubPath, httpClient);
 
 const App = () => (
     <Admin title="Panel de administración" theme={getMuiTheme(myTheme)} authClient={authClient} restClient={restClient}>

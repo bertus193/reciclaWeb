@@ -5,9 +5,12 @@
     "dependencies": {
         "admin-on-rest": "^1.4.1",
         "aor-datetime-input": "^1.0.6",
+        "axios": "^0.18.0",
+        "npm": "^6.0.0",
         "react": "^16.3.2",
         "react-dom": "^16.3.2",
-        "react-scripts": "1.1.4"
+        "react-scripts": "1.1.4",
+        "sha256": "^0.2.0"
     },
     "scripts": {
         "start": "react-scripts start",
