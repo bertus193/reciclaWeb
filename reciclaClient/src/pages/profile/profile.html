@@ -20,7 +20,7 @@
                         <ion-card *ngIf="user">
                             <ion-card-header>
                                 <span style="float: left;">{{ user.fullName }}</span>
-                                <span style="float: right;" *ngIf="user.type == 'Normal'">
+                                <span style="float: right;">
                                     <button color="dark" ion-button clear class="editButton" (tap)="goEditProfile()">
                                         <ion-icon name="md-create"></ion-icon>
                                     </button>

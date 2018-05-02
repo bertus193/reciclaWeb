@@ -1,5 +1,5 @@
 import React from 'react';
-import { ImageInput, ImageField, DateField, ReferenceInput, SelectInput, Responsive, SimpleList, List, Edit, Create, Datagrid, TextField, EditButton, DisabledInput, SimpleForm, TextInput } from 'admin-on-rest';
+import { ImageField, DateField, ReferenceInput, SelectInput, Responsive, SimpleList, List, Edit, Create, Datagrid, TextField, EditButton, DisabledInput, SimpleForm, TextInput } from 'admin-on-rest';
 import MyReferenceField from '../fieldsAndInputs/MyReferenceField'
 import DateTimeInput from 'aor-datetime-input';
 import UrlField from '../fieldsAndInputs/MyUrlField';

@@ -120,6 +120,8 @@ public class AdminUserController {
                 user.setPassword(this.checkPassword(user.getPassword()));
             }
 
+            user.setCustomized(true);
+
             userService.saveUser(user);
         }
 

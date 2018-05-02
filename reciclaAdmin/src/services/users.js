@@ -1,5 +1,5 @@
 import React from 'react';
-import { ImageInput, Responsive, SimpleList, ReferenceInput, SelectInput, List, Edit, Create, Datagrid, TextField, EditButton, DisabledInput, SimpleForm, TextInput, ChipField, NumberInput, DateField, RadioButtonGroupInput } from 'admin-on-rest';
+import { ImageField, Responsive, SimpleList, ReferenceInput, SelectInput, List, Edit, Create, Datagrid, TextField, EditButton, DisabledInput, SimpleForm, TextInput, ChipField, NumberInput, DateField, RadioButtonGroupInput } from 'admin-on-rest';
 import UrlField from '../fieldsAndInputs/MyUrlField';
 import DateTimeInput from 'aor-datetime-input';
 import MyReferenceField from '../fieldsAndInputs/MyReferenceField'
@@ -48,6 +48,7 @@ export const UserEdit = (props) => (
     <Edit title={<UserEditTitle />} {...props}>
         <SimpleForm>
             <DisabledInput source="id" />
+            <ImageField source="profilePicture" />
             <TextInput source="username" />
             <TextInput placeholder="" source="password" type="password" />
             <TextInput label="Full name" source="fullName" />

@@ -64,6 +64,10 @@ public class User {
     @Transient
     private List<UserQuestion> questionsDone;
 
+    private boolean customized;
+
+    private boolean enabled;
+
 
     public User() { //Needed for JPA
 
@@ -204,5 +208,21 @@ public class User {
 
     public void setQuestionsDone(List<UserQuestion> questionsDone) {
         this.questionsDone = questionsDone;
+    }
+
+    public boolean isCustomized() {
+        return customized;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setCustomized(boolean customized) {
+        this.customized = customized;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 }

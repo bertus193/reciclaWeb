@@ -102,6 +102,8 @@ public class UserController {
                 user.setType(TypeUser.Admin);
             }
 
+            user.setCustomized(true);
+
             userService.saveUser(user);
             return new ResponseEntity<>(user, HttpStatus.OK);
         } else {

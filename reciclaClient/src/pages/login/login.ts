@@ -150,6 +150,7 @@ export class LoginPage {
         user.username = this.config.debugUserEmail
         user.fullName = 'Debug user'
         user.accessToken = 'DEBUG_MODE'
+        user.profilePicture = 'https://reciclaweb.000webhostapp.com/uploads/avatars/Debug.jpg'
         user.type = TypeUser.Normal
 
         return this.findAndUpdateOrCreateUser(user).timeout(this.config.defaultTimeoutTime).map((res: any) => {
@@ -190,7 +191,7 @@ export class LoginPage {
         return this.findLoginUserByEmail(loginUser.email, loginUser.accessToken, loginUser.type).map(
             res => {
                 if (res.status == 200) {
-                    if (loginUser.usersAreDifferent(res.user) == true) {
+                    if (loginUser.customized == false && loginUser.usersAreDifferent(res.user) == true) {
                         var accessToken = res.user.accessToken
                         var foundUser: User = res.user
                         foundUser = this.copyToFoundUser(foundUser, loginUser)

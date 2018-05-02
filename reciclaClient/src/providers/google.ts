@@ -1,8 +1,6 @@
 import { Injectable, Inject } from '@angular/core';
 import { Http, RequestOptions, Headers } from '@angular/http';
 import { ApplicationConfig, APP_CONFIG_TOKEN } from '../app/app-config';
-import { ItemTypeProvider } from './api/itemTypeProvider';
-
 
 @Injectable()
 export class GoogleCloudServiceProvider {
@@ -15,7 +13,6 @@ export class GoogleCloudServiceProvider {
 
     constructor(
         public http: Http,
-        private itemTypeProvider: ItemTypeProvider,
         @Inject(APP_CONFIG_TOKEN) private config: ApplicationConfig) { }
 
     getLabels(imageUrl: string) {
