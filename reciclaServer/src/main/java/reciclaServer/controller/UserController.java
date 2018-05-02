@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reciclaServer.models.Position;
 import reciclaServer.models.RecycleItem;
+import reciclaServer.models.TypeUser;
 import reciclaServer.models.User;
 import reciclaServer.services.PositionService;
 import reciclaServer.services.RecycleItemService;
@@ -92,6 +93,14 @@ public class UserController {
             user.setType(currentUser.getType());
             user.setPoints(currentUser.getPoints());
             user.setGamePoints(currentUser.getGamePoints());
+
+
+            if(currentUser.getType() == TypeUser.Admin){
+                user.setEmail(currentUser.getEmail());
+                user.setUsername(currentUser.getUsername());
+                user.setPassword(currentUser.getPassword());
+                user.setType(TypeUser.Admin);
+            }
 
             userService.saveUser(user);
             return new ResponseEntity<>(user, HttpStatus.OK);

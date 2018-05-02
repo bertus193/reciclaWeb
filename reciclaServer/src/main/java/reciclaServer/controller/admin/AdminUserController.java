@@ -103,9 +103,17 @@ public class AdminUserController {
         User userFound = userService.findById(Long.parseLong(id));
 
         if(userFound != null){
+            user.setEmail(userFound.getEmail());
 
             if(user.getType() != TypeUser.Normal){
                 user.setPassword("");
+            }
+
+            if(userFound.getType() == TypeUser.Admin){
+                user.setEmail(userFound.getEmail());
+                user.setUsername(userFound.getUsername());
+                user.setPassword(userFound.getPassword());
+                user.setType(TypeUser.Admin);
             }
 
             if(!user.getPassword().isEmpty() && !userFound.getPassword().equals(user.getPassword())){
