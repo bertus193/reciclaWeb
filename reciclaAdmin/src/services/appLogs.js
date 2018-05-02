@@ -1,6 +1,6 @@
 import React from 'react';
 import { LongTextInput, Responsive, SimpleList, List, Edit, Create, Datagrid, TextField, EditButton, DisabledInput, SimpleForm, TextInput, DateField } from 'admin-on-rest';
-import UrlField from '../urlField';
+import UrlField from '../fieldsAndInputs/MyUrlField';
 import DateTimeInput from 'aor-datetime-input';
 
 export const AppLogList = (props) => (

@@ -1,6 +1,6 @@
 import { AUTH_LOGIN, AUTH_LOGOUT, AUTH_ERROR, AUTH_CHECK } from 'admin-on-rest';
 import axios from 'axios';
-import AppConfig from './config/config'
+import AppConfig from './config'
 import sha256 from 'sha256'
 
 export default (type, params) => {

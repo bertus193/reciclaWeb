@@ -1,8 +1,9 @@
 import React from 'react';
-import { Responsive, SimpleList, ReferenceInput, SelectInput, List, Edit, Create, Datagrid, TextField, EditButton, DisabledInput, SimpleForm, TextInput, ChipField, NumberInput, DateField, RadioButtonGroupInput } from 'admin-on-rest';
-import UrlField from '../urlField';
+import { ImageInput, Responsive, SimpleList, ReferenceInput, SelectInput, List, Edit, Create, Datagrid, TextField, EditButton, DisabledInput, SimpleForm, TextInput, ChipField, NumberInput, DateField, RadioButtonGroupInput } from 'admin-on-rest';
+import UrlField from '../fieldsAndInputs/MyUrlField';
 import DateTimeInput from 'aor-datetime-input';
-import MyReferenceField from '../MyReferenceField'
+import MyReferenceField from '../fieldsAndInputs/MyReferenceField'
+import TextImageField from '../fieldsAndInputs/textImageField'
 
 const UserEditTitle = ({ record }) => {
     return <span>Editar usuario: {record ? `${record.id}` : ''}</span>;
@@ -27,7 +28,7 @@ export const UserList = (props) => (
             medium={
                 <Datagrid bodyOptions={{ stripedRows: true, showRowHover: true }}>
                     <UrlField style={{ textAlign: 'center' }} urlDirection="users" source="id" />
-                    <TextField source="username" />
+                    <TextImageField source="username" source2="profilePicture" />
                     <TextField label="Full name" source="fullName" />
                     <MyReferenceField label="Position" source="lastPosition" reference="positions">
                         <TextField source="id" />
@@ -46,8 +47,8 @@ export const UserList = (props) => (
 export const UserEdit = (props) => (
     <Edit title={<UserEditTitle />} {...props}>
         <SimpleForm>
-            <TextInput source="username" />
             <DisabledInput source="id" />
+            <TextInput source="username" />
             <TextInput placeholder="" source="password" type="password" />
             <TextInput label="Full name" source="fullName" />
             <TextInput label="URL profile picture" source="profilePicture" />

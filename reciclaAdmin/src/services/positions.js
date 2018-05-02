@@ -1,6 +1,6 @@
 import React from 'react';
 import { Responsive, SimpleList, List, Edit, Create, Datagrid, TextField, EditButton, DisabledInput, SimpleForm, TextInput } from 'admin-on-rest';
-import UrlField from '../urlField';
+import UrlField from '../fieldsAndInputs/MyUrlField';
 
 export const PositionList = (props) => (
     <List {...props}>

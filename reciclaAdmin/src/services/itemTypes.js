@@ -1,6 +1,6 @@
 import React from 'react';
 import { NumberInput, Responsive, SimpleList, List, Edit, Create, Datagrid, TextField, EditButton, DisabledInput, SimpleForm, TextInput } from 'admin-on-rest';
-import UrlField from '../urlField';
+import UrlField from '../fieldsAndInputs/MyUrlField';
 
 export const ItemTypeList = (props) => (
     <List {...props} title="Recycle Item Type List">

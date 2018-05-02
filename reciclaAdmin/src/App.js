@@ -14,13 +14,13 @@ import { StorageList, StorageEdit, StorageCreate } from './services/storages'
 import { UserQuestionList, UserQuestionEdit, UserQuestionCreate } from './services/userQuestions'
 import { ItemTypeNameList, ItemTypeNameEdit, ItemTypeNameCreate } from './services/itemTypeNames'
 
-import authClient from './authClient';
-import myTheme from './myTheme';
+import authClient from './config/authClient';
+import myTheme from './config/myTheme';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 import AppConfig from './config/config'
 
-import './App.css';
+import './style/App.css';
 
 const httpClient = (url, options = {}) => {
     if (!options.headers) {

@@ -1,8 +1,9 @@
 import React from 'react';
-import { ImageField, DateField, ReferenceInput, SelectInput, Responsive, SimpleList, List, Edit, Create, Datagrid, TextField, EditButton, DisabledInput, SimpleForm, TextInput } from 'admin-on-rest';
-import MyReferenceField from '../MyReferenceField'
+import { ImageInput, ImageField, DateField, ReferenceInput, SelectInput, Responsive, SimpleList, List, Edit, Create, Datagrid, TextField, EditButton, DisabledInput, SimpleForm, TextInput } from 'admin-on-rest';
+import MyReferenceField from '../fieldsAndInputs/MyReferenceField'
 import DateTimeInput from 'aor-datetime-input';
-import UrlField from '../urlField';
+import UrlField from '../fieldsAndInputs/MyUrlField';
+import TextImageField from '../fieldsAndInputs/textImageField'
 
 export const RecycleItemList = (props) => (
     <List {...props} title="Recycle Item List">
@@ -17,7 +18,7 @@ export const RecycleItemList = (props) => (
             medium={
                 <Datagrid bodyOptions={{ stripedRows: true, showRowHover: true }}>
                     <UrlField urlDirection="recycleItems" source="id" />
-                    <TextField source="name" />
+                    <TextImageField source="name" source2="image" />
                     <MyReferenceField label="Recycled by" source="recycleUser" reference="users">
                         <TextField source="username" />
                     </MyReferenceField>

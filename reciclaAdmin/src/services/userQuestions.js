@@ -1,8 +1,8 @@
 import React from 'react';
 import { DateField, ReferenceInput, SelectInput, Responsive, SimpleList, List, Edit, Create, Datagrid, TextField, EditButton, DisabledInput, SimpleForm } from 'admin-on-rest';
-import MyReferenceField from '../MyReferenceField'
+import MyReferenceField from '../fieldsAndInputs/MyReferenceField'
 import DateTimeInput from 'aor-datetime-input';
-import UrlField from '../urlField';
+import UrlField from '../fieldsAndInputs/MyUrlField';
 
 export const UserQuestionList = (props) => (
     <List {...props} title="User Question List">

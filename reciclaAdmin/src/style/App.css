@@ -1,0 +1,11 @@
+th{
+    color:rgba(0, 0, 0, 0.870588) !important;
+}
+
+.avatarImage{
+    height:28px;
+    width:28px;
+    border-radius: 50%;
+    vertical-align: middle;
+    margin-right:10px;
+}

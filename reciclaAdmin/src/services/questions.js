@@ -1,7 +1,7 @@
 import React from 'react';
 import { ReferenceInput, required, SelectInput, NumberInput, Responsive, SimpleList, List, Edit, Create, Datagrid, TextField, EditButton, DisabledInput, SimpleForm, TextInput } from 'admin-on-rest';
-import MyReferenceField from '../MyReferenceField'
-import UrlField from '../urlField';
+import MyReferenceField from '../fieldsAndInputs/MyReferenceField'
+import UrlField from '../fieldsAndInputs/MyUrlField';
 
 
 export const QuestionList = (props) => (

@@ -1,7 +1,7 @@
 import React from 'react';
 import { SelectInput, ReferenceInput, Responsive, SimpleList, List, Edit, Create, Datagrid, TextField, EditButton, DisabledInput, SimpleForm, TextInput } from 'admin-on-rest';
-import MyReferenceField from '../MyReferenceField'
-import UrlField from '../urlField';
+import MyReferenceField from '../fieldsAndInputs/MyReferenceField'
+import UrlField from '../fieldsAndInputs/MyUrlField';
 
 export const StoragePointList = (props) => (
     <List {...props} title="Storage Point List">

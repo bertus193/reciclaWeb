@@ -1,7 +1,7 @@
 import React from 'react';
 import { SelectInput, ReferenceInput, Responsive, SimpleList, List, Edit, Create, Datagrid, TextField, EditButton, DisabledInput, SimpleForm, TextInput } from 'admin-on-rest';
-import UrlField from '../urlField';
-import MyReferenceField from '../MyReferenceField'
+import UrlField from '../fieldsAndInputs/MyUrlField';
+import MyReferenceField from '../fieldsAndInputs/MyReferenceField'
 
 export const ItemTypeNameList = (props) => (
     <List {...props} title="Item Type Name List">
