@@ -20,7 +20,7 @@ export class ApplicationConfig {
 export let APP_CONFIG: ApplicationConfig = new ApplicationConfig()
 // https://reciclaweb-server.herokuapp.com || http://127.0.0.1:8080
 APP_CONFIG.appName = 'ReciclaWeb App'
-APP_CONFIG.apiEndpoint = 'http://127.0.0.1:8080'
+APP_CONFIG.apiEndpoint = 'https://reciclaweb-server.herokuapp.com'
 APP_CONFIG.uploadFilesUrl = 'https://reciclaweb.000webhostapp.com'
 APP_CONFIG.DEBUG_MODE = true
 APP_CONFIG.defaultTimeoutTime = 10000

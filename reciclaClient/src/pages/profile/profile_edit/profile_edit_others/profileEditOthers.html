@@ -6,6 +6,14 @@
                     <ion-col>
                         <ion-list inset>
                             <ion-item style="padding-left: 0;">
+                                <ion-label>Colectivo</ion-label>
+                                <ion-select formControlName="collective">
+                                    <ion-option *ngFor="let col of collectives" [value]="col.id">
+                                        {{col.name}}
+                                    </ion-option>
+                                </ion-select>
+                            </ion-item>
+                            <ion-item style="padding-left: 0;">
                                 <ion-label>Fecha de nacimiento</ion-label>
                                 <ion-datetime displayFormat="MM/DD/YYYY" formControlName="birthdate"></ion-datetime>
                             </ion-item>
@@ -14,7 +22,7 @@
                             </ion-item>
                             <ion-item>
                                 <ion-label>Género</ion-label>
-                                <ion-select ormControlName="gender">
+                                <ion-select formControlName="gender">
                                     <ion-option value="Masculino">Masculino</ion-option>
                                     <ion-option value="Femenino">Femenino</ion-option>
                                     <ion-option value="NSNC">Otro</ion-option>

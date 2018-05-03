@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reciclaServer.models.User;
 import reciclaServer.models.EnumUser;
+import reciclaServer.services.CollectiveService;
 import reciclaServer.services.UserService;
 
 import java.math.BigInteger;
@@ -23,13 +24,16 @@ public class AdminUserController {
 
 
     private UserService userService;
+    private CollectiveService collectiveService;
 
     private HttpHeaders headers;
 
     @Autowired
     public AdminUserController(
-            UserService userService) {
+            UserService userService,
+            CollectiveService collectiveService) {
         this.userService = userService;
+        this.collectiveService = collectiveService;
 
         this.headers = new HttpHeaders();
         this.headers.set("Content-Type", "application/json");
@@ -86,6 +90,7 @@ public class AdminUserController {
         user.setLastGameDate(new Timestamp(System.currentTimeMillis()));
         user.setUsername(user.getEmail());
         user.setEnabled(true);
+        user.setCollective(this.collectiveService.findByName("Alumno"));
 
         userService.saveUser(user);
         return new ResponseEntity<>(user, HttpStatus.CREATED);

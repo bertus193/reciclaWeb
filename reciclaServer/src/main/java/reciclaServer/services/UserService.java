@@ -22,8 +22,8 @@ public class UserService {
         this.userDAO = userDAO;
     }
 
-    public void saveUser(User user) {
-        userDAO.save(user);
+    public User saveUser(User user) {
+        return userDAO.save(user);
     }
 
 

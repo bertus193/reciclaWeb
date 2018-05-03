@@ -9,6 +9,7 @@ import reciclaServer.models.Position;
 import reciclaServer.models.RecycleItem;
 import reciclaServer.models.EnumUser;
 import reciclaServer.models.User;
+import reciclaServer.services.CollectiveService;
 import reciclaServer.services.PositionService;
 import reciclaServer.services.RecycleItemService;
 import reciclaServer.services.UserService;
@@ -25,15 +26,18 @@ public class UserController {
     private UserService userService;
     private RecycleItemService recycleItemService;
     private PositionService positionService;
+    private CollectiveService collectiveService;
 
     @Autowired
     public UserController(
             UserService userService,
             PositionService positionService,
-            RecycleItemService recycleItemService) {
+            RecycleItemService recycleItemService,
+            CollectiveService collectiveService) {
         this.userService = userService;
         this.positionService = positionService;
         this.recycleItemService = recycleItemService;
+        this.collectiveService = collectiveService;
     }
 
     @RequestMapping(value = "/private/users/username/{username:.+}", method = RequestMethod.GET)
@@ -55,7 +59,9 @@ public class UserController {
             return new ResponseEntity<Void>(HttpStatus.CONFLICT);
         }
 
-        userService.saveUser(user);
+        user.setCollective(this.collectiveService.findByName("Alumno"));
+
+        user = userService.saveUser(user);
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 

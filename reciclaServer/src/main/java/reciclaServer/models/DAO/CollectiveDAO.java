@@ -9,6 +9,10 @@ import java.util.List;
 
 public interface CollectiveDAO extends CrudRepository<Collective, Long> {
 
+    List<Collective> findAllByOrderByIdAsc();
+
+    Collective findByName(String name);
+
     // Admin
 
     Page<Collective> findAll(Pageable pageable);
@@ -19,6 +23,6 @@ public interface CollectiveDAO extends CrudRepository<Collective, Long> {
 
     Collective save(Collective collective);
 
-    List<Collective> findAll();
+
 }
 

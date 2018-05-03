@@ -19,6 +19,9 @@ export class User {
     questionsDone: any
     enabled: boolean
     collective: any
+    gender: string
+    school: string
+    birthdate: any
 
     public constructor() {
         var currentDate = new Date()
@@ -38,7 +41,10 @@ export class User {
         this.lastGameDate = new Date(currentDate.getTime() - (1000 * 60 * 60 * 24))
         this.questionsDone = []
         this.enabled = true
-        this.collective = null
+        this.collective = null /*Instantiated on backend*/
+        this.gender = "NSNC"
+        this.school = null
+        this.birthdate = new Date()
     }
 
     public usersAreDifferent(foundUser: User): boolean {

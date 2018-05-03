@@ -66,6 +66,8 @@ export const UserEdit = (props) => (
             <ReferenceInput label="Colectivo" source="collective.id" reference="collectives">
                 <SelectInput optionText="name" />
             </ReferenceInput>
+            <DateTimeInput label="Birthdate" source="birthdate" />
+            <TextInput source="school" />
         </SimpleForm>
     </Edit>
 );

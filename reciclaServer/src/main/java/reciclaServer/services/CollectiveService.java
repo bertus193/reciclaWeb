@@ -38,11 +38,15 @@ public class CollectiveService {
         return this.collectiveDAO.findById(id);
     }
 
+    public Collective findByName(String name) {
+        return this.collectiveDAO.findByName(name);
+    }
+
     public void deleteById(long id) {
         this.collectiveDAO.deleteById(id);
     }
 
     public List<Collective> getAllCollectives(){
-        return this.collectiveDAO.findAll();
+        return this.collectiveDAO.findAllByOrderByIdAsc();
     }
 }
