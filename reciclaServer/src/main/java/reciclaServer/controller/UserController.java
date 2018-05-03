@@ -36,9 +36,9 @@ public class UserController {
         this.recycleItemService = recycleItemService;
     }
 
-    @RequestMapping(value = "/private/users/email/{email:.+}", method = RequestMethod.GET)
-    public ResponseEntity<?> getUserByEmail(@PathVariable("email") String email) {
-        User user = userService.findByEmail(email);
+    @RequestMapping(value = "/private/users/username/{username:.+}", method = RequestMethod.GET)
+    public ResponseEntity<?> getUserByEmail(@PathVariable("username") String username) {
+        User user = userService.findByUsername(username);
 
         if (user == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -88,7 +88,7 @@ public class UserController {
 
             //Estos valores no deben cambiar, por tanto, se dejan como estaban
             user.setId(currentUser.getId());
-            user.setEmail(currentUser.getEmail());
+            user.setUsername(currentUser.getUsername());
             user.setCreatedDate(currentUser.getCreatedDate());
             user.setType(currentUser.getType());
             user.setPoints(currentUser.getPoints());

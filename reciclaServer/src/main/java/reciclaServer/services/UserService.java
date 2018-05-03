@@ -31,6 +31,8 @@ public class UserService {
         return userDAO.findFirstByEmail(email);
     }
 
+    public User findByUsername(String username){ return userDAO.findFirstByUsername(username);}
+
     public boolean isUserExist(String email) {
         return findByEmail(email) != null;
     }

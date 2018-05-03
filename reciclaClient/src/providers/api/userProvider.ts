@@ -31,10 +31,10 @@ export class UserProvider {
         return this.http.post(this.config.apiEndpoint + "/users", JSON.stringify(user), this.requestJsonOptions).timeout(this.config.defaultTimeoutTime)
     }
 
-    public findUserByEmail(email: string, token: string, userType: string) {
+    public findUserByUsername(username: string, token: string, userType: string) {
         this.requestJsonOptions.headers.set('X-Auth-Token', token)
         this.requestJsonOptions.headers.set('user-type', userType)
-        return this.http.get(this.config.apiEndpoint + "/private/users/email/" + email, this.requestJsonOptions).timeout(this.config.defaultTimeoutTime)
+        return this.http.get(this.config.apiEndpoint + "/private/users/username/" + username, this.requestJsonOptions).timeout(this.config.defaultTimeoutTime)
     }
 
     public getUserRecycleItems(id: number, token: string, page: number, perPage: number) {

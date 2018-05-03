@@ -48,14 +48,14 @@ export class ProfileEditPage {
         var email: string = this.profileEditForm.get("email").value
         var fullName: string = this.profileEditForm.get("fullName").value
 
-        if (this.user.username != email || this.user.fullName != fullName || this.user.profilePicture != this.image) {
+        if (this.user.email != email || this.user.fullName != fullName || this.user.profilePicture != this.image) {
             this.loading = this.loadingCtrl.create({
                 content: 'Guardando usuario...'
             });
             this.loading.present()
 
 
-            this.user.username = email
+            this.user.email = email
             this.user.fullName = fullName
             if (this.image != this.user.profilePicture) {
                 this.user.profilePicture = this.image

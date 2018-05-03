@@ -23,6 +23,7 @@ public interface UserDAO extends CrudRepository<User, Long> {
 
     User findFirstByEmailAndPassword(String email, String password);
 
+    User findFirstByUsername(String username);
 
     //Admin
 

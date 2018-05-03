@@ -28,8 +28,8 @@
                             </ion-card-header>
                             <img [src]="user.profilePicture" onError="this.src = 'assets/imgs/quieroReciclar.png'" />
                             <ion-card-content>
-                                <span *ngIf="user.type == 'Normal'; else showUsername">
-                                    <p>Email: {{ user.username }}</p>
+                                <span>
+                                    <p>Email: {{ user.email }}</p>
                                 </span>
                                 <p>Fecha registro: {{ user.createdDate | date: 'dd/MM/yyyy H:mm'}}</p>
                                 <ion-row class="pointsBox">
@@ -60,7 +60,3 @@
     </div>
 
 </ion-content>
-
-<ng-template #showUsername>
-    <p>Usuario: {{ user.username }}</p>
-</ng-template>

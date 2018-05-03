@@ -188,7 +188,7 @@ export class LoginPage {
 
     findAndUpdateOrCreateUser(loginUser: User): Observable<User> {
 
-        return this.findLoginUserByEmail(loginUser.email, loginUser.accessToken, loginUser.type).map(
+        return this.findLoginUserByUsername(loginUser.username, loginUser.accessToken, loginUser.type).map(
             res => {
                 if (res.status == 200) {
                     if (loginUser.customized == false && loginUser.usersAreDifferent(res.user) == true) {
@@ -238,11 +238,11 @@ export class LoginPage {
         return foundUser
     }
 
-    findLoginUserByEmail(email: string, accessToken: string, userType: string): Observable<{ user: User, status: number }> {
+    findLoginUserByUsername(username: string, accessToken: string, userType: string): Observable<{ user: User, status: number }> {
         var user: User
         var status: number
 
-        return this.userProvider.findUserByEmail(email, accessToken, userType).map(res => {
+        return this.userProvider.findUserByUsername(username, accessToken, userType).map(res => {
             status = res.status
 
             if (status === 200) {
