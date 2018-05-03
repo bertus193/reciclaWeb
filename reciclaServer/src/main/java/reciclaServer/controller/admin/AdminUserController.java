@@ -1,6 +1,5 @@
 package reciclaServer.controller.admin;
 
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
@@ -9,21 +8,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reciclaServer.models.User;
-import reciclaServer.models.RecycleItem;
-import reciclaServer.models.TypeUser;
-import reciclaServer.models.User;
-import reciclaServer.services.UserService;
-import reciclaServer.services.RecycleItemService;
+import reciclaServer.models.EnumUser;
 import reciclaServer.services.UserService;
 
-import javax.servlet.http.HttpServletRequest;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -79,20 +71,21 @@ public class AdminUserController {
         }
 
         if(user.getType() == null){
-            user.setType(TypeUser.Normal);
+            user.setType(EnumUser.Normal);
         }
 
-        if(user.getType() != TypeUser.Normal){
+        if(user.getType() != EnumUser.Normal){
             user.setPassword("");
         }
 
-        if(!user.getPassword().isEmpty()){
+        if(user.getPassword() != null && !user.getPassword().isEmpty()){
             user.setPassword(this.checkPassword(user.getPassword()));
         }
 
         user.setCreatedDate(new Timestamp(System.currentTimeMillis()));
         user.setLastGameDate(new Timestamp(System.currentTimeMillis()));
         user.setUsername(user.getEmail());
+        user.setEnabled(true);
 
         userService.saveUser(user);
         return new ResponseEntity<>(user, HttpStatus.CREATED);
@@ -103,17 +96,17 @@ public class AdminUserController {
         User userFound = userService.findById(Long.parseLong(id));
 
         if(userFound != null){
-            user.setEmail(userFound.getEmail());
+            user.setUsername(userFound.getUsername());
 
-            if(user.getType() != TypeUser.Normal){
+            if(user.getType() != EnumUser.Normal){
                 user.setPassword("");
             }
 
-            if(userFound.getType() == TypeUser.Admin){
+            if(userFound.getType() == EnumUser.Admin){
                 user.setEmail(userFound.getEmail());
                 user.setUsername(userFound.getUsername());
                 user.setPassword(userFound.getPassword());
-                user.setType(TypeUser.Admin);
+                user.setType(EnumUser.Admin);
             }
 
             if(!user.getPassword().isEmpty() && !userFound.getPassword().equals(user.getPassword())){

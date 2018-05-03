@@ -13,6 +13,7 @@ import { StoragePointList, StoragePointEdit, StoragePointCreate } from './servic
 import { StorageList, StorageEdit, StorageCreate } from './services/storages'
 import { UserQuestionList, UserQuestionEdit, UserQuestionCreate } from './services/userQuestions'
 import { ItemTypeNameList, ItemTypeNameEdit, ItemTypeNameCreate } from './services/itemTypeNames'
+import { CollectiveList, CollectiveEdit, CollectiveCreate } from './services/collectives'
 
 import authClient from './config/authClient';
 import myTheme from './config/myTheme';
@@ -37,6 +38,7 @@ const App = () => (
         <Resource name="recycleItems" options={{ label: 'Recycle items' }} list={RecycleItemList} edit={RecycleItemEdit} create={RecycleItemCreate} remove={Delete} />
         <Resource name="appLogs" options={{ label: 'Logs' }} list={AppLogList} edit={AppLogEdit} create={AppLogCreate} remove={Delete} />
         <Resource name="users" list={UserList} edit={UserEdit} create={UserCreate} remove={Delete} />
+        <Resource name="collectives" list={CollectiveList} edit={CollectiveEdit} create={CollectiveCreate} remove={Delete} />
         <Resource name="storagePoints" options={{ label: 'Storage points' }} list={StoragePointList} edit={StoragePointEdit} create={StoragePointCreate} remove={Delete} />
         <Resource name="storages" list={StorageList} edit={StorageEdit} create={StorageCreate} remove={Delete} />
         <Resource name="itemTypeNames" options={{ label: 'Item type names' }} list={ItemTypeNameList} edit={ItemTypeNameEdit} create={ItemTypeNameCreate} remove={Delete} />

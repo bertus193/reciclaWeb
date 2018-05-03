@@ -1,5 +1,5 @@
 import React from 'react';
-import { ImageField, Responsive, SimpleList, ReferenceInput, SelectInput, List, Edit, Create, Datagrid, TextField, EditButton, DisabledInput, SimpleForm, TextInput, ChipField, NumberInput, DateField, RadioButtonGroupInput } from 'admin-on-rest';
+import { BooleanInput, ImageField, Responsive, SimpleList, ReferenceInput, SelectInput, List, Edit, Create, Datagrid, TextField, EditButton, DisabledInput, SimpleForm, TextInput, ChipField, NumberInput, DateField, RadioButtonGroupInput } from 'admin-on-rest';
 import UrlField from '../fieldsAndInputs/MyUrlField';
 import DateTimeInput from 'aor-datetime-input';
 import MyReferenceField from '../fieldsAndInputs/MyReferenceField'
@@ -62,6 +62,10 @@ export const UserEdit = (props) => (
             <NumberInput source="points" />
             <NumberInput label="Game points" source="gamePoints" />
             <DateTimeInput label="Last game date" source="lastGameDate" />
+            <BooleanInput label="Usuario activo" source="enabled" />
+            <ReferenceInput label="Colectivo" source="collective.id" reference="collectives">
+                <SelectInput optionText="name" />
+            </ReferenceInput>
         </SimpleForm>
     </Edit>
 );
@@ -79,7 +83,9 @@ export const UserCreate = (props) => (
             <RadioButtonGroupInput source="type" choices={choices} translateChoice={false} />
             <NumberInput source="points" />
             <NumberInput label="Game points" source="gamePoints" />
-            <DateTimeInput label="Last game date" source="lastGameDate" />
+            <ReferenceInput label="Colectivo" source="collective.id" reference="collectives">
+                <SelectInput optionText="name" />
+            </ReferenceInput>
         </SimpleForm>
     </Create>
 );

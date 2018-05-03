@@ -1,6 +1,6 @@
 package reciclaServer.models;
 
-public enum TypeUser {
+public enum EnumUser {
     Normal,
     Facebook,
     Instagram,

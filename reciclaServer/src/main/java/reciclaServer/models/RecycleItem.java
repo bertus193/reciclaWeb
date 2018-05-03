@@ -24,7 +24,6 @@ public class RecycleItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @NotNull
     private String name;
 
     private String image;

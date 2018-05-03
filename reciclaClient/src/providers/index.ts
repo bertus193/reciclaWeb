@@ -10,6 +10,7 @@ import { ItemTypeProvider } from "./api/itemTypeProvider";
 import { StoragesProvider } from "./api/storagesProvider";
 import { QuestionProvider } from "./api/questionProvider";
 import { UserQuestionProvider } from "./api/userQuestionProvider";
+import { CollectiveProvider } from "./api/collectiveProvider";
 
 export const APP_PROVIDERS = [
     SessionProvider,
@@ -23,5 +24,6 @@ export const APP_PROVIDERS = [
     StoragesProvider,
     ItemTypeProvider,
     QuestionProvider,
-    UserQuestionProvider
+    UserQuestionProvider,
+    CollectiveProvider
 ];

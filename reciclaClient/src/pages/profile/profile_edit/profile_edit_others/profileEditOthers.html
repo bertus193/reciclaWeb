@@ -1,0 +1,35 @@
+<ion-grid style="height: 100%">
+    <ion-row align-items-center text-center style="height: 100%">
+        <ion-col>
+            <form [formGroup]="profileEditOthersForm" (ngSubmit)="editPassword_Button()">
+                <ion-row>
+                    <ion-col>
+                        <ion-list inset>
+                            <ion-item style="padding-left: 0;">
+                                <ion-label>Fecha de nacimiento</ion-label>
+                                <ion-datetime displayFormat="MM/DD/YYYY" formControlName="birthdate"></ion-datetime>
+                            </ion-item>
+                            <ion-item>
+                                <ion-input type="text" placeholder="Escuela / Facultad" formControlName="school"></ion-input>
+                            </ion-item>
+                            <ion-item>
+                                <ion-label>Género</ion-label>
+                                <ion-select ormControlName="gender">
+                                    <ion-option value="Masculino">Masculino</ion-option>
+                                    <ion-option value="Femenino">Femenino</ion-option>
+                                    <ion-option value="NSNC">Otro</ion-option>
+                                </ion-select>
+                            </ion-item>
+                        </ion-list>
+                    </ion-col>
+                </ion-row>
+
+                <ion-row>
+                    <ion-col class="signup-col">
+                        <button ion-button class="submit-btn" full type="submit" [disabled]="!profileEditOthersForm.valid">Modificar datos</button>
+                    </ion-col>
+                </ion-row>
+            </form>
+        </ion-col>
+    </ion-row>
+</ion-grid>

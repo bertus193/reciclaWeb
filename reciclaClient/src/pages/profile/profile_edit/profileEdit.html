@@ -5,7 +5,10 @@
     <ion-toolbar>
         <ion-segment [(ngModel)]="defaultPage" style="margin-bottom: -15px">
             <ion-segment-button value="profileEdit">
-                <div class="segmentName">Datos del perfil</div>
+                <div class="segmentName">Usuario</div>
+            </ion-segment-button>
+            <ion-segment-button value="profileEditOthers">
+                <div class="segmentName">Otros</div>
             </ion-segment-button>
             <ion-segment-button value="profileEditPassword">
                 <div class="segmentName">Contraseña</div>
@@ -61,6 +64,9 @@
         </ion-list>
         <ion-list *ngSwitchCase="'profileEditPassword'" style="height: 100%">
             <page-profileEditPassword></page-profileEditPassword>
+        </ion-list>
+        <ion-list *ngSwitchCase="'profileEditOthers'" style="height: 100%">
+            <page-profileEditOthers></page-profileEditOthers>
         </ion-list>
     </div>
 </ion-content>

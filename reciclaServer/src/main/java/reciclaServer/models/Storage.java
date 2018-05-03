@@ -22,7 +22,6 @@ public class Storage {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private long id;
 
-    @NotNull
     private String name;
 
     @OneToMany(mappedBy = "storage")

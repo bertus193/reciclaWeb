@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.*;
 import reciclaServer.config.EntityIdResolver;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -26,7 +25,6 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @NotNull
     private String email;
 
     private String password;
@@ -43,7 +41,7 @@ public class User {
     private Timestamp createdDate;
 
     @Enumerated(EnumType.STRING) //Fix: by default enums are persisted as int using oridinal
-    private TypeUser type;
+    private EnumUser type;
 
     @ManyToOne
     @JoinColumn(name = "last_position")
@@ -65,6 +63,19 @@ public class User {
     private List<UserQuestion> questionsDone;
 
     private boolean enabled;
+
+    @ManyToOne
+    @JoinColumn(name = "collective")
+    private Collective collective;
+
+
+    @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss.SSSXXX") //Formato necesario para panel admin (new Date())
+    private Timestamp birthdate;
+
+    private String school;
+
+    @Enumerated(EnumType.STRING) //Fix: by default enums are persisted as int using oridinal
+    private EnumGender gender;
 
 
     public User() { //Needed for JPA
@@ -168,11 +179,11 @@ public class User {
         this.password = password;
     }
 
-    public TypeUser getType() {
+    public EnumUser getType() {
         return type;
     }
 
-    public void setType(TypeUser type) {
+    public void setType(EnumUser type) {
         this.type = type;
     }
 
@@ -214,5 +225,37 @@ public class User {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public Collective getCollective() {
+        return collective;
+    }
+
+    public void setCollective(Collective collective) {
+        this.collective = collective;
+    }
+
+    public Timestamp getBirthdate() {
+        return birthdate;
+    }
+
+    public void setBirthdate(Timestamp birthdate) {
+        this.birthdate = birthdate;
+    }
+
+    public String getSchool() {
+        return school;
+    }
+
+    public void setSchool(String school) {
+        this.school = school;
+    }
+
+    public EnumGender getGender() {
+        return gender;
+    }
+
+    public void setGender(EnumGender gender) {
+        this.gender = gender;
     }
 }

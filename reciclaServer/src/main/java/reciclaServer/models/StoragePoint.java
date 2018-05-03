@@ -22,7 +22,6 @@ public class StoragePoint {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private long id;
 
-    @NotNull
     private String name;
 
     @OneToMany(mappedBy = "storagePoint")
