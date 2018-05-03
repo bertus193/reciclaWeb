@@ -17,7 +17,6 @@ export class User {
     gamePoints: number
     lastGameDate: Date
     questionsDone: any
-    customized: boolean
     enabled: boolean
 
     public constructor() {
@@ -37,7 +36,6 @@ export class User {
         this.gamePoints = 0
         this.lastGameDate = new Date(currentDate.getTime() - (1000 * 60 * 60 * 24))
         this.questionsDone = []
-        this.customized = false
         this.enabled = true
     }
 

@@ -191,19 +191,7 @@ export class LoginPage {
         return this.findLoginUserByUsername(loginUser.username, loginUser.accessToken, loginUser.type).map(
             res => {
                 if (res.status == 200) {
-                    if (loginUser.customized == false && loginUser.usersAreDifferent(res.user) == true) {
-                        var accessToken = res.user.accessToken
-                        var foundUser: User = res.user
-                        foundUser = this.copyToFoundUser(foundUser, loginUser)
-                        return this.userProvider.saveUser(foundUser, accessToken).subscribe(_ => {
-                            return loginUser
-                        }, error => {
-                            this.notificationProvider.presentTopToast("Error guardando el usuario.")
-                        })
-                    }
-                    else {
-                        return res.user
-                    }
+                    return res.user
                 } else {
                     return null
                 }
@@ -227,16 +215,6 @@ export class LoginPage {
             });
     }
 
-    public copyToFoundUser(foundUser: User, user: User): User {
-        foundUser.email = user.email
-        foundUser.username = user.username
-        foundUser.fullName = user.fullName
-        foundUser.profilePicture = user.profilePicture
-        foundUser.accessToken = user.accessToken
-        foundUser.password = user.password
-
-        return foundUser
-    }
 
     findLoginUserByUsername(username: string, accessToken: string, userType: string): Observable<{ user: User, status: number }> {
         var user: User

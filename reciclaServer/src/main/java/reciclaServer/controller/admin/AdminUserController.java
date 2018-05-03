@@ -92,7 +92,7 @@ public class AdminUserController {
 
         user.setCreatedDate(new Timestamp(System.currentTimeMillis()));
         user.setLastGameDate(new Timestamp(System.currentTimeMillis()));
-        user.setEmail(user.getUsername());
+        user.setUsername(user.getEmail());
 
         userService.saveUser(user);
         return new ResponseEntity<>(user, HttpStatus.CREATED);
@@ -119,8 +119,6 @@ public class AdminUserController {
             if(!user.getPassword().isEmpty() && !userFound.getPassword().equals(user.getPassword())){
                 user.setPassword(this.checkPassword(user.getPassword()));
             }
-
-            user.setCustomized(true);
 
             userService.saveUser(user);
         }

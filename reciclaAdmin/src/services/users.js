@@ -28,7 +28,7 @@ export const UserList = (props) => (
             medium={
                 <Datagrid bodyOptions={{ stripedRows: true, showRowHover: true }}>
                     <UrlField style={{ textAlign: 'center' }} urlDirection="users" source="id" />
-                    <TextImageField source="username" source2="profilePicture" />
+                    <TextImageField source="email" source2="profilePicture" />
                     <TextField label="Full name" source="fullName" />
                     <MyReferenceField label="Position" source="lastPosition" reference="positions">
                         <TextField source="id" />
@@ -49,7 +49,8 @@ export const UserEdit = (props) => (
         <SimpleForm>
             <DisabledInput source="id" />
             <ImageField source="profilePicture" />
-            <TextInput source="username" />
+            <DisabledInput source="username" />
+            <TextInput source="email" />
             <TextInput placeholder="" source="password" type="password" />
             <TextInput label="Full name" source="fullName" />
             <TextInput label="URL profile picture" source="profilePicture" />
@@ -68,7 +69,7 @@ export const UserEdit = (props) => (
 export const UserCreate = (props) => (
     <Create title={"Añadir usuario"} {...props}>
         <SimpleForm>
-            <TextInput source="username" />
+            <TextInput source="email" />
             <TextInput source="password" type="password" />
             <TextInput label="Full name" source="fullName" />
             <TextInput label="URL profile picture" source="profilePicture" />

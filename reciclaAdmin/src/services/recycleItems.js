@@ -46,6 +46,7 @@ export const RecycleItemEdit = (props) => (
         <SimpleForm>
             <DisabledInput source="id" />
             <ImageField source="image" />
+            <TextInput label="URL Image" source="image" />
             <TextInput source="name" />
             <ReferenceInput label="Recycle user" source="recycleUser" reference="users">
                 <SelectInput optionText="username" />
