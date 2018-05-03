@@ -17,6 +17,7 @@ import reciclaServer.services.UserService;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -41,8 +42,15 @@ public class UserController {
     }
 
     @RequestMapping(value = "/private/users/username/{username:.+}", method = RequestMethod.GET)
-    public ResponseEntity<?> getUserByEmail(@PathVariable("username") String username) {
+    public ResponseEntity<?> getUserByUsername(HttpServletRequest request, @PathVariable("username") String username) {
         User user = userService.findByUsername(username);
+
+        String token = (String) request.getAttribute("token");
+        if(token != null){
+            user.setAccessToken(token);
+            user = userService.saveUser(user);
+        }
+
 
         if (user == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -149,6 +157,10 @@ public class UserController {
             User userFound = userService.findFirstByEmailAndPassword(user.getEmail(), user.getPassword());
 
             if (userFound != null) {
+
+                //userFound.setAccessToken(UUID.randomUUID().toString());
+                //userFound = userService.saveUser(userFound);
+
                 return new ResponseEntity<>(userFound, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(HttpStatus.FORBIDDEN);
