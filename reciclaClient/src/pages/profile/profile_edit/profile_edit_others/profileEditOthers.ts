@@ -73,7 +73,7 @@ export class ProfileEditOthersPage {
         if (school != null && school != '') {
             this.user.school = school
         }
-        if (school != null && school != '') {
+        if (birthdate != null && birthdate != '') {
             var date = new Date(birthdate)
             if (date != null) {
                 this.user.birthdate = date.toISOString()

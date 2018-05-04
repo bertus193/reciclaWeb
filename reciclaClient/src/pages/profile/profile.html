@@ -19,7 +19,8 @@
                     <ion-col>
                         <ion-card *ngIf="user">
                             <ion-card-header>
-                                <span style="float: left;">{{ user.fullName }}</span>
+                                <span style="float: left;">
+                                    <ion-badge style="vertical-align: middle" *ngIf="user.collective != null">{{user.collective.abbreviation}}</ion-badge> {{ user.fullName }}</span>
                                 <span style="float: right;">
                                     <button color="dark" ion-button clear class="editButton" (tap)="goEditProfile()">
                                         <ion-icon name="md-create"></ion-icon>
@@ -28,10 +29,22 @@
                             </ion-card-header>
                             <img [src]="user.profilePicture" onError="this.src = 'assets/imgs/quieroReciclar.png'" />
                             <ion-card-content>
-                                <span>
-                                    <p>Email: {{ user.email }}</p>
-                                </span>
-                                <p>Fecha registro: {{ user.createdDate | date: 'dd/MM/yyyy H:mm'}}</p>
+                                <ion-item>
+                                    <ion-icon name="md-mail" item-start></ion-icon>
+                                    <span item-end>{{ user.email }}</span>
+                                </ion-item>
+                                <ion-item>
+                                    <ion-icon name="md-school" item-start></ion-icon>
+                                    <span item-end>Escuela politécnica superior</span>
+                                </ion-item>
+                                <ion-item>
+                                    Fecha de registro
+                                    <ion-badge item-end>{{ user.createdDate | date: 'dd/MM/yyyy'}}</ion-badge>
+                                </ion-item>
+                                <ion-item>
+                                    Año de nacimiento
+                                    <ion-badge item-end>{{ user.birthdate | date: 'dd/MM/yyyy'}}</ion-badge>
+                                </ion-item>
                                 <ion-row class="pointsBox">
                                     <ion-col>
                                         <p>Puntos reciclando</p>
