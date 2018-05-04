@@ -46,15 +46,4 @@ export class User {
         this.school = null
         this.birthdate = new Date()
     }
-
-    public usersAreDifferent(foundUser: User): boolean {
-        var out = false
-        if (this.email != foundUser.email || this.username != foundUser.username ||
-            this.fullName != foundUser.fullName || this.profilePicture != foundUser.profilePicture ||
-            this.accessToken != foundUser.accessToken ||
-            (this.password != foundUser.password) && this.password != '' && this.password != null) {
-            out = true
-        }
-        return out
-    }
 }

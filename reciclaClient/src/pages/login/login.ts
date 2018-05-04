@@ -76,14 +76,14 @@ export class LoginPage {
 
                     var user: User = new User()
 
-                    user.email = profile['id']
-                    user.username = profile['email']
+                    //user.email = profile['email']
+                    user.username = profile['id']
                     user.fullName = profile['name']
                     user.profilePicture = profile['picture_large']['data']['url']
                     user.accessToken = fbUser.authResponse.accessToken
                     user.type = TypeUser.Facebook
 
-                    return this.findAndUpdateOrCreateUser(user).timeout(this.config.defaultTimeoutTime).map((res: any) => {
+                    return this.findOrCreateUser(user).timeout(this.config.defaultTimeoutTime).map((res: any) => {
                         if (res.value != null) {
                             user = res.value
                         } else {
@@ -110,14 +110,14 @@ export class LoginPage {
 
                 var user: User = new User()
 
-                user.email = instagramUser.data.id
-                user.username = instagramUser.data.username
+                //user.email = instagramUser.data.username
+                user.username = instagramUser.data.id
                 user.fullName = instagramUser.data.full_name
                 user.profilePicture = instagramUser.data.profile_picture
                 user.accessToken = tokenRes.access_token
                 user.type = TypeUser.Instagram
 
-                this.findAndUpdateOrCreateUser(user).timeout(this.config.defaultTimeoutTime).subscribe((res: any) => {
+                this.findOrCreateUser(user).timeout(this.config.defaultTimeoutTime).subscribe((res: any) => {
                     if (res.value != null) {
                         user = res.value
                     } else {
@@ -153,7 +153,7 @@ export class LoginPage {
         user.profilePicture = 'https://reciclaweb.000webhostapp.com/uploads/avatars/Debug.jpg'
         user.type = TypeUser.Normal
 
-        return this.findAndUpdateOrCreateUser(user).timeout(this.config.defaultTimeoutTime).map((res: any) => {
+        return this.findOrCreateUser(user).timeout(this.config.defaultTimeoutTime).map((res: any) => {
             if (res.value != null) {
                 user = res.value
             } else {
@@ -186,8 +186,7 @@ export class LoginPage {
         }
     }
 
-    findAndUpdateOrCreateUser(loginUser: User): Observable<User> {
-
+    findOrCreateUser(loginUser: User): Observable<User> {
         return this.findLoginUserByUsername(loginUser.username, loginUser.accessToken, loginUser.type).map(
             res => {
                 if (res.status == 200) {

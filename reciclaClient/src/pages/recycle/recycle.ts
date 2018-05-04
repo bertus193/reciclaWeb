@@ -258,7 +258,7 @@ export class RecyclePage {
     }
 
     public uploadImage(targetPath) {
-        this.loading.setContent('Subiendo la imagen')
+        this.loading.setContent('Subiendo la imagen...')
 
         var date = new Date()
         var filename = this.user.id + "_" + date.getTime() + ".png";
@@ -284,11 +284,70 @@ export class RecyclePage {
 
         const fileTransfer: TransferObject = this.transfer.create();
 
-        this.upload(targetPath, urlUpload, options, fileTransfer, urlUploadedFiles).catch(error => {
+        this.uploadFileWithTimeout(fileTransfer, targetPath, urlUpload, options).then(res => {
+            this.loading.setContent('Obteniendo el tipo de objeto...')
+            if (res == true) {
+                this.getItemInfo(urlUploadedFiles)
+            }
+            else {
+                this.loading.dismiss()
+                this.notificationProvider.presentAlertError('La imagen no ha sido cargada correctamente.')
+            }
+        }).catch(error => {
             this.loading.dismiss()
             this.notificationProvider.presentAlertError('Error de conexión con el servidor de imágenes.')
         })
 
+
+
+    }
+
+    uploadFileWithTimeout(fileTransfer: TransferObject, targetPath, urlUpload, options): Promise<boolean> {
+        return this.utilsProvider.timeoutPromise(this.config.defaultTimeoutTime + 5000,
+            fileTransfer.upload(targetPath, urlUpload, options).then(data => {
+                return true
+            }, error => {
+                return false
+            })
+        )
+    }
+
+    public getItemInfo(urlUploadedFiles) {
+        this.googleCloudServiceProvider.getLabels(urlUploadedFiles).timeout(this.config.defaultTimeoutTime).subscribe((result: any) => {
+
+            var labelResponseList: LabelResponse[] = []
+            labelResponseList = result.json().responses[0].labelAnnotations;
+            if (labelResponseList == null || labelResponseList.length == 0) {
+                labelResponseList = []
+                var myLabelResponse = new LabelResponse("empty", 1)
+                labelResponseList.push(myLabelResponse)
+            }
+            this.temporalName = labelResponseList[0].description
+
+            this.getTypeFromDB(labelResponseList).subscribe((res: boolean) => {
+
+                if (res == true) {
+                    this.googleCloudServiceProvider.translateToSpanish(this.temporalName).subscribe(res => {
+                        this.recycleItem.name = res.json().data.translations[0].translatedText
+                        this.recycleItem.name = this.recycleItem.name.charAt(0).toUpperCase() + this.recycleItem.name.substr(1).toLowerCase()
+                        this.loading.setContent("Obteniendo la ubicación del usuario...")
+                        this.getUserPosition()
+                    }, err => { // translate
+                        this.loading.dismiss()
+                        this.notificationProvider.presentTopToast("Error interno en la obtención del nombre.")
+                    })
+                }
+                else {
+                    this.loading.dismiss()
+                }
+            }, error => { // this.getTypeFromDB
+                this.loading.dismiss()
+                this.notificationProvider.presentTopToast("Error obteniendo el tipo de objeto")
+            })
+        }, err => { // Vision
+            this.loading.dismiss()
+            this.notificationProvider.presentTopToast("Error a la hora de utilizar la imagen.")
+        })
     }
 
     public getTypeFromDB(labelResponseList): Observable<boolean> {
@@ -302,50 +361,6 @@ export class RecyclePage {
             })
         })
     }
-
-    public upload(targetPath, urlUpload, options, fileTransfer, urlUploadedFiles) {
-        // Use the FileTransfer to upload the image
-        return this.utilsProvider.timeoutPromise(this.config.defaultTimeoutTime * 2,
-            fileTransfer.upload(targetPath, urlUpload, options).then(data => {
-                this.googleCloudServiceProvider.getLabels(urlUploadedFiles).timeout(this.config.defaultTimeoutTime).subscribe((result: any) => {
-                    var labelResponseList: LabelResponse[];
-                    labelResponseList = result.json().responses[0].labelAnnotations;
-                    if (labelResponseList.length > 0) {
-                        this.temporalName = labelResponseList[0].description
-
-                        this.getTypeFromDB(labelResponseList).subscribe((res: boolean) => {
-                            if (res == true) {
-                                this.googleCloudServiceProvider.translateToSpanish(this.temporalName).subscribe(res => {
-                                    this.recycleItem.name = res.json().data.translations[0].translatedText
-                                    this.recycleItem.name = this.recycleItem.name.charAt(0).toUpperCase() + this.recycleItem.name.substr(1).toLowerCase()
-                                    this.loading.setContent("Obteniendo la ubicación del usuario...")
-                                    this.getUserPosition()
-                                }, err => { // translate
-                                    this.loading.dismiss()
-                                    this.notificationProvider.presentTopToast("Error interno en la obtención del nombre.")
-                                })
-                            }
-                            else {
-                                this.loading.dismiss()
-                            }
-                        }, error => { // this.getTypeFromDB
-                            this.loading.dismiss()
-                            this.notificationProvider.presentTopToast("Error obteniendo el tipo de objeto")
-                        })
-                    }
-
-                }, err => { // Vision
-                    this.loading.dismiss()
-                    this.notificationProvider.presentTopToast("Error a la hora de utilizar la imagen.")
-                })
-
-            }, err => { //upload
-                this.loading.dismiss()
-                this.notificationProvider.presentTopToast("Error a la hora de subir la imagen.")
-            })
-        )
-    }
-
 
     showRadioModifyItemType(): Promise<boolean> {
         return new Promise((resolve, reject) => {
