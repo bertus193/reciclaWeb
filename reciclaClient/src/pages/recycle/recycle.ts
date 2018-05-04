@@ -164,11 +164,14 @@ export class RecyclePage {
         };
 
         // Get the data of an image 
-        this.camera.getPicture(options).then((imagePath) => {
-            var fileUri = 'file://' + imagePath;
+        this.camera.getPicture(options).then((base64ImageCamera) => {
+            var fileUri = 'file://' + base64ImageCamera;
             //var image = `data:image/png;base64,${imagePath}`; //load image on view
-            this.crop.crop(fileUri, { quality: 100, targetWidth: 650, targetHeight: 650 }).then((image) => {
-                this.uploadImage(image)
+            this.crop.crop(fileUri, { quality: 100, targetWidth: 650, targetHeight: 650 }).then((imagePath) => {
+                this.utilsProvider.toBase64(imagePath).then(base64Image => {
+                    base64Image = base64Image.substring(base64Image.indexOf(',') + 1)
+                    this.processImage(base64Image, imagePath)
+                })
             }, error => { //crop.crop
                 this.loading.dismiss()
                 if (error.message != "User cancelled") {
@@ -257,7 +260,7 @@ export class RecyclePage {
 
     }
 
-    public uploadImage(targetPath) {
+    public processImage(base64Image, imagePath) {
         this.loading.setContent('Subiendo la imagen...')
 
         var date = new Date()
@@ -265,11 +268,11 @@ export class RecyclePage {
 
         var url = this.config.uploadFilesUrl
         var urlUpload = url + "/upload.php"
-        var urlUploadedFiles = url + '/uploads/' + filename
+        var urlUploadedFile = url + '/uploads/' + filename
 
         this.recycleItem = new RecycleItem()
         this.recycleItem.id = null
-        this.recycleItem.image = urlUploadedFiles
+        this.recycleItem.image = urlUploadedFile
         this.recycleItem.recycleUser = this.user.id
         this.recycleItem.createdDate = new Date()
 
@@ -284,10 +287,10 @@ export class RecyclePage {
 
         const fileTransfer: TransferObject = this.transfer.create();
 
-        this.uploadFileWithTimeout(fileTransfer, targetPath, urlUpload, options).then(res => {
+        this.uploadFileWithTimeout(fileTransfer, imagePath, urlUpload, options).then(res => {
             this.loading.setContent('Obteniendo el tipo de objeto...')
             if (res == true) {
-                this.getItemInfo(urlUploadedFiles)
+                this.getItemInfo(base64Image)
             }
             else {
                 this.loading.dismiss()
@@ -312,8 +315,8 @@ export class RecyclePage {
         )
     }
 
-    public getItemInfo(urlUploadedFiles) {
-        this.googleCloudServiceProvider.getLabels(urlUploadedFiles).timeout(this.config.defaultTimeoutTime).subscribe((result: any) => {
+    public getItemInfo(base64Image) {
+        this.googleCloudServiceProvider.getLabels(base64Image).timeout(this.config.defaultTimeoutTime).subscribe((result: any) => {
 
             var labelResponseList: LabelResponse[] = []
             labelResponseList = result.json().responses[0].labelAnnotations;

@@ -15,15 +15,13 @@ export class GoogleCloudServiceProvider {
         public http: Http,
         @Inject(APP_CONFIG_TOKEN) private config: ApplicationConfig) { }
 
-    getLabels(imageUrl: string) {
+    getLabels(base64Image: string) {
         //this.base64.encodeFile(imagePath).then((base64Image: string) => {
         const body = {
             "requests": [
                 {
                     "image": {
-                        "source": {
-                            "imageUri": imageUrl
-                        }
+                        "content": base64Image
                     },
                     "features": [
                         {

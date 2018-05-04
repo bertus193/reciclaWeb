@@ -75,4 +75,20 @@ export class UtilsProvider {
 
         return Promise.race([promise, wrapPromise]);
     }
+
+    toBase64(url: string) {
+        return new Promise<string>(function (resolve) {
+            var xhr = new XMLHttpRequest();
+            xhr.responseType = 'blob';
+            xhr.onload = function () {
+                var reader = new FileReader();
+                reader.onloadend = function () {
+                    resolve(reader.result);
+                }
+                reader.readAsDataURL(xhr.response);
+            };
+            xhr.open('GET', url);
+            xhr.send();
+        });
+    }
 }
