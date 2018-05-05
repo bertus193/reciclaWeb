@@ -44,15 +44,14 @@ public class UserController {
     public ResponseEntity<?> getUserByUsername(HttpServletRequest request, @PathVariable("username") String username) {
         User user = userService.findByUsername(username);
 
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
         String token = (String) request.getAttribute("token");
         if(token != null){
             user.setAccessToken(token);
             user = userService.saveUser(user);
-        }
-
-
-        if (user == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
         return new ResponseEntity<>(user, HttpStatus.OK);

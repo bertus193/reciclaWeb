@@ -2,14 +2,11 @@ package reciclaServer.config;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-import reciclaServer.models.AppLog;
 import reciclaServer.models.User;
 import reciclaServer.services.AppLogService;
 import reciclaServer.services.UserService;
 import reciclaServer.utils.JsonReader;
-import springfox.documentation.spring.web.json.Json;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,7 +25,7 @@ public class AppInterceptor extends HandlerInterceptorAdapter {
 
         String token = request.getHeader("x-auth-token");
         User user = null;
-        String email = null;
+        String username = null;
 
         if (token != null && !token.isEmpty()) {
 
@@ -45,18 +42,33 @@ public class AppInterceptor extends HandlerInterceptorAdapter {
             String userType = request.getHeader("user-type");
 
             if(userType != null){
-                if(userType.equals("Facebook")){
-                    JSONObject fbUser = JsonReader.readJsonFromUrl("https://graph.facebook.com/me/?access_token=" + token);
-                    email = fbUser.getString("id");
+
+                if(userType.equals("Facebook") || userType.equals("Instagram")){
                     request.setAttribute("token", token);
-                    user = this.userService.findByUsername(email);
+
+
+                    if(userType.equals("Facebook")){
+                        JSONObject fbUser = JsonReader.readJsonFromUrl("https://graph.facebook.com/me/?access_token=" + token);
+                        username = fbUser.getString("id");
+
+                        user = this.userService.findByUsername(username);
+                    }
+                    else if(userType.equals("Instagram")){
+                        JSONObject instagramUser = JsonReader.readJsonFromUrl("https://api.instagram.com/v1/users/self/?access_token=" + token);
+                        username = instagramUser.getJSONObject("data").getString("id");
+                        user = this.userService.findByUsername(username);
+                    }
+
+
+                    if (user != null && user.isEnabled()) {
+                        request.setAttribute("userId", user.getId());
+                        return true;
+                    }
+                    else if(username != null){
+                        return true;
+                    }
                 }
-                else if(userType.equals("Instagram")){
-                    JSONObject instagramUser = JsonReader.readJsonFromUrl("https://api.instagram.com/v1/users/self/?access_token=" + token);
-                    email = instagramUser.getJSONObject("data").getString("id");
-                    request.setAttribute("token", token);
-                    user = this.userService.findByUsername(email);
-                }
+
                 else if(userType.equals("Normal")){
                     user = userService.findByAccessToken(token);
                 }
