@@ -80,7 +80,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/private/users/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<?> updateUser(HttpServletRequest request, @PathVariable("id") long id, @RequestBody User user) {
+    public ResponseEntity<?> updateUser(HttpServletRequest request, @PathVariable("id") long id, @RequestBody User user, @RequestParam(value ="prev_password", defaultValue = "") String prev_password) {
 
         long userId = (long) request.getAttribute("userId");
 
@@ -89,6 +89,12 @@ public class UserController {
 
             if (currentUser == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+
+            if(currentUser.getPassword() != null && !currentUser.getPassword().equals(user.getPassword())){
+                if(!(currentUser.getPassword().equals(prev_password))){
+                    return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+                }
             }
 
             Position position = currentUser.getLastPosition();
