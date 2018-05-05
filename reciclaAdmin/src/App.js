@@ -14,6 +14,7 @@ import { StorageList, StorageEdit, StorageCreate } from './services/storages'
 import { UserQuestionList, UserQuestionEdit, UserQuestionCreate } from './services/userQuestions'
 import { ItemTypeNameList, ItemTypeNameEdit, ItemTypeNameCreate } from './services/itemTypeNames'
 import { CollectiveList, CollectiveEdit, CollectiveCreate } from './services/collectives'
+import { TipList, TipEdit, TipCreate } from './services/tips'
 
 import authClient from './config/authClient';
 import myTheme from './config/myTheme';
@@ -47,6 +48,7 @@ const App = () => (
         <Resource name="questions" list={QuestionList} edit={QuestionEdit} create={QuestionCreate} remove={Delete} />
         <Resource name="replies" list={ReplyList} edit={ReplyEdit} create={ReplyCreate} remove={Delete} />
         <Resource name="userQuestions" options={{ label: 'User questions' }} list={UserQuestionList} edit={UserQuestionEdit} create={UserQuestionCreate} remove={Delete} />
+        <Resource name="tips" options={{ label: 'Tips' }} list={TipList} edit={TipEdit} create={TipCreate} remove={Delete} />
     </Admin>
 );
 /*<Resource name="posts" list={PositionList} edit={PositionEdit} create={PositionCreate} remove={Delete} />*/

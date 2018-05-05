@@ -70,8 +70,15 @@ public class AdminUserController {
     @RequestMapping(value = "/admin/users", method = RequestMethod.POST)
     public ResponseEntity<?> createUser(@RequestBody User user) throws NoSuchAlgorithmException {
 
-        if (userService.isUserExist(user.getEmail())) {
-            return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+        if(user.getType() == EnumUser.Normal){
+            if (userService.isUserExistByEmail(user.getEmail())) {
+                return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+            }
+        }
+        else{
+            if (userService.isUserExistByUsername(user.getUsername())) {
+                return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+            }
         }
 
         if(user.getType() == null){
