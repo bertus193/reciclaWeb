@@ -90,6 +90,5 @@ export class ProfileEditPasswordPage {
                 return null
             }
         }
-
     }
 }

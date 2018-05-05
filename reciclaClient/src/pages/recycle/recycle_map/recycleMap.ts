@@ -280,7 +280,7 @@ export class MapPage {
             if (result.status == 200) {
                 this.recycleItem.storage.position = result.storagePoint.position
                 this.loading.dismiss()
-                this.initMarkers(result.storagePoint.position, "Punto más cercano", this.recycleItem.itemType.typeColor)
+                this.initMarkers(result.storagePoint.position, result.storagePoint.name, this.recycleItem.itemType.typeColor)
             }
             else {
                 this.loading.dismiss()

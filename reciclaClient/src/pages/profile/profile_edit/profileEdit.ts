@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, AbstractControl } from '@angular/forms';
 import { ActionSheetController, Loading, LoadingController, NavParams, NavController } from 'ionic-angular';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { NotificationProvider } from '../../../providers/notifications';
@@ -34,13 +34,16 @@ export class ProfileEditPage {
         private navCtrl: NavController,
         private transfer: Transfer
     ) {
-        this.profileEditForm = this.formBuilder.group({
-            email: [''],
-            fullName: ['']
-        }, {});
-
         this.user = this.navParams.get('user')
         this.image = this.user.profilePicture
+
+        this.profileEditForm = this.formBuilder.group({
+            email: [this.user.email],
+            fullName: [this.user.fullName]
+        }, {
+                validator: ProfileEditPage.EmailIsValid
+            });
+
     }
 
     public editProfile_Button() {
@@ -178,5 +181,19 @@ export class ProfileEditPage {
             return urlUploadedFiles
         })
 
+    }
+
+    static EmailIsValid(control: FormGroup) {
+
+        let email: AbstractControl = control.controls.email; // to get value in input tag
+
+        var EMAIL_REGEXP = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/i;
+
+        if (control.value != "" && (control.value.length <= 5 || !EMAIL_REGEXP.test(email.value))) {
+            email.setErrors({ EmailIsValid: true })
+        }
+        else {
+            return null
+        }
     }
 }

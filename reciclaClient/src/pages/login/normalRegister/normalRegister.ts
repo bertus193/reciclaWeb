@@ -40,7 +40,7 @@ export class NormalRegisterPage {
             password: [''],
             password_repeat: [''],
         }, {
-                validator: NormalRegisterPage.MatchPassword
+                validator: [NormalRegisterPage.MatchPassword, NormalRegisterPage.EmailIsValid]
             });
     }
 
@@ -112,5 +112,19 @@ export class NormalRegisterPage {
             }
         }
 
+    }
+
+    static EmailIsValid(control: FormGroup) {
+
+        let email: AbstractControl = control.controls.email; // to get value in input tag
+
+        var EMAIL_REGEXP = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/i;
+
+        if (control.value != "" && (control.value.length <= 5 || !EMAIL_REGEXP.test(email.value))) {
+            email.setErrors({ EmailIsValid: true })
+        }
+        else {
+            return null
+        }
     }
 }

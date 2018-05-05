@@ -70,34 +70,34 @@ export class LoginPage {
 
     loginFb(): Promise<Observable<User>> {
 
-        return this.fb.login(['public_profile', 'email'])
-            .then((fbUser: FacebookLoginResponse) =>
-                this.fb.api('me?fields=id,name,email,first_name,picture.width(720).height(720).as(picture_large)', []).then(profile => {
+        return this.fb.login(['public_profile', 'email']).then((fbUser: FacebookLoginResponse) =>
+            this.fb.api('me?fields=id,email,first_name,picture.width(720).height(720).as(picture_large)', []).then(profile => {
 
-                    var user: User = new User()
+                var user: User = new User()
 
-                    //user.email = profile['email']
-                    user.username = profile['id']
-                    user.fullName = profile['name']
-                    user.profilePicture = profile['picture_large']['data']['url']
-                    user.accessToken = fbUser.authResponse.accessToken
-                    user.type = TypeUser.Facebook
+                //user.email = profile['email']
+                user.username = profile['id']
+                user.fullName = profile['name']
+                user.profilePicture = profile['picture_large']['data']['url']
+                user.accessToken = fbUser.authResponse.accessToken
+                user.type = TypeUser.Facebook
 
-                    return this.findOrCreateUser(user).timeout(this.config.defaultTimeoutTime).map((res: any) => {
-                        if (res.value != null) {
-                            user = res.value
-                        } else {
-                            user = res
-                        }
-                        return user
-                    }).catch(error => {
-                        return Observable.throw("[login()] ->" + error)
-                    })
-                })).catch(e => {
-                    return null
+                return this.findOrCreateUser(user).timeout(this.config.defaultTimeoutTime).map((res: any) => {
+                    if (res.value != null) {
+                        user = res.value
+                    } else {
+                        user = res
+                    }
+                    return user
                 }).catch(error => {
                     return Observable.throw("[login()] ->" + error)
-                });
+                })
+            })
+        ).catch(e => {
+            return null
+        }).catch(error => {
+            return Observable.throw("[login()] ->" + error)
+        });
     }
 
     loginInstagram() {
@@ -197,7 +197,7 @@ export class LoginPage {
             }).catch(err => {
                 if (err.status === 404) {
 
-                    return this.createUserByFBUser(loginUser).map(res => {
+                    return this.createUserBySocialUser(loginUser).map(res => {
                         if (res.status == 201) {
                             return Observable.of(res.user)
                         }
@@ -232,7 +232,7 @@ export class LoginPage {
 
     }
 
-    createUserByFBUser(user: User): Observable<{ user: User, status: number }> {
+    createUserBySocialUser(user: User): Observable<{ user: User, status: number }> {
         var user: User
         var status: number
         return this.userProvider.createUser(user).map(res => {

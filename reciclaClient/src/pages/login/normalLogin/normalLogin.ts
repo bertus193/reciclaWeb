@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { NavParams, LoadingController, Loading, App } from 'ionic-angular';
 import { UserProvider } from '../../../providers/api/userProvider';
 import { User } from '../../../models/user';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, AbstractControl } from '@angular/forms';
 import { SessionProvider } from '../../../providers/session';
 import { TabsPage } from '../../tabs/tabs';
 import { NotificationProvider } from '../../../providers/notifications';
@@ -39,7 +39,9 @@ export class NormalLoginPage {
         this.loginForm = this.formBuilder.group({
             email: [''],
             password: ['']
-        }, {});
+        }, {
+                validator: NormalLoginPage.EmailIsValid
+            });
     }
 
     ionViewDidLoad() {
@@ -80,5 +82,19 @@ export class NormalLoginPage {
             passwordForm.setValue('')
             this.notificationProvider.presentAlertError("El usuario y/o contrseña son incorrectos.")
         })
+    }
+
+    static EmailIsValid(control: FormGroup) {
+
+        let email: AbstractControl = control.controls.email; // to get value in input tag
+
+        var EMAIL_REGEXP = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/i;
+
+        if (control.value != "" && (control.value.length <= 5 || !EMAIL_REGEXP.test(email.value))) {
+            email.setErrors({ EmailIsValid: true })
+        }
+        else {
+            return null
+        }
     }
 }
