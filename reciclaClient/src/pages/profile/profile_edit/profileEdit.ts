@@ -189,10 +189,11 @@ export class ProfileEditPage {
 
         var EMAIL_REGEXP = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/i;
 
-        if (control.value != "" && (control.value.length <= 5 || !EMAIL_REGEXP.test(email.value))) {
+        if (email.value != null && control.value != "" && (control.value.length <= 5 || !EMAIL_REGEXP.test(email.value))) {
             email.setErrors({ EmailIsValid: true })
         }
         else {
+            email.setErrors(null)
             return null
         }
     }

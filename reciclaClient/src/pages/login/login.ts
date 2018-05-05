@@ -71,7 +71,7 @@ export class LoginPage {
     loginFb(): Promise<Observable<User>> {
 
         return this.fb.login(['public_profile', 'email']).then((fbUser: FacebookLoginResponse) =>
-            this.fb.api('me?fields=id,email,first_name,picture.width(720).height(720).as(picture_large)', []).then(profile => {
+            this.fb.api('me?fields=id,email,name,picture.width(720).height(720).as(picture_large)', []).then(profile => {
 
                 var user: User = new User()
 

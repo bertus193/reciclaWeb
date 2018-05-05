@@ -19,12 +19,13 @@ export class UserProvider {
         @Inject(APP_CONFIG_TOKEN) private config: ApplicationConfig) { }
 
 
-    public saveUser(user: User, token: string) {
+    public saveUser(user: User, token: string, prev_password: string = "") {
         this.sessionProvider.updateSession(user)
         user.recycleItems = null
         user.questionsDone = null
         this.requestJsonOptions.headers.set('X-Auth-Token', token)
-        return this.http.put(this.config.apiEndpoint + "/private/users/" + user.id, JSON.stringify(user), this.requestJsonOptions).timeout(this.config.defaultTimeoutTime)
+        console.log(prev_password)
+        return this.http.put(this.config.apiEndpoint + "/private/users/" + user.id + "?prev_password=" + prev_password, JSON.stringify(user), this.requestJsonOptions).timeout(this.config.defaultTimeoutTime)
     }
 
     public createUser(user: User) {

@@ -11,6 +11,7 @@ import { StoragesProvider } from "./api/storagesProvider";
 import { QuestionProvider } from "./api/questionProvider";
 import { UserQuestionProvider } from "./api/userQuestionProvider";
 import { CollectiveProvider } from "./api/collectiveProvider";
+import { TipProvider } from "./api/tipProvider";
 
 export const APP_PROVIDERS = [
     SessionProvider,
@@ -25,5 +26,6 @@ export const APP_PROVIDERS = [
     ItemTypeProvider,
     QuestionProvider,
     UserQuestionProvider,
-    CollectiveProvider
+    CollectiveProvider,
+    TipProvider
 ];

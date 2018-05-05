@@ -14,8 +14,15 @@
         <ion-grid style="height: 100%">
             <ion-row align-items-center text-center style="height: 100%">
                 <ion-col>
-                    <img src="assets/imgs/quieroReciclar.png" />
-                    <p>
+                    <ion-card style="height: 260px;" *ngIf="tip != null;else tipNotFound">
+                        <ion-card-header text-left>
+                            {{tip.name}}
+                        </ion-card-header>
+                        <ion-card-content class="tip-box">
+                            <span class="tip-box-content" [innerHtml]="tip.description"></span>
+                        </ion-card-content>
+                    </ion-card>
+                    <p style="margin-top: 50px;">
                         <button ion-button (tap)="presentActionSheetActions()">
                             Quiero reciclar
                         </button>
@@ -41,4 +48,8 @@
         <p>Ha habido algún problema</p>
         <h5 style="font-weight: bold">Intentalo de nuevo en unos minutos</h5>
     </div>
+</ng-template>
+
+<ng-template #tipNotFound>
+    <img src="assets/imgs/quieroReciclar.png" />
 </ng-template>

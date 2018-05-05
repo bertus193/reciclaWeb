@@ -1,4 +1,13 @@
 page-recycle {
+    .tip-box{
+        height: 82%;
+        display: table;
+        width: 100%;
+    }
 
+    .tip-box-content{
+        display: table-cell;
+        vertical-align: middle;
+    }
 }
 

@@ -23,6 +23,8 @@ import { UtilsProvider } from '../../providers/utils';
 import { UserProvider } from '../../providers/api/userProvider';
 import { ItemTypeProvider } from '../../providers/api/itemTypeProvider';
 import { ItemType } from '../../models/itemType';
+import { Tip } from '../../models/tip';
+import { TipProvider } from '../../providers/api/tipProvider';
 
 @Component({
     selector: 'page-recycle',
@@ -37,6 +39,7 @@ export class RecyclePage {
     user: User
     temporalName: string = ""
     isitemTypeName: boolean = false
+    tip: Tip
 
     private showLoadingMsg: boolean = true
 
@@ -58,12 +61,15 @@ export class RecyclePage {
         private sessionProvider: SessionProvider,
         private userProvider: UserProvider,
         private itemTypeProvider: ItemTypeProvider,
-        private crop: Crop
+        private crop: Crop,
+        private tipProvider: TipProvider
     ) {
 
         this.getAllItems().then(res => {
             this.showLoadingMsg = false
         })
+
+        this.getRandomTip()
     }
 
     public getAllItems() {
@@ -79,7 +85,31 @@ export class RecyclePage {
                     resolve(false)
                 }
             }, error => {
-                if (error.status == 404) { // no users found
+                if (error.status == 404) {
+                    resolve(true)
+                }
+                else {
+                    resolve(false)
+                }
+
+            })
+        })
+    }
+
+    public getRandomTip() {
+        var status: number
+        return new Promise(resolve => {
+            this.tipProvider.getRandomTip().subscribe(res => {
+                console.log(res)
+                status = res.status
+                if (status === 200) {
+                    this.tip = res.json()
+                    resolve(true)
+                } else {
+                    resolve(false)
+                }
+            }, error => {
+                if (error.status == 404) {
                     resolve(true)
                 }
                 else {
@@ -133,7 +163,7 @@ export class RecyclePage {
                     this.goToMapPage(this.user.lastPosition)
                 }
                 else {
-                    this.notificationProvider.presentTopToast("Error: " + error.message)
+                    this.notificationProvider.presentTopToast("Error, comprueba que la localización esté activada")
                 }
 
             }
@@ -418,6 +448,8 @@ export class RecyclePage {
     }
 
     doRefresh(refresher: any) {
+        this.getRandomTip()
+
         this.getAllItems().then((res: boolean) => {
             refresher.complete();
         });

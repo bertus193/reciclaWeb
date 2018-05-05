@@ -28,6 +28,8 @@ export class ProfileEditPasswordPage {
         private encryptProvider: EncryptProvider,
         private notificationProvider: NotificationProvider
     ) {
+        this.user = this.navParams.get('user')
+
         this.profileEditPasswordForm = this.formBuilder.group({
             prev_password: [''],
             password: [''],
@@ -36,7 +38,6 @@ export class ProfileEditPasswordPage {
                 validator: ProfileEditPasswordPage.MatchPassword
             });
 
-        this.user = this.navParams.get('user')
     }
 
     ionViewDidLoad() {
@@ -47,33 +48,43 @@ export class ProfileEditPasswordPage {
             content: 'Guardando usuario...'
         });
         this.loading.present()
-        var password = this.profileEditPasswordForm.get("prev_password").value
-        this.user.password = this.encryptProvider.encryptPassword(password)
+        var prev_password = this.profileEditPasswordForm.get("prev_password").value
+        prev_password = this.encryptProvider.encryptPassword(prev_password)
 
-        this.userProvider.login(this.user).subscribe(res => {
-
-            password = this.profileEditPasswordForm.get("password").value
-            this.user.password = this.encryptProvider.encryptPassword(password)
-
-            this.userProvider.saveUser(this.user, this.user.accessToken).subscribe(res => {
-                this.notificationProvider.presentTopToast("La contraseña ha sido modificada correctamente!")
-                this.navCtrl.pop()
-                this.loading.dismiss()
-
+        if (this.user.password == null) {
+            this.changePassword()
+        }
+        else {
+            this.userProvider.login(this.user).subscribe(res => {
+                this.changePassword(prev_password)
             }, error => {
-                this.loading.dismiss()
-                this.notificationProvider.presentTopToast("Error, no se ha podido guardar la contraseña.")
+                if (error.status == 403) {
+                    this.loading.dismiss()
+                    this.notificationProvider.presentAlertError("La contraseña actual no es correcta.")
+                }
+                else {
+                    console.log(error)
+                    this.loading.dismiss()
+                    this.notificationProvider.presentTopToast("Error, no se ha podido guardar la contraseña.")
+                }
             })
+        }
+
+
+    }
+
+    public changePassword(prev_password: string = "") {
+        var password: string = this.profileEditPasswordForm.get("password").value
+        this.user.password = this.encryptProvider.encryptPassword(password)
+        console.log(this.user.password)
+        this.userProvider.saveUser(this.user, this.user.accessToken, prev_password).subscribe(res => {
+            this.notificationProvider.presentTopToast("La contraseña ha sido modificada correctamente!")
+            this.navCtrl.pop()
+            this.loading.dismiss()
 
         }, error => {
-            if (error.status == 403) {
-                this.loading.dismiss()
-                this.notificationProvider.presentAlertError("La contraseña actual no es correcta.")
-            }
-            else {
-                this.loading.dismiss()
-                this.notificationProvider.presentTopToast("Error, no se ha podido guardar la contraseña.")
-            }
+            this.loading.dismiss()
+            this.notificationProvider.presentTopToast("Error, no se ha podido guardar la contraseña.")
         })
     }
 
