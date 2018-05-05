@@ -3,11 +3,13 @@ package reciclaServer.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import reciclaServer.models.Tip;
 import reciclaServer.services.TipService;
 
-import javax.servlet.http.HttpServletRequest;
 import java.security.SecureRandom;
 import java.util.List;
 
@@ -24,7 +26,7 @@ public class TipController {
 
 
     @RequestMapping(value = "/tips/random", method = RequestMethod.GET)
-    public ResponseEntity<?> getRandomTip(HttpServletRequest request, @PathVariable("id") long id) {
+    public ResponseEntity<?> getRandomTip() {
 
         SecureRandom rand = new SecureRandom();
 
