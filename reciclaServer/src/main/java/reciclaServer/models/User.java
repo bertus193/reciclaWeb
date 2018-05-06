@@ -77,6 +77,11 @@ public class User {
     @Enumerated(EnumType.STRING) //Fix: by default enums are persisted as int using oridinal
     private EnumGender gender;
 
+    private String resetPwdCode;
+
+    @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss.SSSXXX") //Formato necesario para panel admin (new Date())
+    private Timestamp resetPwdCodeDate;
+
 
     public User() { //Needed for JPA
 
@@ -97,6 +102,16 @@ public class User {
 
         long diff = timeNow.getTime() - timeUser.getTime();
         return TimeUnit.HOURS.convert(diff, TimeUnit.MILLISECONDS);
+    }
+
+    @JsonIgnore
+    public void resetUserPwdCode(Timestamp userPwdRcverDate){
+        Timestamp now = new Timestamp(System.currentTimeMillis());
+        long diff = (now.getTime() - userPwdRcverDate.getTime()) / (60 * 60 * 1000);
+        if(diff >= 24){
+            this.setResetPwdCodeDate(null);
+            this.setResetPwdCode(null);
+        }
     }
 
     public long getId() {
@@ -257,5 +272,21 @@ public class User {
 
     public void setGender(EnumGender gender) {
         this.gender = gender;
+    }
+
+    public String getResetPwdCode() {
+        return resetPwdCode;
+    }
+
+    public void setResetPwdCode(String resetPwdCode) {
+        this.resetPwdCode = resetPwdCode;
+    }
+
+    public Timestamp getResetPwdCodeDate() {
+        return resetPwdCodeDate;
+    }
+
+    public void setResetPwdCodeDate(Timestamp resetPwdCodeDate) {
+        this.resetPwdCodeDate = resetPwdCodeDate;
     }
 }

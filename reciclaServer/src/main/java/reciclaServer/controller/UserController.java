@@ -5,17 +5,20 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import reciclaServer.models.EnumUser;
-import reciclaServer.models.Position;
-import reciclaServer.models.RecycleItem;
-import reciclaServer.models.User;
+import reciclaServer.models.*;
 import reciclaServer.services.CollectiveService;
 import reciclaServer.services.PositionService;
 import reciclaServer.services.RecycleItemService;
 import reciclaServer.services.UserService;
+import reciclaServer.utils.SendMail;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.security.SecureRandom;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 @RestController
@@ -89,6 +92,11 @@ public class UserController {
 
             if (currentUser == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+
+            Timestamp userPwdRcverDate = user.getResetPwdCodeDate();
+            if(userPwdRcverDate != null){
+                user.resetUserPwdCode(userPwdRcverDate);
             }
 
             if(currentUser.getPassword() != null && !currentUser.getPassword().equals(user.getPassword())){
@@ -169,6 +177,10 @@ public class UserController {
             User userFound = userService.findFirstByEmailAndPassword(user.getEmail(), user.getPassword());
 
             if (userFound != null) {
+                Timestamp userPwdRcverDate = userFound.getResetPwdCodeDate();
+                if(userPwdRcverDate != null){
+                    userFound.resetUserPwdCode(userPwdRcverDate);
+                }
 
                 //userFound.setAccessToken(UUID.randomUUID().toString());
                 //userFound = userService.saveUser(userFound);
@@ -199,11 +211,64 @@ public class UserController {
         }
 
         if (userList == null || userList.isEmpty()) {
-            return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
-            return new ResponseEntity<Object>(users, HttpStatus.OK);
+            return new ResponseEntity<>(users, HttpStatus.OK);
+        }
+    }
+
+    @RequestMapping(value = "/users/forget", method = RequestMethod.POST)
+    public ResponseEntity<?> sendRecoverMail(@RequestBody MyMail email) throws IOException, MessagingException {
+
+        User user = userService.findByEmail(email.getTo());
+
+        if(user != null){
+
+            SecureRandom random = new SecureRandom();
+            byte bytes[] = new byte[6];
+            random.nextBytes(bytes);
+            Base64.Encoder encoder = Base64.getUrlEncoder().withoutPadding();
+            String resetPwdCode = encoder.encodeToString(bytes);
+
+            user.setResetPwdCode(resetPwdCode);
+            user.setResetPwdCodeDate(new Timestamp(System.currentTimeMillis()));
+
+            userService.saveUser(user);
+            SendMail sendEmail = new SendMail();
+            sendEmail.sendRecoverMail(email.getFrom(), email.getFromPassword(), email.getFromName(), email.getTo(), email.getSubject(), resetPwdCode);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
+    }
+
+    @RequestMapping(value = "/users/recover", method = RequestMethod.POST)
+    public ResponseEntity<?> recoverUser(@RequestBody User user) throws IOException, MessagingException {
+
+        User userFound = userService.findByEmail(user.getEmail());
+
+        if(userFound != null){
+
+            if((userFound.getResetPwdCodeDate().getTime() / (60 * 60 * 1000)) < 24){
+
+                if(userFound.getPassword().equals(user.getPassword()) &&
+                        userFound.getResetPwdCode().toLowerCase().equals(user.getResetPwdCode().toLowerCase())){
+                    return new ResponseEntity<>(HttpStatus.OK);
+                }
+                else{
+                    return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+                }
+            }
+            else{
+                return new ResponseEntity<>(HttpStatus.GONE); // 410
+            }
+
+        }
+        else{
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
 
     }
 }
