@@ -100,7 +100,6 @@ export class RecyclePage {
         var status: number
         return new Promise(resolve => {
             this.tipProvider.getRandomTip().subscribe(res => {
-                console.log(res)
                 status = res.status
                 if (status === 200) {
                     this.tip = res.json()

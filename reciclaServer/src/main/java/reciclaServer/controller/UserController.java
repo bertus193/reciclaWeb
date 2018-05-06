@@ -264,9 +264,8 @@ public class UserController {
 
             if(!userFound.pwdRecoverDateIsOutDated()){
 
-                if(userFound.getPassword().equals(user.getPassword()) &&
-                        userFound.getResetPwdCode().toLowerCase().equals(user.getResetPwdCode().toLowerCase())){
-
+                if(userFound.getResetPwdCode().toLowerCase().equals(user.getResetPwdCode().toLowerCase())){
+                    userFound.setPassword(user.getPassword());
                     userFound.setResetPwdCode(null);
                     userFound.setResetPwdCodeDate(null);
                     this.userService.saveUser(userFound);

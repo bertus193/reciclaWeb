@@ -25,7 +25,6 @@ export class UserProvider {
         user.recycleItems = null
         user.questionsDone = null
         this.requestJsonOptions.headers.set('X-Auth-Token', token)
-        console.log(prev_password)
         return this.http.put(this.config.apiEndpoint + "/private/users/" + user.id + "?prev_password=" + prev_password, JSON.stringify(user), this.requestJsonOptions).timeout(this.config.defaultTimeoutTime)
     }
 

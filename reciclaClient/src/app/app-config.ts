@@ -13,6 +13,9 @@ export class ApplicationConfig {
     debugUserEmail: string //If DEBUG_MODE == false is not used
     debugUserPassword: string //If DEBUG_MODE == false is not used,
     instagramAPIKey: string
+    emailFrom: string
+    emailFromName: string
+    emailFromPassword: string
 }
 
 // Configuration values for our app
@@ -30,5 +33,8 @@ APP_CONFIG.itemsPerPage = 10
 APP_CONFIG.debugUserEmail = 'debug@debug.com'
 APP_CONFIG.debugUserPassword = 'debug'
 APP_CONFIG.instagramAPIKey = '92039beca32246398f5d17847329007a'
+APP_CONFIG.emailFrom = 'recicla.ua.noreply@gmail.com'
+APP_CONFIG.emailFromName = 'ReciclaUA (no contestar)'
+APP_CONFIG.emailFromPassword = 'w2L-gDk-cSq-nuK'
 
 export const APP_CONFIG_TOKEN = new InjectionToken<ApplicationConfig>('config');

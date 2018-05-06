@@ -63,7 +63,6 @@ export class ProfileEditPasswordPage {
                     this.notificationProvider.presentAlertError("La contraseña actual no es correcta.")
                 }
                 else {
-                    console.log(error)
                     this.loading.dismiss()
                     this.notificationProvider.presentTopToast("Error, no se ha podido guardar la contraseña.")
                 }
@@ -76,7 +75,7 @@ export class ProfileEditPasswordPage {
     public changePassword(prev_password: string = "") {
         var password: string = this.profileEditPasswordForm.get("password").value
         this.user.password = this.encryptProvider.encryptPassword(password)
-        console.log(this.user.password)
+
         this.userProvider.saveUser(this.user, this.user.accessToken, prev_password).subscribe(res => {
             this.notificationProvider.presentTopToast("La contraseña ha sido modificada correctamente!")
             this.navCtrl.pop()

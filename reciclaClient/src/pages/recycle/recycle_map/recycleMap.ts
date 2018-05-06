@@ -164,7 +164,6 @@ export class MapPage {
                 }
             }, error => {
                 this.loading.dismiss()
-                console.log(error)
                 this.notificationProvider.presentTopToast(this.config.defaultTimeoutMsg)
             })
         }, err => {
@@ -260,7 +259,6 @@ export class MapPage {
         alert.addButton({
             text: 'Cambiar tipo',
             handler: data => {
-                console.log(this.itemTypeList[data])
                 this.loading = this.loadingCtrl.create({
                     content: 'Buscando punto más cercano...'
                 });
