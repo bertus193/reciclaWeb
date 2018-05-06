@@ -14,6 +14,8 @@ import { ProfileEditPasswordPage } from './profile/profile_edit/profile_edit_pas
 import { RankingPage } from './ranking/ranking';
 import { GamePage } from './game/game';
 import { ProfileEditOthersPage } from './profile/profile_edit/profile_edit_others/profileEditOthers';
+import { RecoverPasswordGenCodePage } from './login/normalLogin/recoverPasswordGenCode/recoverPasswordGenCode';
+import { RecoverPasswordPage } from './login/normalLogin/recoverPasswordGenCode/recoverPassword/recoverPassword';
 
 export const APP_PAGES = [
     RecyclePage,
@@ -31,5 +33,7 @@ export const APP_PAGES = [
     ProfileEditPasswordPage,
     RankingPage,
     GamePage,
-    ProfileEditOthersPage
+    ProfileEditOthersPage,
+    RecoverPasswordGenCodePage,
+    RecoverPasswordPage
 ];

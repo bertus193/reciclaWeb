@@ -20,6 +20,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -96,7 +97,10 @@ public class UserController {
 
             Timestamp userPwdRcverDate = user.getResetPwdCodeDate();
             if(userPwdRcverDate != null){
-                user.resetUserPwdCode(userPwdRcverDate);
+                if(user.pwdRecoverDateIsOutDated() == true){
+                    user.setResetPwdCodeDate(null);
+                    user.setResetPwdCode(null);
+                }
             }
 
             if(currentUser.getPassword() != null && !currentUser.getPassword().equals(user.getPassword())){
@@ -179,11 +183,16 @@ public class UserController {
             if (userFound != null) {
                 Timestamp userPwdRcverDate = userFound.getResetPwdCodeDate();
                 if(userPwdRcverDate != null){
-                    userFound.resetUserPwdCode(userPwdRcverDate);
+                    if(userFound.pwdRecoverDateIsOutDated()){
+                        userFound.setResetPwdCodeDate(null);
+                        userFound.setResetPwdCode(null);
+                    }
                 }
+                if(!userFound.getUsername().equals("debug@debug.com")){
+                    userFound.setAccessToken(UUID.randomUUID().toString());
+                }
+                userFound = userService.saveUser(userFound);
 
-                //userFound.setAccessToken(UUID.randomUUID().toString());
-                //userFound = userService.saveUser(userFound);
 
                 return new ResponseEntity<>(userFound, HttpStatus.OK);
             } else {
@@ -251,14 +260,19 @@ public class UserController {
 
         if(userFound != null){
 
-            if((userFound.getResetPwdCodeDate().getTime() / (60 * 60 * 1000)) < 24){
+            if(!userFound.pwdRecoverDateIsOutDated()){
 
                 if(userFound.getPassword().equals(user.getPassword()) &&
                         userFound.getResetPwdCode().toLowerCase().equals(user.getResetPwdCode().toLowerCase())){
-                    return new ResponseEntity<>(HttpStatus.OK);
+
+                    userFound.setResetPwdCode(null);
+                    userFound.setResetPwdCodeDate(null);
+                    this.userService.saveUser(userFound);
+                    
+                    return new ResponseEntity<>(userFound, HttpStatus.OK);
                 }
                 else{
-                    return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+                    return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
                 }
             }
             else{

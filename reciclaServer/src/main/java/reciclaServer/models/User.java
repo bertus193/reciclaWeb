@@ -105,13 +105,15 @@ public class User {
     }
 
     @JsonIgnore
-    public void resetUserPwdCode(Timestamp userPwdRcverDate){
+    public boolean pwdRecoverDateIsOutDated(){
+        boolean out = false;
         Timestamp now = new Timestamp(System.currentTimeMillis());
-        long diff = (now.getTime() - userPwdRcverDate.getTime()) / (60 * 60 * 1000);
+        long diff = (now.getTime() - this.getResetPwdCodeDate().getTime()) / (60 * 60 * 1000);
         if(diff >= 24){
-            this.setResetPwdCodeDate(null);
-            this.setResetPwdCode(null);
+            out = true;
         }
+
+        return out;
     }
 
     public long getId() {

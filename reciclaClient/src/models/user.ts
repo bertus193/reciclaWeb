@@ -22,6 +22,8 @@ export class User {
     gender: string
     school: string
     birthdate: any
+    resetPwdCode: string
+    resetPwdCodeDate: Date
 
     public constructor() {
         var currentDate = new Date()
@@ -41,9 +43,11 @@ export class User {
         this.lastGameDate = new Date(currentDate.getTime() - (1000 * 60 * 60 * 24))
         this.questionsDone = []
         this.enabled = true
-        this.collective = null /*Instantiated on backend*/
+        this.collective = null /* Instantiated on backend */
         this.gender = "NSNC"
         this.school = null
         this.birthdate = new Date()
+        this.resetPwdCode = null
+        this.resetPwdCodeDate = null /* Default null */
     }
 }

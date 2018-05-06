@@ -3,6 +3,7 @@ import { Http, RequestOptions, Headers } from '@angular/http';
 import { ApplicationConfig, APP_CONFIG_TOKEN } from '../../app/app-config';
 import { SessionProvider } from '../session';
 import { User } from '../../models/user';
+import { MyMail } from '../../models/myMail';
 
 @Injectable()
 export class UserProvider {
@@ -49,5 +50,13 @@ export class UserProvider {
 
     public getTopRankedUsers() {
         return this.http.get(this.config.apiEndpoint + "/users/topRanked/").timeout(this.config.defaultTimeoutTime)
+    }
+
+    public sendRecoverMail(myMail: MyMail) {
+        return this.http.post(this.config.apiEndpoint + "/users/forget", JSON.stringify(myMail), this.requestJsonOptions).timeout(this.config.defaultTimeoutTime)
+    }
+
+    public recoverUser(user: User) {
+        return this.http.post(this.config.apiEndpoint + "/users/recover", JSON.stringify(user), this.requestJsonOptions).timeout(this.config.defaultTimeoutTime)
     }
 }

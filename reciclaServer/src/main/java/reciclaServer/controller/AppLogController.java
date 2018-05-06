@@ -1,5 +1,6 @@
 package reciclaServer.controller;
 
+import com.google.common.base.Throwables;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +34,7 @@ public class AppLogController {
             path = path.substring(path.indexOf(";"));
         }
 
-        AppLog appLog = new AppLog(status, ex.getClass().getName(), ex.getMessage(), path);
+        AppLog appLog = new AppLog(status, ex.getClass().getName(), Throwables.getStackTraceAsString(ex), path);
         appLog = this.appLogService.saveAppLog(appLog);
 
         return new ResponseEntity<>(appLog, status);

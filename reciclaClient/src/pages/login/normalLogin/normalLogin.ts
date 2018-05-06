@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavParams, LoadingController, Loading, App } from 'ionic-angular';
+import { NavParams, LoadingController, Loading, App, NavController } from 'ionic-angular';
 import { UserProvider } from '../../../providers/api/userProvider';
 import { User } from '../../../models/user';
 import { FormBuilder, FormGroup, AbstractControl } from '@angular/forms';
@@ -8,6 +8,7 @@ import { TabsPage } from '../../tabs/tabs';
 import { NotificationProvider } from '../../../providers/notifications';
 import { EncryptProvider } from '../../../providers/encryptProvider';
 import { TypeUser } from '../../../models/typeUser';
+import { RecoverPasswordGenCodePage } from './recoverPasswordGenCode/recoverPasswordGenCode';
 
 @Component({
     selector: 'page-normalLogin',
@@ -32,7 +33,8 @@ export class NormalLoginPage {
         private loadingCtrl: LoadingController,
         private sessionProvider: SessionProvider,
         private notificationProvider: NotificationProvider,
-        private encryptProvider: EncryptProvider
+        private encryptProvider: EncryptProvider,
+        private navCtrl: NavController
     ) {
         this.defaultPage = this.navParams.get("defaultPage");
 
@@ -96,5 +98,10 @@ export class NormalLoginPage {
         else {
             return null
         }
+    }
+
+    public goToRecoverPasswordPage() {
+        this.navCtrl.push(RecoverPasswordGenCodePage, {
+        })
     }
 }
