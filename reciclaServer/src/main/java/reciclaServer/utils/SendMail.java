@@ -11,9 +11,9 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
-import java.net.URL;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Properties;
 
 public class SendMail {
@@ -47,11 +47,13 @@ public class SendMail {
         transport.close();
     }
 
-    public String readHtmlFromFile(String file) throws IOException {
+    public String readHtmlFromFile(String filePath) throws IOException {
         StringBuilder contentBuilder = new StringBuilder();
 
-        URL path = ClassLoader.getSystemResource(file);
-        BufferedReader in = new BufferedReader(new FileReader(path.getFile()));
+        ClassLoader classLoader = SendMail.class.getClassLoader();
+        InputStream inputStream = classLoader.getResourceAsStream(filePath);
+
+        BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
         String str;
         while ((str = in.readLine()) != null) {
             contentBuilder.append(str);
