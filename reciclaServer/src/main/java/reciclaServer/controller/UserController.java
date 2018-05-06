@@ -188,8 +188,10 @@ public class UserController {
                         userFound.setResetPwdCode(null);
                     }
                 }
-                if(!userFound.getUsername().equals("debug@debug.com")){
-                    userFound.setAccessToken(UUID.randomUUID().toString());
+                if(userFound.getType() == EnumUser.Normal){
+                    if(userFound.getUsername() == null || !userFound.getUsername().equals("debug@debug.com")){
+                        userFound.setAccessToken(UUID.randomUUID().toString());
+                    }
                 }
                 userFound = userService.saveUser(userFound);
 
