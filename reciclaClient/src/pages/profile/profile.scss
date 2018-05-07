@@ -9,7 +9,7 @@ page-profile {
         position: absolute;
         top: 5px;
         right: 0;
-        right: 20px;
+        right: 30px;
         padding: 0;
     }
 
@@ -21,11 +21,15 @@ page-profile {
         text-align: center;
     }
 
-    .item-md{
+    .item-block{
         padding-left: 0;
     }
     
-    .icon-md{
+    .item-icon{
         padding:0
+    }
+
+    ion-card{
+        margin: 0px 10px 10px 10px !important;
     }
 }

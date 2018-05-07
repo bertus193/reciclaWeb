@@ -8,6 +8,11 @@ page-recycle {
     .tip-box-content{
         display: table-cell;
         vertical-align: middle;
+        padding: 5px;
+    }
+
+    .scroll-content{
+        padding:0px !important;
     }
 }
 

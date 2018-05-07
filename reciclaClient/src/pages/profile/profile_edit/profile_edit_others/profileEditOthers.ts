@@ -70,9 +70,9 @@ export class ProfileEditOthersPage {
         if (gender != null && gender != '') {
             this.user.gender = gender
         }
-        if (school != null && school != '') {
-            this.user.school = school
-        }
+
+        this.user.school = school
+
         if (birthdate != null && birthdate != '') {
             var date = new Date(birthdate)
             if (date != null) {

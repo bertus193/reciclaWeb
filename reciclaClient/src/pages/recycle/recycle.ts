@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { NavController, LoadingController, ActionSheetController, Loading, AlertController } from 'ionic-angular';
+import { NavController, LoadingController, ActionSheetController, Loading, AlertController, Platform } from 'ionic-angular';
 
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { Crop } from '@ionic-native/crop';
@@ -62,7 +62,8 @@ export class RecyclePage {
         private userProvider: UserProvider,
         private itemTypeProvider: ItemTypeProvider,
         private crop: Crop,
-        private tipProvider: TipProvider
+        private tipProvider: TipProvider,
+        private platform: Platform
     ) {
 
         this.getAllItems().then(res => {
@@ -189,14 +190,16 @@ export class RecyclePage {
             targetWidth: 900,
             targetHeight: 900,
             encodingType: this.camera.EncodingType.PNG,
-            mediaType: this.camera.MediaType.PICTURE
+            mediaType: this.camera.MediaType.PICTURE,
+            destinationType: this.camera.DestinationType.FILE_URI // Return image file URI
         };
 
         // Get the data of an image 
-        this.camera.getPicture(options).then((base64ImageCamera) => {
-            var fileUri = 'file://' + base64ImageCamera;
-            //var image = `data:image/png;base64,${imagePath}`; //load image on view
-            this.crop.crop(fileUri, { quality: 100, targetWidth: 650, targetHeight: 650 }).then((imagePath) => {
+        this.camera.getPicture(options).then((imageUri) => {
+            if (this.platform.is('android')) {
+                imageUri = 'file://' + imageUri
+            }
+            this.crop.crop(imageUri, { quality: 100, targetWidth: 650, targetHeight: 650 }).then((imagePath) => {
                 this.utilsProvider.toBase64(imagePath).then(base64Image => {
                     base64Image = base64Image.substring(base64Image.indexOf(',') + 1)
                     this.processImage(base64Image, imagePath)
