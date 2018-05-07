@@ -211,14 +211,16 @@ public class UserController {
         List<User> users = new ArrayList<>();
         User user;
 
-        List<User> userList = this.userService.findTop10ByPoints();
+        List<User> userList = this.userService.findAll();
 
-        for (int i = 0; i < userList.size(); i++) {
-            user = new User();
-            user.setFullName(userList.get(i).getFullName());
-            user.setProfilePicture(userList.get(i).getProfilePicture());
-            user.setPoints(userList.get(i).getPoints());
-            users.add(user);
+        for (int i = 0; (i < userList.size() && i < 10); i++) {
+            if(userList.get(i).getType() != EnumUser.Admin){
+                user = new User();
+                user.setFullName(userList.get(i).getFullName());
+                user.setProfilePicture(userList.get(i).getProfilePicture());
+                user.setPoints(userList.get(i).getPoints());
+                users.add(user);
+            }
         }
 
         if (userList == null || userList.isEmpty()) {
