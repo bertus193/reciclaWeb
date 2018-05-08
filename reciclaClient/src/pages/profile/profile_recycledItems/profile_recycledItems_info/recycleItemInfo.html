@@ -6,20 +6,14 @@
 
 <ion-content>
     <div *ngIf="recycleItem != null;else recycleItemsNotFound">
-        <ion-grid style="height: 97%;">
-            <ion-row style="height: 100%;">
-                <ion-col style="height: 100%;">
-                    <ion-card *ngIf="recycleItem" style="height: 100%;">
-                        <ion-card-header>{{ recycleItem.name }}</ion-card-header>
-                        <img [src]="recycleItem.image" onError="this.src = 'assets/imgs/quieroReciclar.png'" style="max-height: 75%;" />
-                        <ion-card-content>
-                            <p>Tipo: {{ recycleItem.itemType.typeEs }}</p>
-                            <p>Reciclado el: {{ recycleItem.createdDate | date: 'dd/MM/yyyy H:mm'}}</p>
-                        </ion-card-content>
-                    </ion-card>
-                </ion-col>
-            </ion-row>
-        </ion-grid>
+        <ion-card *ngIf="recycleItem" style="height: 100%;">
+            <ion-card-header>{{ recycleItem.name }}</ion-card-header>
+            <img [src]="recycleItem.image" onError="this.src = 'assets/imgs/quieroReciclar.png'" style="max-height: 75%;" />
+            <ion-card-content>
+                <p>Tipo: {{ recycleItem.itemType.typeEs }}</p>
+                <p>Reciclado el: {{ recycleItem.createdDate | date: 'dd/MM/yyyy H:mm'}}</p>
+            </ion-card-content>
+        </ion-card>
     </div>
 </ion-content>
 

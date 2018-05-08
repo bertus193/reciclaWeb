@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { NavController, LoadingController, ActionSheetController, Loading, AlertController, Platform } from 'ionic-angular';
 
-import { Camera, CameraOptions } from '@ionic-native/camera';
+import { Camera } from '@ionic-native/camera';
 import { Crop } from '@ionic-native/crop';
 import { Transfer, TransferObject, FileUploadOptions } from '@ionic-native/transfer';
 import { Geolocation } from '@ionic-native/geolocation';
@@ -25,6 +25,7 @@ import { ItemTypeProvider } from '../../providers/api/itemTypeProvider';
 import { ItemType } from '../../models/itemType';
 import { Tip } from '../../models/tip';
 import { TipProvider } from '../../providers/api/tipProvider';
+import { FileProvider } from '../../providers/fileProvider';
 
 @Component({
     selector: 'page-recycle',
@@ -61,9 +62,8 @@ export class RecyclePage {
         private sessionProvider: SessionProvider,
         private userProvider: UserProvider,
         private itemTypeProvider: ItemTypeProvider,
-        private crop: Crop,
         private tipProvider: TipProvider,
-        private platform: Platform
+        private fileProvider: FileProvider
     ) {
 
         this.getAllItems().then(res => {
@@ -175,49 +175,7 @@ export class RecyclePage {
     }
 
 
-    public takePicture(sourceType) {
-        this.loading = this.loadingCtrl.create({
-            content: 'Cargando...',
-            enableBackdropDismiss: true
-        });
-        this.loading.present()
 
-        var options: CameraOptions = {
-            quality: 100,
-            sourceType: sourceType,
-            saveToPhotoAlbum: false,
-            correctOrientation: true,
-            targetWidth: 900,
-            targetHeight: 900,
-            encodingType: this.camera.EncodingType.PNG,
-            mediaType: this.camera.MediaType.PICTURE,
-            destinationType: this.camera.DestinationType.FILE_URI // Return image file URI
-        };
-
-        // Get the data of an image 
-        this.camera.getPicture(options).then((imageUri) => {
-            if (this.platform.is('android')) {
-                imageUri = 'file://' + imageUri
-            }
-            this.crop.crop(imageUri, { quality: 100, targetWidth: 650, targetHeight: 650 }).then((imagePath) => {
-                this.utilsProvider.toBase64(imagePath).then(base64Image => {
-                    base64Image = base64Image.substring(base64Image.indexOf(',') + 1)
-                    this.processImage(base64Image, imagePath)
-                })
-            }, error => { //crop.crop
-                this.loading.dismiss()
-                if (error.message != "User cancelled") {
-                    this.notificationProvider.presentTopToast('Error en la selección de la imagen.');
-                }
-            })
-        }).catch(error => { //camera.GetPicture
-            this.loading.dismiss()
-            if (error != 'No Image Selected') {
-                this.notificationProvider.presentTopToast('Error en la selección de la imagen.');
-            }
-
-        });
-    }
 
     public presentActionSheetActions() {
         this.sessionProvider.getSession().then(res => {
@@ -237,6 +195,23 @@ export class RecyclePage {
             this.loading.dismiss()
             this.notificationProvider.presentTopToast('Error obteniendo los datos necesarios.')
         });
+    }
+
+    public takePicture(sourceType) {
+        this.loading = this.loadingCtrl.create({
+            content: 'Cargando...',
+            enableBackdropDismiss: true
+        });
+        this.loading.present()
+
+        this.fileProvider.takePicture(sourceType).then((res: string[]) => {
+            this.processImage(res['base64Image'], res['imagePath'])
+        }, error => {
+            this.loading.dismiss()
+            if (error != 'No Image Selected' && error.message != "User cancelled") {
+                this.notificationProvider.presentTopToast('Error en la selección de la imagen.');
+            }
+        })
     }
 
     private actionSheetMenuActions() {
@@ -309,42 +284,20 @@ export class RecyclePage {
         this.recycleItem.createdDate = new Date()
 
 
-        var options: FileUploadOptions = {
-            fileKey: "file",
-            fileName: filename,
-            chunkedMode: false,
-            mimeType: "multipart/form-data",
-            params: { 'fileName': filename }
-        };
 
-        const fileTransfer: TransferObject = this.transfer.create();
-
-        this.uploadFileWithTimeout(fileTransfer, imagePath, urlUpload, options).then(res => {
-            this.loading.setContent('Obteniendo el tipo de objeto...')
+        this.fileProvider.uploadFile(imagePath, filename, urlUpload).then(res => {
             if (res == true) {
+                this.loading.setContent('Obteniendo el tipo de objeto...')
                 this.getItemInfo(base64Image)
             }
             else {
                 this.loading.dismiss()
                 this.notificationProvider.presentAlertError('La imagen no ha sido cargada correctamente.')
             }
-        }).catch(error => {
+        }, error => {
             this.loading.dismiss()
             this.notificationProvider.presentAlertError('Error de conexión con el servidor de imágenes.')
         })
-
-
-
-    }
-
-    uploadFileWithTimeout(fileTransfer: TransferObject, targetPath, urlUpload, options): Promise<boolean> {
-        return this.utilsProvider.timeoutPromise(this.config.defaultTimeoutTime + 5000,
-            fileTransfer.upload(targetPath, urlUpload, options).then(data => {
-                return true
-            }, error => {
-                return false
-            })
-        )
     }
 
     public getItemInfo(base64Image) {

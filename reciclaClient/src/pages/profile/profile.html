@@ -14,58 +14,55 @@
 <ion-content>
     <div [ngSwitch]="profileSegment" style="height: 97%">
         <ion-list *ngSwitchCase="'profile'" style="height: 100%;">
-            <ion-grid>
-                <ion-row>
-                    <ion-col>
-                        <ion-card *ngIf="user">
-                            <ion-card-header>
-                                <span style="float: left;">
-                                    <ion-badge style="vertical-align: middle" *ngIf="user.collective != null">{{user.collective.abbreviation}}</ion-badge> {{ user.fullName }}</span>
-                                <span style="float: right;">
-                                    <button color="dark" ion-button clear class="editButton" (tap)="goEditProfile()">
-                                        <ion-icon name="md-create"></ion-icon>
-                                    </button>
-                                </span>
-                            </ion-card-header>
-                            <img [src]="user.profilePicture" onError="this.src = 'assets/imgs/quieroReciclar.png'" />
-                            <ion-card-content>
-                                <ion-item>
-                                    <ion-icon name="md-mail" item-start></ion-icon>
-                                    <span item-end>{{ user.email }}</span>
-                                </ion-item>
-                                <ion-item>
-                                    <ion-icon name="md-school" item-start></ion-icon>
-                                    <span item-end>{{user.school}}</span>
-                                </ion-item>
-                                <ion-item>
-                                    Fecha de registro
-                                    <ion-badge item-end>{{ user.createdDate | date: 'dd/MM/yyyy'}}</ion-badge>
-                                </ion-item>
-                                <ion-item>
-                                    Año de nacimiento
-                                    <ion-badge item-end>{{ user.birthdate | date: 'dd/MM/yyyy'}}</ion-badge>
-                                </ion-item>
-                                <ion-row class="pointsBox">
-                                    <ion-col>
-                                        <p>Puntos reciclando</p>
-                                        <p>
-                                            <ion-badge item-end>{{ user.points}}</ion-badge>
-                                        </p>
-                                    </ion-col>
-                                    <ion-col>
-                                        <p>Puntos jugando</p>
-                                        <p>
-                                            <ion-badge item-end>{{ user.gamePoints}}</ion-badge>
-                                        </p>
-                                    </ion-col>
-                                </ion-row>
+            <ion-card *ngIf="user">
+                <ion-card-header>
+                    <span style="float: left;">
+                        <ion-badge style="vertical-align: middle" *ngIf="user.collective != null">{{user.collective.abbreviation}}</ion-badge> {{ user.fullName }}</span>
+                    <span style="float: right;">
+                        <button color="dark" ion-button clear class="editButton" (tap)="goEditProfile()">
+                            <ion-icon name="md-create"></ion-icon>
+                        </button>
+                    </span>
+                </ion-card-header>
+                <img [src]="user.profilePicture" onError="this.src = 'assets/imgs/quieroReciclar.png'" />
+                <ion-card-content>
+                    <ion-item>
+                        <ion-icon name="md-mail" item-start></ion-icon>
+                        <span item-end>{{ user.email }}</span>
+                    </ion-item>
+                    <ion-item>
+                        <ion-icon name="md-school" item-start></ion-icon>
+                        <span item-end>{{user.school}}</span>
+                    </ion-item>
+                    <ion-item>
+                        Fecha de registro
+                        <ion-badge item-end>{{ user.createdDate | date: 'dd/MM/yyyy'}}</ion-badge>
+                    </ion-item>
+                    <ion-item>
+                        Año de nacimiento
+                        <ion-badge item-end>{{ user.birthdate | date: 'dd/MM/yyyy'}}</ion-badge>
+                    </ion-item>
+                    <ion-row class="pointsBox">
+                        <ion-col>
+                            <p>Puntos reciclando</p>
+                            <p>
+                                <ion-badge item-end>{{ user.points}}</ion-badge>
+                            </p>
+                        </ion-col>
+                        <ion-col>
+                            <p>Puntos jugando</p>
+                            <p>
+                                <ion-badge item-end>{{ user.gamePoints}}</ion-badge>
+                            </p>
+                        </ion-col>
+                    </ion-row>
 
-                            </ion-card-content>
-                        </ion-card>
-                        <button ion-button block (tap)="goToLogout()">Cerrar sesión</button>
-                    </ion-col>
-                </ion-row>
-            </ion-grid>
+                </ion-card-content>
+            </ion-card>
+            <div class="logoutButton">
+                <button ion-button block (tap)="goToLogout()">Cerrar sesión</button>
+            </div>
+
         </ion-list>
         <ion-list *ngSwitchCase="'history'" style="height: 100%">
             <page-myRecycledItems></page-myRecycledItems>

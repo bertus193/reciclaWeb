@@ -16,6 +16,7 @@ import { NormalLoginPage } from './normalLogin/normalLogin';
 import { EncryptProvider } from '../../providers/encryptProvider';
 import { InstagramProvider } from '../../providers/instagramProvider';
 import { TypeUser } from '../../models/typeUser';
+import { UtilsProvider } from '../../providers/utils';
 
 
 @Component({
@@ -36,7 +37,8 @@ export class LoginPage {
         private userProvider: UserProvider,
         private navCtrl: NavController,
         private encryptProvider: EncryptProvider,
-        private instagramProvider: InstagramProvider
+        private instagramProvider: InstagramProvider,
+        private utilsProvider: UtilsProvider
     ) {
     }
 
@@ -233,6 +235,7 @@ export class LoginPage {
     }
 
     createUserBySocialUser(user: User): Observable<{ user: User, status: number }> {
+
         var user: User
         var status: number
         return this.userProvider.createUser(user).map(res => {

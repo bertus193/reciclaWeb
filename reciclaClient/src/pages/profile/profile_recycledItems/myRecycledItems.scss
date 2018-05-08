@@ -6,4 +6,8 @@ page-myRecycledItems {
     .item-md{
         padding-left: 16px;
     }
+
+    .item-ios ion-avatar[item-left], .item-ios ion-thumbnail[item-left], .item-ios ion-avatar[item-start], .item-ios ion-thumbnail[item-start]{
+        margin-left: 10px;
+    }
 }

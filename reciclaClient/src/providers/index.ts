@@ -12,6 +12,7 @@ import { QuestionProvider } from "./api/questionProvider";
 import { UserQuestionProvider } from "./api/userQuestionProvider";
 import { CollectiveProvider } from "./api/collectiveProvider";
 import { TipProvider } from "./api/tipProvider";
+import { FileProvider } from "./fileProvider";
 
 export const APP_PROVIDERS = [
     SessionProvider,
@@ -27,5 +28,6 @@ export const APP_PROVIDERS = [
     QuestionProvider,
     UserQuestionProvider,
     CollectiveProvider,
-    TipProvider
+    TipProvider,
+    FileProvider
 ];

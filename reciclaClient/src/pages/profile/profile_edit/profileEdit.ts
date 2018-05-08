@@ -1,13 +1,14 @@
 import { Component, Inject } from '@angular/core';
 import { FormGroup, FormBuilder, AbstractControl } from '@angular/forms';
 import { ActionSheetController, Loading, LoadingController, NavParams, NavController } from 'ionic-angular';
-import { Camera, CameraOptions } from '@ionic-native/camera';
+import { Camera } from '@ionic-native/camera';
 import { NotificationProvider } from '../../../providers/notifications';
 import { Crop } from '@ionic-native/crop';
 import { User } from '../../../models/user';
 import { UserProvider } from '../../../providers/api/userProvider';
 import { APP_CONFIG_TOKEN, ApplicationConfig } from '../../../app/app-config';
 import { FileUploadOptions, TransferObject, Transfer } from '@ionic-native/transfer';
+import { FileProvider } from '../../../providers/fileProvider';
 
 @Component({
     selector: 'page-profileEdit',
@@ -28,11 +29,11 @@ export class ProfileEditPage {
         private camera: Camera,
         private loadingCtrl: LoadingController,
         private notificationProvider: NotificationProvider,
-        private crop: Crop,
         private navParams: NavParams,
         private userProvider: UserProvider,
         private navCtrl: NavController,
-        private transfer: Transfer
+        private transfer: Transfer,
+        private fileProvider: FileProvider
     ) {
         this.user = this.navParams.get('user')
         this.image = this.user.profilePicture
@@ -63,17 +64,17 @@ export class ProfileEditPage {
             if (this.image != this.user.profilePicture) {
                 this.user.profilePicture = this.image
 
-                this.uploadImage(this.image).then(urlUploadedFiles => {
-                    this.image = urlUploadedFiles
-                    this.user.profilePicture = urlUploadedFiles
+                this.uploadImage(this.image).then((res: string) => {
+                    this.image = res
+                    this.user.profilePicture = res
                     this.userProvider.saveUser(this.user, this.user.accessToken).subscribe(res => {
                         this.notificationProvider.presentTopToast("El usuario se ha guardado correctamente!")
                         this.loading.dismiss()
                         this.navCtrl.pop()
+                    }, error => {
+                        this.notificationProvider.presentTopToast("Error a la hora de guardar el usuario")
+                        this.loading.dismiss()
                     })
-                }).catch(error => {
-                    this.loading.dismiss()
-                    this.notificationProvider.presentTopToast("Error al guardar el usuario")
                 })
             }
             else {
@@ -125,36 +126,15 @@ export class ProfileEditPage {
         });
         this.loading.present()
 
-        var options: CameraOptions = {
-            quality: 100,
-            sourceType: sourceType,
-            saveToPhotoAlbum: false,
-            correctOrientation: true,
-            targetWidth: 900,
-            targetHeight: 900,
-            encodingType: this.camera.EncodingType.PNG,
-            mediaType: this.camera.MediaType.PICTURE
-        };
-
-        // Get the data of an image 
-        this.camera.getPicture(options).then((imagePath) => {
-            var fileUri = 'file://' + imagePath;
-            this.crop.crop(fileUri, { quality: 100, targetWidth: 650, targetHeight: 650 }).then((image) => {
-                this.image = image
-                this.loading.dismiss()
-            }, error => { //crop.crop
-                this.loading.dismiss()
-                if (error.message != "User cancelled") {
-                    this.notificationProvider.presentTopToast('Error en la selección de la imagen.');
-                }
-            })
-        }).catch(error => { //camera.GetPicture
+        this.fileProvider.takePicture(sourceType).then((res: string[]) => {
+            this.image = res['imagePath']
             this.loading.dismiss()
-            if (error != 'No Image Selected') {
+        }, error => {
+            this.loading.dismiss()
+            if (error != 'No Image Selected' && error.message != "User cancelled") {
                 this.notificationProvider.presentTopToast('Error en la selección de la imagen.');
             }
-
-        });
+        })
     }
 
     public uploadImage(targetPath) {
@@ -166,21 +146,22 @@ export class ProfileEditPage {
         var urlUpload = url + "/upload-avatar.php"
         var urlUploadedFiles = url + '/uploads/avatars/' + filename
 
-
-        var options: FileUploadOptions = {
-            fileKey: "file",
-            fileName: filename,
-            chunkedMode: false,
-            mimeType: "multipart/form-data",
-            params: { 'fileName': filename }
-        };
-
-        const fileTransfer: TransferObject = this.transfer.create();
-
-        return fileTransfer.upload(targetPath, urlUpload, options).then(data => {
-            return urlUploadedFiles
+        return new Promise((resolve, reject) => {
+            this.fileProvider.uploadFile(targetPath, filename, urlUpload).then(res => {
+                if (res == true) {
+                    resolve(urlUploadedFiles)
+                }
+                else {
+                    this.loading.dismiss()
+                    this.notificationProvider.presentAlertError('La imagen no ha sido cargada correctamente.')
+                    reject()
+                }
+            }, error => {
+                this.loading.dismiss()
+                this.notificationProvider.presentAlertError('Error de conexión con el servidor de imágenes.')
+                reject()
+            })
         })
-
     }
 
     static EmailIsValid(control: FormGroup) {
