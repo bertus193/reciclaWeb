@@ -1,7 +1,7 @@
 import React from 'react';
-import { LongTextInput, Responsive, SimpleList, List, Edit, Create, Datagrid, TextField, EditButton, DisabledInput, SimpleForm, TextInput, DateField } from 'admin-on-rest';
+import { LongTextInput, Responsive, SimpleList, List, Edit, Create, Datagrid, TextField, EditButton, DisabledInput, SimpleForm, TextInput } from 'admin-on-rest';
 import UrlField from '../fieldsAndInputs/MyUrlField';
-import DateTimeInput from 'aor-datetime-input';
+
 
 export const TipList = (props) => (
     <List {...props}>
@@ -41,10 +41,10 @@ export const TipEdit = (props) => (
 );
 
 export const TipCreate = (props) => (
-    <Create {...props}>
-        <SimpleForm>
+    <Create title={"Añadir Tip"} {...props}>
+        <SimpleForm redirect="list">
             <TextInput source="name" />
-            <LongTextInput source="description" />
+            <TextInput source="description" />
         </SimpleForm>
     </Create>
 );

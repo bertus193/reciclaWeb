@@ -20,7 +20,7 @@ export const RecycleItemList = (props) => (
                     <UrlField urlDirection="recycleItems" source="id" />
                     <TextImageField source="name" source2="image" />
                     <MyReferenceField label="Recycled by" source="recycleUser" reference="users">
-                        <TextField source="username" />
+                        <TextField source="email" />
                     </MyReferenceField>
                     <MyReferenceField label="Item type" source="itemType" reference="itemTypes">
                         <TextField source="type" />
@@ -49,7 +49,7 @@ export const RecycleItemEdit = (props) => (
             <TextInput label="URL Image" source="image" />
             <TextInput source="name" />
             <ReferenceInput label="Recycle user" source="recycleUser" reference="users">
-                <SelectInput optionText="username" />
+                <SelectInput optionText="email" />
             </ReferenceInput>
             <ReferenceInput label="Item type" source="itemType.id" reference="itemTypes">
                 <SelectInput optionText="type" />
@@ -68,7 +68,7 @@ export const RecycleItemCreate = (props) => (
             <TextInput source="name" />
             <TextInput label="URL image" source="image" />
             <ReferenceInput label="Recycled by" source="recycleUser" reference="users">
-                <SelectInput optionText="username" />
+                <SelectInput optionText="email" />
             </ReferenceInput>
             <ReferenceInput label="Item type" source="itemType.id" reference="itemTypes">
                 <SelectInput optionText="type" />
