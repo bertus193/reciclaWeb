@@ -1,9 +1,7 @@
 import { Component, Inject } from '@angular/core';
-import { NavController, LoadingController, ActionSheetController, Loading, AlertController, Platform } from 'ionic-angular';
+import { NavController, LoadingController, ActionSheetController, Loading, AlertController } from 'ionic-angular';
 
 import { Camera } from '@ionic-native/camera';
-import { Crop } from '@ionic-native/crop';
-import { Transfer, TransferObject, FileUploadOptions } from '@ionic-native/transfer';
 import { Geolocation } from '@ionic-native/geolocation';
 import { LocationAccuracy } from '@ionic-native/location-accuracy';
 import { ApplicationConfig, APP_CONFIG_TOKEN } from '../../app/app-config';
@@ -50,7 +48,6 @@ export class RecyclePage {
         @Inject(APP_CONFIG_TOKEN) private config: ApplicationConfig,
         private navCtrl: NavController,
         private camera: Camera,
-        private transfer: Transfer,
         private actionSheetCtrl: ActionSheetController,
         private loadingCtrl: LoadingController,
         private geolocation: Geolocation,
@@ -275,7 +272,7 @@ export class RecyclePage {
 
         var url = this.config.uploadFilesUrl
         var urlUpload = url + "/upload.php"
-        var urlUploadedFile = url + '/uploads/' + filename
+        var urlUploadedFile = url + this.fileProvider.recycleItemImagesFolder + filename
 
         this.recycleItem = new RecycleItem()
         this.recycleItem.id = null

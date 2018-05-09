@@ -3,11 +3,9 @@ import { FormGroup, FormBuilder, AbstractControl } from '@angular/forms';
 import { ActionSheetController, Loading, LoadingController, NavParams, NavController } from 'ionic-angular';
 import { Camera } from '@ionic-native/camera';
 import { NotificationProvider } from '../../../providers/notifications';
-import { Crop } from '@ionic-native/crop';
 import { User } from '../../../models/user';
 import { UserProvider } from '../../../providers/api/userProvider';
 import { APP_CONFIG_TOKEN, ApplicationConfig } from '../../../app/app-config';
-import { FileUploadOptions, TransferObject, Transfer } from '@ionic-native/transfer';
 import { FileProvider } from '../../../providers/fileProvider';
 
 @Component({
@@ -32,7 +30,6 @@ export class ProfileEditPage {
         private navParams: NavParams,
         private userProvider: UserProvider,
         private navCtrl: NavController,
-        private transfer: Transfer,
         private fileProvider: FileProvider
     ) {
         this.user = this.navParams.get('user')
@@ -48,7 +45,6 @@ export class ProfileEditPage {
     }
 
     public editProfile_Button() {
-
         var email: string = this.profileEditForm.get("email").value
         var fullName: string = this.profileEditForm.get("fullName").value
 
@@ -58,35 +54,43 @@ export class ProfileEditPage {
             });
             this.loading.present()
 
+            this.emailCheckDifferenceAndExistAlready(this.user.email, email).then(res => {
+                if (res == false) {
+                    this.user.email = email
+                    this.user.fullName = fullName
 
-            this.user.email = email
-            this.user.fullName = fullName
-            if (this.image != this.user.profilePicture) {
-                this.user.profilePicture = this.image
+                    if (this.image != this.user.profilePicture) {
+                        this.user.profilePicture = this.image
 
-                this.uploadImage(this.image).then((res: string) => {
-                    this.image = res
-                    this.user.profilePicture = res
-                    this.userProvider.saveUser(this.user, this.user.accessToken).subscribe(res => {
-                        this.notificationProvider.presentTopToast("El usuario se ha guardado correctamente!")
-                        this.loading.dismiss()
-                        this.navCtrl.pop()
-                    }, error => {
-                        this.notificationProvider.presentTopToast("Error a la hora de guardar el usuario")
-                        this.loading.dismiss()
-                    })
-                })
-            }
-            else {
-                this.userProvider.saveUser(this.user, this.user.accessToken).subscribe(res => {
-                    this.notificationProvider.presentTopToast("El usuario se ha guardado correctamente!")
+                        this.uploadImage(this.image).then((res: string) => {
+                            this.image = res
+                            this.user.profilePicture = res
+                            this.userProvider.saveUser(this.user, this.user.accessToken).subscribe(res => {
+                                this.notificationProvider.presentTopToast("El usuario se ha guardado correctamente!")
+                                this.loading.dismiss()
+                                this.navCtrl.pop()
+                            }, error => {
+                                this.notificationProvider.presentTopToast("Error a la hora de guardar el usuario")
+                                this.loading.dismiss()
+                            })
+                        })
+                    }
+                    else {
+                        this.userProvider.saveUser(this.user, this.user.accessToken).subscribe(res => {
+                            this.notificationProvider.presentTopToast("El usuario se ha guardado correctamente!")
+                            this.loading.dismiss()
+                            this.navCtrl.pop()
+                        }, error => {
+                            this.loading.dismiss()
+                            this.notificationProvider.presentTopToast("Error al guardar el usuario")
+                        })
+                    }
+                }
+                else {
                     this.loading.dismiss()
-                    this.navCtrl.pop()
-                }, error => {
-                    this.loading.dismiss()
-                    this.notificationProvider.presentTopToast("Error al guardar el usuario")
-                })
-            }
+                    this.notificationProvider.presentAlertError("Dicho correo ya está siendo utilizado")
+                }
+            })
         }
         else {
             this.navCtrl.pop()
@@ -120,6 +124,22 @@ export class ProfileEditPage {
         actionSheet.present();
     }
 
+    public emailCheckDifferenceAndExistAlready(userMail: string, newMail: string) {
+        return new Promise(resolve => {
+            if (userMail != newMail) {
+                this.userProvider.existUserByEmail(newMail).subscribe(res => {
+                    resolve(res.json())
+                }, error => {
+                    resolve(true)
+                })
+            }
+            else {
+                resolve(false)
+            }
+        })
+
+    }
+
     public takePicture(sourceType) {
         this.loading = this.loadingCtrl.create({
             content: 'Cargando...'
@@ -144,7 +164,7 @@ export class ProfileEditPage {
 
         var url = this.config.uploadFilesUrl
         var urlUpload = url + "/upload-avatar.php"
-        var urlUploadedFiles = url + '/uploads/avatars/' + filename
+        var urlUploadedFiles = url + this.fileProvider.avatarsFolder + filename
 
         return new Promise((resolve, reject) => {
             this.fileProvider.uploadFile(targetPath, filename, urlUpload).then(res => {

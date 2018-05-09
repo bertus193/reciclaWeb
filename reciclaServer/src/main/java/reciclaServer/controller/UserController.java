@@ -61,7 +61,6 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-
     @RequestMapping(value = "/users", method = RequestMethod.POST)
     public ResponseEntity<?> createUser(@RequestBody User user) {
 
@@ -93,6 +92,10 @@ public class UserController {
 
             if (currentUser == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+
+            if (userService.isUserExistByEmail(user.getEmail())) {
+                return new ResponseEntity<Void>(HttpStatus.CONFLICT);
             }
 
             Timestamp userPwdRcverDate = user.getResetPwdCodeDate();
@@ -189,9 +192,7 @@ public class UserController {
                     }
                 }
                 if(userFound.getType() == EnumUser.Normal){
-                    if(userFound.getUsername() == null || !userFound.getUsername().equals("debug@debug.com")){
-                        userFound.setAccessToken(UUID.randomUUID().toString());
-                    }
+                    userFound.setAccessToken(UUID.randomUUID().toString());
                 }
                 userFound = userService.saveUser(userFound);
 
@@ -287,5 +288,16 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
+    }
+
+    @RequestMapping(value = "/users/exist/email/{email:.+}", method = RequestMethod.GET)
+    public ResponseEntity<?> existUserByEmail(@PathVariable("email") String email) {
+        User user = userService.findByEmail(email);
+
+        if (user == null) {
+            return new ResponseEntity<>(false, HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(true, HttpStatus.OK);
     }
 }

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map';
 import { StoragePoint } from '../models/storagePoint';
 import { Position } from '../models/position';
-import { Observable, TimeoutError } from 'rxjs/Rx'
+import { Observable } from 'rxjs/Rx'
 import { StoragesProvider } from './api/storagesProvider';
 
 

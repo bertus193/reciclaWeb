@@ -1,7 +1,6 @@
 import { Injectable, Inject } from '@angular/core';
 import 'rxjs/add/operator/map';
-import { Position } from '../models/position';
-import { Observable, TimeoutError } from 'rxjs/Rx'
+import { TimeoutError } from 'rxjs/Rx'
 import { CameraOptions, Camera } from '@ionic-native/camera';
 import { Platform } from 'ionic-angular';
 import { Crop } from '@ionic-native/crop';
@@ -11,6 +10,9 @@ import { APP_CONFIG_TOKEN, ApplicationConfig } from '../app/app-config';
 
 @Injectable()
 export class FileProvider {
+
+    public recycleItemImagesFolder: string = "/uploads/"
+    public avatarsFolder: string = "/uploads/avatars/"
 
     constructor(
         @Inject(APP_CONFIG_TOKEN) private config: ApplicationConfig,

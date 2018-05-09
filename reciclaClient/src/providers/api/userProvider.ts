@@ -58,4 +58,8 @@ export class UserProvider {
     public recoverUser(user: User) {
         return this.http.post(this.config.apiEndpoint + "/users/recover", JSON.stringify(user), this.requestJsonOptions).timeout(this.config.defaultTimeoutTime)
     }
+
+    public existUserByEmail(email: string) {
+        return this.http.get(this.config.apiEndpoint + "/users/exist/email/" + email, this.requestJsonOptions).timeout(this.config.defaultTimeoutTime)
+    }
 }

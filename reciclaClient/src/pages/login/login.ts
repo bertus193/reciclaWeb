@@ -7,8 +7,6 @@ import { App } from 'ionic-angular/components/app/app'
 import { User } from '../../models/user'
 import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
 
-import { Observable } from 'rxjs/Rx'
-import 'rxjs/add/operator/map'
 import { APP_CONFIG_TOKEN, ApplicationConfig } from '../../app/app-config';
 import { LoadingController, Loading, NavController } from 'ionic-angular';
 import { UserProvider } from '../../providers/api/userProvider';
@@ -16,7 +14,6 @@ import { NormalLoginPage } from './normalLogin/normalLogin';
 import { EncryptProvider } from '../../providers/encryptProvider';
 import { InstagramProvider } from '../../providers/instagramProvider';
 import { TypeUser } from '../../models/typeUser';
-import { UtilsProvider } from '../../providers/utils';
 
 
 @Component({
@@ -37,8 +34,7 @@ export class LoginPage {
         private userProvider: UserProvider,
         private navCtrl: NavController,
         private encryptProvider: EncryptProvider,
-        private instagramProvider: InstagramProvider,
-        private utilsProvider: UtilsProvider
+        private instagramProvider: InstagramProvider
     ) {
     }
 
@@ -53,53 +49,45 @@ export class LoginPage {
             content: 'Iniciando sesión...'
         });
         this.loading.present()
-        this.loginFb().then(res => {
-            res.subscribe(user => {
-                this.loading.dismiss()
-                if (user != null) {
-                    this.sessionProvider.updateSession(user)
-                    this.app.getRootNavs()[0].setRoot(TabsPage)
-                }
-            }, error => {
-                this.loading.dismiss()
-                this.notificationProvider.presentTopToast(this.config.defaultTimeoutMsg);
-            })
-        }).catch(error => {
+        this.loginFb().then().then((user: User) => {
+            this.loading.dismiss()
+            this.sessionProvider.updateSession(user)
+            this.app.getRootNavs()[0].setRoot(TabsPage)
+        }, error => {
             this.loading.dismiss()
             this.notificationProvider.presentTopToast(this.config.defaultTimeoutMsg);
         })
     }
 
-    loginFb(): Promise<Observable<User>> {
+    loginFb() {
+        return new Promise((resolve, reject) => {
+            return this.fb.login(['public_profile', 'email']).then((fbUser: FacebookLoginResponse) =>
+                this.fb.api('me?fields=id,email,name,picture.width(720).height(720).as(picture_large)', []).then(profile => {
 
-        return this.fb.login(['public_profile', 'email']).then((fbUser: FacebookLoginResponse) =>
-            this.fb.api('me?fields=id,email,name,picture.width(720).height(720).as(picture_large)', []).then(profile => {
+                    var user: User = new User()
 
-                var user: User = new User()
+                    //user.email = profile['email']
+                    user.username = profile['id']
+                    user.fullName = profile['name']
+                    user.profilePicture = profile['picture_large']['data']['url']
+                    user.accessToken = fbUser.authResponse.accessToken
+                    user.type = TypeUser.Facebook
 
-                //user.email = profile['email']
-                user.username = profile['id']
-                user.fullName = profile['name']
-                user.profilePicture = profile['picture_large']['data']['url']
-                user.accessToken = fbUser.authResponse.accessToken
-                user.type = TypeUser.Facebook
-
-                return this.findOrCreateUser(user).timeout(this.config.defaultTimeoutTime).map((res: any) => {
-                    if (res.value != null) {
-                        user = res.value
-                    } else {
+                    return this.findOrCreateUser(user).then((res: User) => {
                         user = res
-                    }
-                    return user
-                }).catch(error => {
-                    return Observable.throw("[login()] ->" + error)
+                        resolve(user)
+                    }, error => {
+                        reject(error)
+                    })
+                }, error => {
+                    reject(error)
                 })
-            })
-        ).catch(e => {
-            return null
-        }).catch(error => {
-            return Observable.throw("[login()] ->" + error)
-        });
+            ).catch(error => {
+                reject(error)
+            }).catch(error => {
+                reject(error)
+            });
+        })
     }
 
     loginInstagram() {
@@ -119,13 +107,8 @@ export class LoginPage {
                 user.accessToken = tokenRes.access_token
                 user.type = TypeUser.Instagram
 
-                this.findOrCreateUser(user).timeout(this.config.defaultTimeoutTime).subscribe((res: any) => {
-                    if (res.value != null) {
-                        user = res.value
-                    } else {
-                        user = res
-                    }
-                    this.sessionProvider.updateSession(user)
+                this.findOrCreateUser(user).then((res: User) => {
+                    this.sessionProvider.updateSession(res)
                     this.app.getRootNavs()[0].setRoot(TabsPage)
                 }, error => {
                     this.loading.dismiss()
@@ -155,15 +138,17 @@ export class LoginPage {
         user.profilePicture = 'https://reciclaweb.000webhostapp.com/uploads/avatars/Debug.jpg'
         user.type = TypeUser.Normal
 
-        return this.findOrCreateUser(user).timeout(this.config.defaultTimeoutTime).map((res: any) => {
-            if (res.value != null) {
-                user = res.value
-            } else {
-                user = res
-            }
-            return user
-        }).catch(error => {
-            return Observable.throw("[findAndUpdateOrCreateUser()] ->" + error)
+        return new Promise((resolve, reject) => {
+            this.findOrCreateUser(user).then((res: any) => {
+                if (res.value != null) {
+                    user = res.value
+                } else {
+                    user = res
+                }
+                resolve(user)
+            }, error => {
+                reject(user)
+            })
         })
 
 
@@ -175,76 +160,67 @@ export class LoginPage {
                 content: 'Iniciando sesión...'
             });
             this.loading.present()
-            this.loginInDebugMode().subscribe(user => {
+            this.loginInDebugMode().then((user: User) => {
                 this.loading.dismiss()
                 if (user != null) {
                     this.sessionProvider.updateSession(user)
                     this.app.getRootNavs()[0].setRoot(TabsPage)
                 }
-            }, error => {
-                this.loading.dismiss()
-                this.notificationProvider.presentTopToast(this.config.defaultTimeoutMsg);
+            }, (rejectUser: User) => {
+                this.userProvider.login(rejectUser).subscribe(res => {
+                    this.loading.dismiss()
+                    this.sessionProvider.updateSession(res.json())
+                    this.app.getRootNavs()[0].setRoot(TabsPage)
+                }, error => {
+                    this.loading.dismiss()
+                    this.notificationProvider.presentTopToast(this.config.defaultTimeoutMsg);
+                })
             })
         }
     }
 
-    findOrCreateUser(loginUser: User): Observable<User> {
-        return this.findLoginUserByUsername(loginUser.username, loginUser.accessToken, loginUser.type).map(
-            res => {
-                if (res.status == 200) {
-                    return res.user
-                } else {
-                    return null
-                }
-            }).catch(err => {
+    findOrCreateUser(loginUser: User) {
+        return new Promise((resolve, reject) => {
+            this.findLoginUserByUsername(loginUser.username, loginUser.accessToken, loginUser.type).then(res => {
+                resolve(res)
+            }, err => {
                 if (err.status === 404) {
-
-                    return this.createUserBySocialUser(loginUser).map(res => {
-                        if (res.status == 201) {
-                            return Observable.of(res.user)
-                        }
-                        else {
-                            return Observable.of(null);
-                        }
-                    }).catch(error => {
-                        return Observable.throw("[findAndUpdateOrCreateUser] -> " + error)
+                    return this.createUserBySocialUser(loginUser).then(res => {
+                        resolve(res)
+                    }, error => {
+                        reject(error)
                     })
                 }
                 else {
-                    return Observable.of(null);
+                    reject(err)
                 }
             });
+        })
     }
 
 
-    findLoginUserByUsername(username: string, accessToken: string, userType: string): Observable<{ user: User, status: number }> {
+    findLoginUserByUsername(username: string, accessToken: string, userType: string) {
         var user: User
-        var status: number
-
-        return this.userProvider.findUserByUsername(username, accessToken, userType).map(res => {
-            status = res.status
-
-            if (status === 200) {
+        return new Promise((resolve, reject) => {
+            this.userProvider.findUserByUsername(username, accessToken, userType).subscribe(res => {
                 user = res.json();
-            }
-            return { user, status }
-        }).catch(error => {
-            return Observable.throw(error);
-        });
+                resolve(user)
+            }, error => {
+                reject(error)
+            });
+        })
 
     }
 
-    createUserBySocialUser(user: User): Observable<{ user: User, status: number }> {
+    createUserBySocialUser(user: User) {
 
         var user: User
-        var status: number
-        return this.userProvider.createUser(user).map(res => {
-            status = res.status
-
-            if (status === 201) {
-                user = res.json()
-            }
-            return { user, status }
+        return new Promise((resolve, reject) => {
+            this.userProvider.createUser(user).subscribe(res => {
+                resolve(res.json())
+            }, error => {
+                reject(error)
+            })
         })
     }
 }
