@@ -53,8 +53,8 @@ public class UserService {
         return userDAO.findFirstByEmailAndPassword(email, password);
     }
 
-    public List<User> findAll() {
-        return this.userDAO.findAll();
+    public List<User> getUserPointsRanking() {
+        return this.userDAO.findAllByOrderByPointsDesc();
     }
 
 

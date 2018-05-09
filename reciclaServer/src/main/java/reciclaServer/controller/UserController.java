@@ -212,7 +212,7 @@ public class UserController {
         List<User> users = new ArrayList<>();
         User user;
 
-        List<User> userList = this.userService.findAll();
+        List<User> userList = this.userService.getUserPointsRanking();
 
         for (int i = 0; (i < userList.size() && i < 10); i++) {
             if(userList.get(i).getType() != EnumUser.Admin){

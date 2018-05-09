@@ -11,7 +11,7 @@ import java.util.List;
 @Transactional
 public interface UserDAO extends CrudRepository<User, Long> {
 
-    List<User> findAll();
+    List<User> findAllByOrderByPointsDesc();
 
     User findFirstByEmail(String email);
 

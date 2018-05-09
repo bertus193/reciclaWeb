@@ -119,4 +119,23 @@ export class FileProvider {
 
         return Promise.race([promise, wrapPromise]);
     }
+
+    convertToDataURLviaCanvas(url, outputFormat) {
+        return new Promise((resolve, reject) => {
+            var img = new Image();
+            img.crossOrigin = 'Anonymous';
+            img.onload = () => {
+                let canvas = <HTMLCanvasElement>document.createElement('CANVAS'),
+                    ctx = canvas.getContext('2d'),
+                    dataURL;
+                canvas.height = img.height;
+                canvas.width = img.width;
+                ctx.drawImage(img, 0, 0);
+                dataURL = canvas.toDataURL(outputFormat);
+                resolve(dataURL);
+                canvas = null;
+            };
+            img.src = url;
+        });
+    }
 }

@@ -14,6 +14,7 @@ import { NormalLoginPage } from './normalLogin/normalLogin';
 import { EncryptProvider } from '../../providers/encryptProvider';
 import { InstagramProvider } from '../../providers/instagramProvider';
 import { TypeUser } from '../../models/typeUser';
+import { FileProvider } from '../../providers/fileProvider';
 
 
 @Component({
@@ -34,7 +35,8 @@ export class LoginPage {
         private userProvider: UserProvider,
         private navCtrl: NavController,
         private encryptProvider: EncryptProvider,
-        private instagramProvider: InstagramProvider
+        private instagramProvider: InstagramProvider,
+        private fileProvider: FileProvider
     ) {
     }
 
@@ -216,11 +218,28 @@ export class LoginPage {
 
         var user: User
         return new Promise((resolve, reject) => {
-            this.userProvider.createUser(user).subscribe(res => {
-                resolve(res.json())
-            }, error => {
-                reject(error)
+            var date = new Date()
+            var filename = user.id + "_" + date.getTime() + ".png";
+
+            var url = this.config.uploadFilesUrl
+            var urlUpload = url + "/upload-avatar.php"
+            var completeUrl = url + this.fileProvider.avatarsFolder + filename
+            this.fileProvider.convertToDataURLviaCanvas(user.profilePicture, "image/png").then((res: string) => {
+                this.fileProvider.uploadFile(res, filename, urlUpload).then(res => {
+                    user.profilePicture = completeUrl
+                    this.userProvider.createUser(user).subscribe(res => {
+                        resolve(res.json())
+                    }, error => {
+                        reject(error)
+                    })
+                }, error => {
+                    this.loading.dismiss()
+                    this.notificationProvider.presentAlertError('Error de conexión con el servidor de imágenes.')
+                    reject(error)
+                })
             })
         })
     }
+
+
 }
