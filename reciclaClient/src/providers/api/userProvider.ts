@@ -4,6 +4,7 @@ import { ApplicationConfig, APP_CONFIG_TOKEN } from '../../app/app-config';
 import { SessionProvider } from '../session';
 import { User } from '../../models/user';
 import { MyMail } from '../../models/myMail';
+import { Observable } from 'rxjs/Rx'
 
 @Injectable()
 export class UserProvider {
@@ -21,11 +22,20 @@ export class UserProvider {
 
 
     public saveUser(user: User, token: string, prev_password: string = "") {
-        this.sessionProvider.updateSession(user)
+
         user.recycleItems = null
         user.questionsDone = null
         this.requestJsonOptions.headers.set('X-Auth-Token', token)
-        return this.http.put(this.config.apiEndpoint + "/private/users/" + user.id + "?prev_password=" + prev_password, JSON.stringify(user), this.requestJsonOptions).timeout(this.config.defaultTimeoutTime)
+        var parameters: string = ""
+        if (prev_password != "") {
+            parameters = "?prev_password=" + prev_password
+        }
+        return this.http.put(this.config.apiEndpoint + "/private/users/" + user.id + parameters, JSON.stringify(user), this.requestJsonOptions).timeout(this.config.defaultTimeoutTime).map(res => {
+            this.sessionProvider.updateSession(res.json())
+            return Observable.of(res)
+        }, error => {
+            return Observable.of(error)
+        })
     }
 
     public createUser(user: User) {

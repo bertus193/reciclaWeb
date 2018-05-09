@@ -88,7 +88,7 @@ public class RecycleItemController {
 
 
     @RequestMapping(value = "/private/recycleItems/{id}", method = RequestMethod.GET)
-    public ResponseEntity<RecycleItem> updateUser(HttpServletRequest request, @PathVariable("id") long id) {
+    public ResponseEntity<RecycleItem> findRecycleItemById(HttpServletRequest request, @PathVariable("id") long id) {
 
         long userId = (long) request.getAttribute("userId");
 

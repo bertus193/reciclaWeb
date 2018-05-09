@@ -1,5 +1,4 @@
 import { Injectable, Inject } from '@angular/core';
-import 'rxjs/add/operator/map';
 import { TimeoutError } from 'rxjs/Rx'
 import { CameraOptions, Camera } from '@ionic-native/camera';
 import { Platform } from 'ionic-angular';

@@ -94,8 +94,10 @@ public class UserController {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
 
-            if (userService.isUserExistByEmail(user.getEmail())) {
-                return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+            if(!currentUser.getEmail().equals(user.getEmail())){
+                if (userService.isUserExistByEmail(user.getEmail())) {
+                    return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+                }
             }
 
             Timestamp userPwdRcverDate = user.getResetPwdCodeDate();
@@ -141,6 +143,10 @@ public class UserController {
                 user.setUsername(currentUser.getUsername());
                 user.setPassword(currentUser.getPassword());
                 user.setType(EnumUser.Admin);
+            }
+
+            if(user.getType() == EnumUser.Normal){
+                user.setAccessToken(UUID.randomUUID().toString());
             }
 
             userService.saveUser(user);

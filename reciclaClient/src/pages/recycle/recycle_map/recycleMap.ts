@@ -13,6 +13,7 @@ import { UtilsProvider } from '../../../providers/utils';
 import { RecycleItemsProvider } from '../../../providers/api/recycleItemsProvider';
 import { ItemTypeProvider } from '../../../providers/api/itemTypeProvider';
 import { ItemType } from '../../../models/itemType';
+import { StoragePoint } from '../../../models/storagePoint';
 
 @Component({
     selector: 'page-recycleMap',
@@ -274,19 +275,18 @@ export class MapPage {
     }
 
     callGetNearestStoragePointByItemType() {
-        this.utilsProvider.getNearestStoragePointByItemType(this.myPosition, this.recycleItem.itemType.id).timeout(this.config.defaultTimeoutTime).subscribe(result => {
-            if (result.status == 200) {
-                this.recycleItem.storage.position = result.storagePoint.position
-                this.loading.dismiss()
-                this.initMarkers(result.storagePoint.position, result.storagePoint.name, this.recycleItem.itemType.typeColor)
-            }
-            else {
-                this.loading.dismiss()
-                this.notificationProvider.presentTopToast('No hay ningún punto de reciclaje cercano.');
-            }
+        this.utilsProvider.getNearestStoragePointByItemType(this.myPosition, this.recycleItem.itemType.id).then((result: StoragePoint) => {
+            this.recycleItem.storage.position = result.position
+            this.loading.dismiss()
+            this.initMarkers(result.position, result.name, this.recycleItem.itemType.typeColor)
         }, error => { // Error undefined desde cordova browser /itemTypes/undefined/storagePoints
             this.loading.dismiss()
-            this.notificationProvider.presentTopToast(this.config.defaultTimeoutMsg)
+            if (error.status == 404) {
+                this.notificationProvider.presentTopToast('No hay ningún punto de reciclaje cercano.');
+            }
+            else {
+                this.notificationProvider.presentTopToast(this.config.defaultTimeoutMsg)
+            }
         })
     }
 

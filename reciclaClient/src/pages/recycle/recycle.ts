@@ -24,6 +24,7 @@ import { ItemType } from '../../models/itemType';
 import { Tip } from '../../models/tip';
 import { TipProvider } from '../../providers/api/tipProvider';
 import { FileProvider } from '../../providers/fileProvider';
+import { StoragePoint } from '../../models/storagePoint';
 
 @Component({
     selector: 'page-recycle',
@@ -149,6 +150,7 @@ export class RecyclePage {
             this.userProvider.saveUser(this.user, this.user.accessToken).subscribe(res => {
                 this.goToMapPage(myPosition)
             }, error => { //saveUserPosition
+                console.log(error)
                 this.loading.dismiss()
                 this.notificationProvider.presentTopToast(this.config.defaultTimeoutMsg);
             })
@@ -375,27 +377,25 @@ export class RecyclePage {
 
 
     goToMapPage(myPosition: Position) {
-        this.utilsProvider.getNearestStoragePointByItemType(myPosition, this.recycleItem.itemType.id).timeout(this.config.defaultTimeoutTime).subscribe(
-            result => {
-                this.recycleItem.storage = result.storagePoint
-                if (result.status == 200) {
+        this.utilsProvider.getNearestStoragePointByItemType(myPosition, this.recycleItem.itemType.id).then((result: StoragePoint) => {
+            this.recycleItem.storage = result
 
-                    this.navCtrl.push(MapPage, {
-                        isitemTypeName: this.isitemTypeName, // false => If take photo/library || true => recycleByItemType
-                        recycleItem: this.recycleItem,
-                        myPosition: myPosition,
-                        itemTypeList: this.itemTypeList
-                    })
-                    this.loading.dismiss()
-                }
-                else {
-                    this.loading.dismiss()
-                    this.notificationProvider.presentTopToast('No hay ningún punto de reciclaje cercano.');
-                }
-            },
+            this.navCtrl.push(MapPage, {
+                isitemTypeName: this.isitemTypeName, // false => If take photo/library || true => recycleByItemType
+                recycleItem: this.recycleItem,
+                myPosition: myPosition,
+                itemTypeList: this.itemTypeList
+            })
+            this.loading.dismiss()
+        },
             error => { // Error undefined desde cordova browser /itemType/undefined/storagePoints
                 this.loading.dismiss()
-                this.notificationProvider.presentTopToast(this.config.defaultTimeoutMsg)
+                if (error.status == 404) {
+                    this.notificationProvider.presentTopToast('No hay ningún punto de reciclaje cercano.');
+                }
+                else {
+                    this.notificationProvider.presentTopToast(this.config.defaultTimeoutMsg)
+                }
             })
     }
 

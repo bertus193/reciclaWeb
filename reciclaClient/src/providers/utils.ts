@@ -28,13 +28,13 @@ export class UtilsProvider {
         return R * c;
     }
 
-    public getNearestStoragePointByItemType(currentPosition: Position, itemTypeId: number): Observable<{ storagePoint: StoragePoint, status: number }> {
+    public getNearestStoragePointByItemType(currentPosition: Position, itemTypeId: number) {
         var status: number
         var storagePointList: StoragePoint[]
         var storagePoint: StoragePoint
-        return this.storagesProvider.getStoragePointsByItemType(itemTypeId).map(res => {
-            status = res.status
-            if (status === 200) {
+        return new Promise((resolve, reject) => {
+            this.storagesProvider.getStoragePointsByItemType(itemTypeId).subscribe(res => {
+                status = res.status
                 storagePointList = res.json();
                 storagePoint = storagePointList[0];
                 for (let currentSPoint of storagePointList) {
@@ -42,11 +42,11 @@ export class UtilsProvider {
                         storagePoint = currentSPoint
                     }
                 }
-            }
-            return { storagePoint, status }
-        }).catch(error => {
-            return Observable.throw(error);
-        });
+                resolve(storagePoint)
+            }, error => {
+                reject(error)
+            });
+        })
     }
 
     rad = function (x) {
