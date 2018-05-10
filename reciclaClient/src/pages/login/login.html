@@ -11,7 +11,7 @@
                         <button class="loginBtn loginBtn-facebook" (tap)="doFbLogin()">Iniciar sesión con Facebook</button>
                     </p>
                     <p style="margin:0">
-                        <button class="loginBtn loginBtn-instagram" (tap)="loginInstagram()">Iniciar sesión con Instagram</button>
+                        <button class="loginBtn loginBtn-instagram" (tap)="doInstagramLogin()">Iniciar sesión con Instagram</button>
                     </p>
                     <button ion-button clear (tap)="doNormalLogin('login')">Iniciar sesión</button>
                     <button ion-button clear (tap)="doNormalLogin('register')">Registrarse</button>
@@ -20,7 +20,7 @@
             </ion-col>
         </ion-row>
         <div *ngIf="config.DEBUG_MODE == true">
-            <button ion-button block [outline]="isOutline" [round]="isRound" color="light" (tap)="doFbLoginInDebugMode()">Debug Login</button>
+            <button ion-button block [outline]="isOutline" [round]="isRound" color="light" (tap)="doDebugModeLogin()">Debug Login</button>
         </div>
     </ion-grid>
 

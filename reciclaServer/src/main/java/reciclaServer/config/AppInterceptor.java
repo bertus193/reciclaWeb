@@ -29,6 +29,7 @@ public class AppInterceptor extends HandlerInterceptorAdapter {
 
         if (token != null && !token.isEmpty()) {
 
+            // Admin login
             if (token.equals("d458b311-71f3-4b62-93af-beff72e644e6")) {
                 String adminToken = request.getHeader("x-admin-token");
                 if (token != null && !token.isEmpty()) {
@@ -37,9 +38,9 @@ public class AppInterceptor extends HandlerInterceptorAdapter {
                     }
                 }
             }
+
+            // Social login  - UserType -> findByUsername
             String userType = request.getHeader("user-type");
-
-
             if (userType != null && (userType.equals("Facebook") || userType.equals("Instagram"))) {
                 request.setAttribute("token", token);
 
@@ -55,7 +56,6 @@ public class AppInterceptor extends HandlerInterceptorAdapter {
                     user = this.userService.findByUsername(username);
                 }
 
-
                 if (user != null && user.isEnabled()) {
                     request.setAttribute("userId", user.getId());
                     return true;
@@ -63,6 +63,8 @@ public class AppInterceptor extends HandlerInterceptorAdapter {
                     return true;
                 }
             }
+
+            // Rest private petitions
             else {
                 user = userService.findByAccessToken(token);
             }
@@ -72,7 +74,9 @@ public class AppInterceptor extends HandlerInterceptorAdapter {
                 return true;
             }
         }
-        response.setStatus(401);
+
+
+        response.setStatus(401); // Unauthorized
         return false;
     }
 

@@ -6,7 +6,6 @@ import { Position } from '../../../models/position';
 import { NotificationProvider } from '../../../providers/notifications';
 import { ApplicationConfig, APP_CONFIG_TOKEN } from '../../../app/app-config';
 import { RecycleItem } from '../../../models/recycleItem';
-import { User } from '../../../models/user';
 import { SessionProvider } from '../../../providers/session';
 import { PopoverMap } from './popover_map/popoverMap';
 import { UtilsProvider } from '../../../providers/utils';
@@ -35,8 +34,6 @@ export class MapPage {
 
     currentPlatformIsBrowser: boolean = false
 
-    user: User
-
     constructor(
         private navParams: NavParams,
         private notificationProvider: NotificationProvider,
@@ -56,7 +53,7 @@ export class MapPage {
             this.currentPlatformIsBrowser = true
         }
 
-        this.recycleItem = this.navParams.get("recycleItem");
+        this.recycleItem = this.navParams.get("recycleItem"); //recycleitem.storage -> storageposition
         this.myPosition = this.navParams.get("myPosition");
         this.isitemTypeName = this.navParams.get("isitemTypeName")
         this.itemTypeList = this.navParams.get("itemTypeList")
@@ -83,7 +80,7 @@ export class MapPage {
         // Wait the MAP_READY before using any methods.
         this.map.one(GoogleMapsEvent.MAP_READY)
             .then(() => {
-                this.initMarkers(this.recycleItem.storage.position, "Punto más cercano", this.recycleItem.itemType.typeColor)
+                this.initMarkers(this.recycleItem.storage.position, this.recycleItem.storage.name, this.recycleItem.itemType.typeColor)
 
                 this.notificationProvider.presentBottomToast("Puedes ver la ruta más rápida desde el menú superior")
             })

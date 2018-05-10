@@ -197,9 +197,7 @@ public class UserController {
                         userFound.setResetPwdCode(null);
                     }
                 }
-                if(userFound.getType() == EnumUser.Normal){
-                    userFound.setAccessToken(UUID.randomUUID().toString());
-                }
+                userFound.setAccessToken(UUID.randomUUID().toString());
                 userFound = userService.saveUser(userFound);
 
 

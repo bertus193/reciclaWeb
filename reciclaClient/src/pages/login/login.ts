@@ -92,10 +92,11 @@ export class LoginPage {
         })
     }
 
-    loginInstagram() {
+    doInstagramLogin() {
         this.loading = this.loadingCtrl.create({
             content: 'Iniciando sesión...'
         });
+        this.loading.present()
         this.instagramProvider.login().then(tokenRes => {
             this.instagramProvider.getInstagramUserInfo(tokenRes.access_token).subscribe(res => {
                 var instagramUser = res.json()
@@ -156,7 +157,7 @@ export class LoginPage {
 
     }
 
-    doFbLoginInDebugMode() {
+    doDebugModeLogin() {
         if (this.config.DEBUG_MODE) {
             this.loading = this.loadingCtrl.create({
                 content: 'Iniciando sesión...'
