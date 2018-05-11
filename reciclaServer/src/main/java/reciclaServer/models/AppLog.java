@@ -38,6 +38,9 @@ public class AppLog {
 
     private String path;
 
+    @JoinColumn(name = "base64_image")
+    private String base64Image;
+
     public AppLog() { //Needed for JPA
     }
 
@@ -105,5 +108,13 @@ public class AppLog {
 
     public void setStatusName(String statusName) {
         this.statusName = statusName;
+    }
+
+    public String getBase64Image() {
+        return base64Image;
+    }
+
+    public void setBase64Image(String base64Image) {
+        this.base64Image = base64Image;
     }
 }

@@ -7,10 +7,9 @@ import org.springframework.web.bind.annotation.*;
 import reciclaServer.models.AppLog;
 import reciclaServer.models.ItemTypeName;
 import reciclaServer.models.LabelAnnotations;
+import reciclaServer.models.LabelAnnotationsWithImage;
 import reciclaServer.services.AppLogService;
 import reciclaServer.services.ItemTypeNameService;
-
-import java.util.List;
 
 
 @RestController
@@ -30,12 +29,12 @@ public class ItemTypeNameController {
     }
 
     @RequestMapping(value = "/itemTypeNames/labelAnnotations", method = RequestMethod.POST)
-    public ResponseEntity<?> getRecycleItemItemTypeBylabelAnnotations(@RequestBody List<LabelAnnotations> labelAnnotations) {
+    public ResponseEntity<?> getRecycleItemItemTypeBylabelAnnotations(@RequestBody LabelAnnotationsWithImage labelAnnotationsWithImage) {
         ItemTypeName itemTypeName;
         LabelAnnotations labelAnnotation;
 
-        for (int i = 0; i < labelAnnotations.size(); i++) {
-            labelAnnotation = labelAnnotations.get(i);
+        for (int i = 0; i < labelAnnotationsWithImage.labelAnnotations.size(); i++) {
+            labelAnnotation = labelAnnotationsWithImage.labelAnnotations.get(i);
             if (labelAnnotation.getScore() > 0.5) {
                 itemTypeName = this.itemTypeNameService.findFirstByDescription(labelAnnotation.getDescription());
 
@@ -46,7 +45,8 @@ public class ItemTypeNameController {
         }
 
         HttpStatus status = HttpStatus.NOT_FOUND;
-        AppLog appLog = new AppLog(status, "LabelAnnotation not found", labelAnnotations.toString(), "/itemTypeName/labelAnnotations");
+        AppLog appLog = new AppLog(status, "LabelAnnotation not found", labelAnnotationsWithImage.labelAnnotations.toString(), "/itemTypeName/labelAnnotations");
+        appLog.setBase64Image(labelAnnotationsWithImage.base64Image);
         this.appLogService.saveAppLog(appLog);
 
         return new ResponseEntity<>(null, status);

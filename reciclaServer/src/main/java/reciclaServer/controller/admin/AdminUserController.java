@@ -115,9 +115,6 @@ public class AdminUserController {
             }
 
             if(userFound.getType() == EnumUser.Admin){
-                user.setEmail(userFound.getEmail());
-                user.setUsername(userFound.getUsername());
-                user.setPassword(userFound.getPassword());
                 user.setType(EnumUser.Admin);
             }
 

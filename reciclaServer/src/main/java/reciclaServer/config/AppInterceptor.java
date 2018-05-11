@@ -2,7 +2,9 @@ package reciclaServer.config;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import reciclaServer.models.AppLog;
 import reciclaServer.models.User;
 import reciclaServer.services.AppLogService;
 import reciclaServer.services.UserService;
@@ -11,6 +13,7 @@ import reciclaServer.utils.JsonReader;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Scanner;
 
 public class AppInterceptor extends HandlerInterceptorAdapter {
 
@@ -74,10 +77,21 @@ public class AppInterceptor extends HandlerInterceptorAdapter {
                 return true;
             }
         }
+        // Unauthorized
 
+        AppLog appLog = new AppLog(HttpStatus.UNAUTHORIZED, "Unauthorized", this.extractPostRequestBody(request) ,request.getRequestURI());
+        this.appLogService.saveAppLog(appLog);
 
-        response.setStatus(401); // Unauthorized
+        response.setStatus(401);
         return false;
+    }
+
+    static String extractPostRequestBody(HttpServletRequest request) throws IOException {
+        if ("POST".equalsIgnoreCase(request.getMethod()) || "PUT".equalsIgnoreCase(request.getMethod())) {
+            Scanner s = new Scanner(request.getInputStream(), "UTF-8").useDelimiter("\\A");
+            return s.hasNext() ? s.next() : "";
+        }
+        return "";
     }
 
 

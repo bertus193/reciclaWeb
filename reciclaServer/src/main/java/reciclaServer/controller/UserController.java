@@ -94,11 +94,18 @@ public class UserController {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
 
-            if(!currentUser.getEmail().equals(user.getEmail())){
-                if (userService.isUserExistByEmail(user.getEmail())) {
-                    return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+            if(user.getEmail() != null){
+                if(currentUser.getEmail() != null){
+                    if(!currentUser.getEmail().equals(user.getEmail())){
+                        if (userService.isUserExistByEmail(user.getEmail())) {
+                            return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+                        }
+                    }
+
                 }
             }
+
+
 
             Timestamp userPwdRcverDate = user.getResetPwdCodeDate();
             if(userPwdRcverDate != null){
