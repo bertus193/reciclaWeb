@@ -29,7 +29,7 @@ public class AppLog {
 
     private Integer status;
 
-    @JoinColumn(name = "status_name")
+    @Column(name = "status_name")
     private String statusName;
 
     private String exception;
@@ -38,7 +38,7 @@ public class AppLog {
 
     private String path;
 
-    @JoinColumn(name = "base64_image")
+    @Column(name = "base64_image")
     private String base64Image;
 
     public AppLog() { //Needed for JPA
