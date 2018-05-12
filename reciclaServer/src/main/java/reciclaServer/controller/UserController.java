@@ -275,25 +275,31 @@ public class UserController {
         User userFound = userService.findByEmail(user.getEmail());
 
         if(userFound != null){
+            if(userFound.getResetPwdCode() != null){
+                if(!userFound.pwdRecoverDateIsOutDated()){
 
-            if(!userFound.pwdRecoverDateIsOutDated()){
+                    if(userFound.getResetPwdCode().toLowerCase().equals(user.getResetPwdCode().toLowerCase())){
+                        userFound.setPassword(user.getPassword());
+                        userFound.setResetPwdCode(null);
+                        userFound.setResetPwdCodeDate(null);
+                        this.userService.saveUser(userFound);
 
-                if(userFound.getResetPwdCode().toLowerCase().equals(user.getResetPwdCode().toLowerCase())){
-                    userFound.setPassword(user.getPassword());
+                        return new ResponseEntity<>(userFound, HttpStatus.OK);
+                    }
+                    else{
+                        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
+                    }
+                }
+                else{
                     userFound.setResetPwdCode(null);
                     userFound.setResetPwdCodeDate(null);
                     this.userService.saveUser(userFound);
-                    
-                    return new ResponseEntity<>(userFound, HttpStatus.OK);
-                }
-                else{
-                    return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
+                    return new ResponseEntity<>(HttpStatus.GONE); // 410
                 }
             }
             else{
-                return new ResponseEntity<>(HttpStatus.GONE); // 410
+                return new ResponseEntity<>(HttpStatus.PRECONDITION_REQUIRED); // 428
             }
-
         }
         else{
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

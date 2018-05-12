@@ -85,6 +85,9 @@ export class RecoverPasswordPage {
                 case 404:
                     errorMsg = "Dicho usuario no existe"
                     break;
+                case 428:
+                    errorMsg = "El usuario indicado no tiene ningún código de recuperación asociado"
+                    break;
             }
 
             this.notificationProvider.presentAlertError(errorMsg)

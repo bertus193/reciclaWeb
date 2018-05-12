@@ -150,7 +150,6 @@ export class RecyclePage {
             this.userProvider.saveUser(this.user, this.user.accessToken).subscribe(res => {
                 this.goToMapPage(myPosition)
             }, error => { //saveUserPosition
-                console.log(error)
                 this.loading.dismiss()
                 this.notificationProvider.presentTopToast(this.config.defaultTimeoutMsg);
             })
@@ -325,6 +324,7 @@ export class RecyclePage {
                     })
                 }
                 else {
+                    this.notificationProvider.presentAlertOk("¡No te preocupes!, un administrador revisará el caso para definir el tipo de objeto")
                     this.loading.dismiss()
                 }
             }, error => { // this.getTypeFromDB
@@ -355,12 +355,19 @@ export class RecyclePage {
                 title: '<span style="font-size:10px">No se ha encontrado ningún tipo, por favor, selecciona uno</span>',
                 buttons: [
                     {
+                        text: 'No lo sé',
+                        handler: () => {
+                            resolve(false)
+                        }
+                    },
+                    {
                         text: 'Cambiar tipo',
                         handler: (data) => {
                             this.recycleItem.itemType = this.itemTypeList[data]
                             resolve(true)
                         }
-                    }
+                    },
+
                 ]
             })
             for (let i = 0; i < this.itemTypeList.length; i++) {
