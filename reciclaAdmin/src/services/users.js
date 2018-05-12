@@ -49,7 +49,6 @@ export const UserEdit = (props) => (
         <SimpleForm>
             <DisabledInput source="id" />
             <ImageField source="profilePicture" />
-            <DisabledInput source="username" />
             <TextInput source="email" />
             <TextInput placeholder="" source="password" type="password" />
             <TextInput label="Full name" source="fullName" />

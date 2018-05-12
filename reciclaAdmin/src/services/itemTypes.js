@@ -45,7 +45,7 @@ export const ItemTypeEdit = (props) => (
 
 export const ItemTypeCreate = (props) => (
     <Create {...props}>
-        <SimpleForm>
+        <SimpleForm redirect="list">
             <NumberInput source="recycleValue" />
             <TextInput label="English name" source="type" />
             <TextInput source="typeColor" />

@@ -44,7 +44,7 @@ export const TipCreate = (props) => (
     <Create title={"Añadir Tip"} {...props}>
         <SimpleForm redirect="list">
             <TextInput source="name" />
-            <TextInput source="description" />
+            <LongTextInput source="description" />
         </SimpleForm>
     </Create>
 );

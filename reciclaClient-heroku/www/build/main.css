@@ -25700,8 +25700,9 @@ ion-icon[class*="reciclaUA-recyle"] {
   mask-image: url("../assets/imgs/icons/recycle.svg");
 }
 
-ion-card {
-  margin: 0px 10px 10px 10px !important;
+ion-icon[class*="reciclaUA-directions"] {
+  -webkit-mask-image: url("../assets/imgs/icons/directions_48px.svg");
+  mask-image: url("../assets/imgs/icons/directions_48px.svg");
 }
 
 ion-card-header {
@@ -25724,6 +25725,61 @@ body.keyboard-is-open .fixed-content {
   margin-bottom: 0 !important;
 }
 
+page-game .questionTitle {
+  background-color: #f6f6f6;
+  border: 1px solid #edecec;
+  border-radius: 10px;
+  font-size: 16px;
+  width: 80%;
+  margin: auto;
+}
+
+page-game .currentQuestion {
+  line-height: 100px;
+  height: 100px;
+}
+
+page-game .lastQuestionBox {
+  height: 100%;
+}
+
+page-game .col {
+  padding: 0;
+}
+
+page-game p {
+  margin: 5px 0px 0px 0px;
+}
+
+page-home .recycleItemName {
+  line-height: normal;
+  color: #666;
+}
+
+page-home .lastUsersAvatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+page-home .lastUsersTitle {
+  font-size: 12px;
+  padding-left: 5px;
+  color: #4a4a4a;
+}
+
+page-home .lastUsersBody {
+  padding-top: 3px;
+  height: 62px;
+  padding-left: 5px;
+  white-space: nowrap;
+  overflow-x: auto !important;
+}
+
+page-home .toolbar-background {
+  background: transparent;
+}
+
 .loginBtn {
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
@@ -25737,7 +25793,7 @@ body.keyboard-is-open .fixed-content {
   border-radius: 0.2em;
   font-size: 16px;
   color: #FFF;
-  width: 80%;
+  width: 265px;
 }
 
 .loginBtn:before {
@@ -25806,6 +25862,30 @@ page-normalLogin .scroll-content {
   padding-bottom: 0 !important;
 }
 
+page-normalLogin .segment-md {
+  margin-bottom: -15px !important;
+}
+
+page-normalLogin .back-button-icon-ios {
+  margin: -14px 0 0;
+}
+
+page-recoverPasswordGenCode .scroll-content {
+  padding-bottom: 0 !important;
+}
+
+page-recoverPasswordGenCode .segment-md {
+  margin-bottom: -15px !important;
+}
+
+page-recoverPasswordGenCode .toolbar-ios .segment-button {
+  max-width: 120px;
+}
+
+page-recoverPassword .scroll-content {
+  padding-bottom: 0 !important;
+}
+
 page-normalRegister .registerSuccessMsg {
   margin: 45px;
   font-size: 16px;
@@ -25823,10 +25903,42 @@ page-profile .editButton {
   float: right;
   display: inline;
   position: absolute;
-  top: 5px;
+  top: 7px;
   right: 0;
-  right: 20px;
+  right: 10px;
   padding: 0;
+}
+
+page-profile .pointsBox {
+  text-align: center;
+  border: 1px solid #a59b9b;
+  border-radius: 5px;
+  background-color: #f8f8f8;
+  text-align: center;
+}
+
+page-profile .item-block {
+  padding-left: 0;
+}
+
+page-profile .item-icon {
+  padding: 0;
+}
+
+page-profile ion-card {
+  margin: 0px 10px 10px 10px !important;
+}
+
+page-profile .segment-md {
+  margin-bottom: -15px !important;
+}
+
+page-profile .list {
+  padding-top: 10px;
+}
+
+page-profile .logoutButton {
+  padding: 0px 10px 5px 10px;
 }
 
 page-profileEdit .segmentName {
@@ -25835,6 +25947,18 @@ page-profileEdit .segmentName {
 
 page-profileEdit .scroll-content {
   padding-bottom: 0 !important;
+}
+
+page-profileEdit .segment-md {
+  margin-bottom: -15px !important;
+}
+
+page-profileEditOthers .scroll-content {
+  padding-bottom: 0 !important;
+}
+
+page-profileEditOthers .item-md {
+  padding-left: 0;
 }
 
 page-profileEditPassword .registerSuccessMsg {
@@ -25850,6 +25974,30 @@ page-myRecycledItems .recycleItemIonItem:hover {
   background-color: #e7e7e7;
 }
 
+page-myRecycledItems .item-md {
+  padding-left: 16px;
+}
+
+page-myRecycledItems .item-ios ion-avatar[item-left], page-myRecycledItems .item-ios ion-thumbnail[item-left], page-myRecycledItems .item-ios ion-avatar[item-start], page-myRecycledItems .item-ios ion-thumbnail[item-start] {
+  margin-left: 10px;
+}
+
+page-recycle .tip-box {
+  height: 82%;
+  display: table;
+  width: 100%;
+}
+
+page-recycle .tip-box-content {
+  display: table-cell;
+  vertical-align: middle;
+  padding: 5px;
+}
+
+page-recycle .scroll-content {
+  padding: 0px !important;
+}
+
 page-recycleMap #map_canvas {
   display: block;
   height: 100%;
@@ -25857,11 +26005,11 @@ page-recycleMap #map_canvas {
 }
 
 page-recycleMap .title-navbar {
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 500;
   color: #424242;
   text-align: center;
-  margin-left: -85px;
+  margin-left: -125px;
 }
 
 page-recycleMap .sub-title {

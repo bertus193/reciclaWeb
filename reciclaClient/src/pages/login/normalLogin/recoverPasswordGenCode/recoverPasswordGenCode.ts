@@ -63,7 +63,13 @@ export class RecoverPasswordGenCodePage {
             this.defaultPage = 'resetPwd'
         }, error => {
             this.loading.dismiss()
-            this.notificationProvider.presentTopToast(this.config.defaultTimeoutMsg)
+            if (error.status == 404) {
+                this.notificationProvider.presentAlertError("El correo indicado no existe")
+            }
+            else {
+                this.notificationProvider.presentTopToast(this.config.defaultTimeoutMsg)
+            }
+
         })
 
     }

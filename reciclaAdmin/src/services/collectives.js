@@ -42,8 +42,7 @@ export const CollectiveEdit = (props) => (
 
 export const CollectiveCreate = (props) => (
     <Create {...props}>
-        <SimpleForm>
-
+        <SimpleForm redirect="list">
             <TextInput source="name" />
             <TextInput source="abbreviation" />
         </SimpleForm>

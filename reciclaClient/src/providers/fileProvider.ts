@@ -100,7 +100,7 @@ export class FileProvider {
     }
 
     uploadFileWithTimeout(fileTransfer: TransferObject, targetPath, urlUpload, options): Promise<boolean> {
-        return this.timeoutPromise(this.config.defaultTimeoutTime + 5000,
+        return this.timeoutPromise(this.config.defaultTimeoutTime * 2,
             fileTransfer.upload(targetPath, urlUpload, options).then(data => {
                 return true
             }, error => {

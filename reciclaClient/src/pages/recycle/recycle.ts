@@ -295,7 +295,7 @@ export class RecyclePage {
             }
         }, error => {
             this.loading.dismiss()
-            this.notificationProvider.presentAlertError('Error de conexión con el servidor de imágenes.')
+            this.notificationProvider.presentAlertError('Tiempo excedido, por favor, prueba de nuevo.')
         })
     }
 
@@ -311,7 +311,7 @@ export class RecyclePage {
             }
             this.temporalName = labelResponseList[0].description
 
-            this.getTypeFromDB(labelResponseList).subscribe((res: boolean) => {
+            this.getTypeFromDB(labelResponseList, base64Image).subscribe((res: boolean) => {
 
                 if (res == true) {
                     this.googleCloudServiceProvider.translateToSpanish(this.temporalName).subscribe(res => {
@@ -337,8 +337,8 @@ export class RecyclePage {
         })
     }
 
-    public getTypeFromDB(labelResponseList): Observable<boolean> {
-        return this.itemTypeProvider.getRecycleItemItemTypeBylabelAnnotations(labelResponseList).map(res => {
+    public getTypeFromDB(labelResponseList, base64Image): Observable<boolean> {
+        return this.itemTypeProvider.getRecycleItemItemTypeBylabelAnnotations(labelResponseList, base64Image).map(res => {
             this.temporalName = res.json().description
             this.recycleItem.itemType = res.json().itemType
             return true

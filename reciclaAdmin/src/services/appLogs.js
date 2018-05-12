@@ -2,6 +2,7 @@ import React from 'react';
 import { LongTextInput, Responsive, SimpleList, List, Edit, Create, Datagrid, TextField, EditButton, DisabledInput, SimpleForm, TextInput, DateField } from 'admin-on-rest';
 import UrlField from '../fieldsAndInputs/MyUrlField';
 import DateTimeInput from 'aor-datetime-input';
+import Base64ImageField from '../fieldsAndInputs/Base64ImageField'
 
 export const AppLogList = (props) => (
     <List {...props}>
@@ -40,6 +41,7 @@ export const AppLogEdit = (props) => (
             <TextInput source="status" />
             <TextInput abel="Status name" source="statusName" />
             <TextInput source="exception" />
+            <Base64ImageField source="base64Image" />
             <LongTextInput source="message" />
             <TextInput source="path" />
         </SimpleForm>

@@ -4,6 +4,7 @@ import MyReferenceField from '../fieldsAndInputs/MyReferenceField'
 import DateTimeInput from 'aor-datetime-input';
 import UrlField from '../fieldsAndInputs/MyUrlField';
 import TextImageField from '../fieldsAndInputs/textImageField'
+import MyTextField from '../fieldsAndInputs/MyTextField'
 
 export const RecycleItemList = (props) => (
     <List {...props} title="Recycle Item List">
@@ -20,7 +21,7 @@ export const RecycleItemList = (props) => (
                     <UrlField urlDirection="recycleItems" source="id" />
                     <TextImageField source="name" source2="image" />
                     <MyReferenceField label="Recycled by" source="recycleUser" reference="users">
-                        <TextField source="email" />
+                        <MyTextField source="email" source2="username" />
                     </MyReferenceField>
                     <MyReferenceField label="Item type" source="itemType" reference="itemTypes">
                         <TextField source="type" />
