@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { User } from '../../models/user';
-import { Content } from 'ionic-angular';
+import { Content, Events } from 'ionic-angular';
 import { UserProvider } from '../../providers/api/userProvider';
 
 @Component({
@@ -16,10 +16,18 @@ export class RankingPage {
     @ViewChild(Content) content: Content
 
     constructor(
-        private usersProvider: UserProvider
+        private usersProvider: UserProvider,
+        private events: Events
     ) {
         this.getTopRankedUsers().then((res: boolean) => {
             this.showLoadingMsg = false
+        });
+
+        this.events.subscribe('update-user', (user) => {
+            if (user.id != null) {
+                var index = this.users.findIndex(u => u.id == user.id)
+                this.users[index].points = user.points
+            }
         });
 
     }

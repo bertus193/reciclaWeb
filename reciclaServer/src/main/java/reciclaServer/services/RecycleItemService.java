@@ -45,7 +45,7 @@ public class RecycleItemService {
     }
 
 
-    public void saveRecycleItem(RecycleItem recycleItem) throws UserNotFoundException, StorageNotFoundException, ItemTypeNotFoundException {
+    public RecycleItem saveRecycleItem(RecycleItem recycleItem) throws UserNotFoundException, StorageNotFoundException, ItemTypeNotFoundException {
         if (recycleItem.getRecycleUser() == null) {
             throw new UserNotFoundException("recycleItem user not found");
         } else if (recycleItem.getStorage() == null) {
@@ -53,7 +53,7 @@ public class RecycleItemService {
         } else if (recycleItem.getItemType() == null) {
             throw new ItemTypeNotFoundException("recycleItem itemType not found");
         } else {
-            recycleItemDAO.save(recycleItem);
+            return recycleItemDAO.save(recycleItem);
         }
 
     }

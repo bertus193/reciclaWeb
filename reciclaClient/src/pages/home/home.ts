@@ -4,7 +4,7 @@ import { APP_CONFIG_TOKEN, ApplicationConfig } from '../../app/app-config';
 import { SessionProvider } from '../../providers/session';
 import { User } from '../../models/user';
 import { RecycleItem } from '../../models/recycleItem';
-import { Content } from 'ionic-angular';
+import { Content, Events } from 'ionic-angular';
 
 @Component({
     selector: 'page-home',
@@ -30,7 +30,8 @@ export class HomePage {
 
         private recycleItemsProvider: RecycleItemsProvider,
         @Inject(APP_CONFIG_TOKEN) private config: ApplicationConfig,
-        private sessionProvider: SessionProvider
+        private sessionProvider: SessionProvider,
+        private events: Events
     ) {
 
         this.perPage = this.config.itemsPerPage
@@ -50,6 +51,12 @@ export class HomePage {
             }
 
         })
+
+        this.events.subscribe('new-item', (recycleItem) => {
+            if (recycleItem.name != null) {
+                this.recycleItems.unshift(recycleItem)
+            }
+        });
 
     }
 

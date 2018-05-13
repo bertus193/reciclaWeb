@@ -228,6 +228,7 @@ public class UserController {
         for (int i = 0; (i < userList.size() && i < 10); i++) {
             if(userList.get(i).getType() != EnumUser.Admin){
                 user = new User();
+                user.setId(userList.get(i).getId());
                 user.setFullName(userList.get(i).getFullName());
                 user.setProfilePicture(userList.get(i).getProfilePicture());
                 user.setPoints(userList.get(i).getPoints());

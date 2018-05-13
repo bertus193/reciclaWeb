@@ -13,6 +13,7 @@ import { RecycleItemsProvider } from '../../../providers/api/recycleItemsProvide
 import { ItemTypeProvider } from '../../../providers/api/itemTypeProvider';
 import { ItemType } from '../../../models/itemType';
 import { StoragePoint } from '../../../models/storagePoint';
+import { User } from '../../../models/user';
 
 @Component({
     selector: 'page-recycleMap',
@@ -184,13 +185,15 @@ export class MapPage {
         });
         this.loading.present()
 
+        var saveRecycleItem: RecycleItem = this.recycleItem
+
         this.sessionProvider.getSession().then(user => {
-            this.recycleItem.storage = this.recycleItem.storage.id
-            this.recycleItemsProvider.saveRecycleItem(this.recycleItem, user.accessToken).subscribe(res => {
-                var status = res.status;
+            saveRecycleItem.storage = saveRecycleItem.storage.id
+            this.recycleItemsProvider.saveRecycleItem(saveRecycleItem, user.accessToken).subscribe(resSaveItem => {
+                var status = resSaveItem.status;
                 if (status === 201) {
 
-                    this.itemTypeProvider.findItemTypeById(this.recycleItem.itemType).subscribe(res => {
+                    this.itemTypeProvider.findItemTypeById(saveRecycleItem.itemType).subscribe(res => {
 
                         user.points = user.points + res.json().recycleValue
                         this.sessionProvider.updateSession(user)
@@ -198,7 +201,14 @@ export class MapPage {
                         this.recycledAlready = true
                         this.loading.dismiss()
                         this.notificationProvider.presentAlertOk('Se ha guardadado correctamente este reciclado!')
+                        this.showLeaveAlertMessage = false
                         this.navCtrl.pop()
+                        var savedItem: RecycleItem = resSaveItem.json()
+                        savedItem.recycleUser = new User()
+                        savedItem.recycleUser.fullName = user.fullName
+
+
+                        this.events.publish('new-item', savedItem)
                         this.events.publish('change-tab', "profile", "history")
                         this.events.publish('update-user', user)
                     }, error => {

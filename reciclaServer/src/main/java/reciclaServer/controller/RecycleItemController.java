@@ -39,7 +39,7 @@ public class RecycleItemController {
         if (userId == recycleItem.getRecycleUser().getId()) {
 
             try {
-                recycleItemService.saveRecycleItem(recycleItem);
+                recycleItem = recycleItemService.saveRecycleItem(recycleItem);
 
                 User user = userService.findById(userId);
                 user.setPoints(user.getPoints() + recycleItem.getItemType().getRecycleValue());
