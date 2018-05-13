@@ -16,6 +16,14 @@ export class SessionProvider {
         this.storage.set('user', this.user)
     }
 
+    public setUserHelp(userHelp: boolean) {
+        this.storage.set('help', userHelp)
+    }
+
+    public getUserHelp() {
+        return this.storage.get('help')
+    }
+
     public getSession(): Promise<User> {
         return this.storage.get('user')
     }

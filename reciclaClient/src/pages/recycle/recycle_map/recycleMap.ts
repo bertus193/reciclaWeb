@@ -34,6 +34,8 @@ export class MapPage {
 
     currentPlatformIsBrowser: boolean = false
 
+    showLeaveAlertMessage: boolean = true
+
     constructor(
         private navParams: NavParams,
         private notificationProvider: NotificationProvider,
@@ -63,6 +65,34 @@ export class MapPage {
         this.loadMap();
     }
 
+    ionViewCanLeave() {
+        if (this.showLeaveAlertMessage) {
+            let alertPopup = this.alertCtrl.create({
+                title: '¿Volver?',
+                message: 'Si vuelves perderás los cambios',
+                buttons: [{
+                    text: 'Sí',
+                    handler: () => {
+                        this.showLeaveAlertMessage = false;
+                        alertPopup.dismiss().then(() => {
+                            this.showLeaveAlertMessage = false
+                            this.navCtrl.pop()
+                        });
+                    }
+                },
+                {
+                    text: 'No'
+                }]
+            });
+
+            // Show the alert
+            alertPopup.present();
+
+            // Return false to avoid the page to be popped up
+            return false;
+        }
+    }
+
     loadMap() {
         let mapOptions: GoogleMapOptions = {
             camera: {
@@ -81,8 +111,28 @@ export class MapPage {
         this.map.one(GoogleMapsEvent.MAP_READY)
             .then(() => {
                 this.initMarkers(this.recycleItem.storage.position, this.recycleItem.storage.name, this.recycleItem.itemType.typeColor)
+                this.sessionProvider.getUserHelp().then(res => {
+                    if (res == null) {
+                        let alertPopup = this.alertCtrl.create({
+                            title: "Ayuda",
+                            message: 'Puedes ver la ruta más rápida desde el menú superior',
+                            buttons: [{
+                                text: 'No volver a mostrar este mensaje',
+                                handler: () => {
+                                    alertPopup.dismiss().then(() => {
+                                        this.sessionProvider.setUserHelp(false)
+                                    });
+                                }
+                            },
+                            {
+                                text: 'De acuerdo'
+                            }]
+                        });
+                        // Show the alert
+                        alertPopup.present();
+                    }
+                })
 
-                this.notificationProvider.presentBottomToast("Puedes ver la ruta más rápida desde el menú superior")
             })
             .catch(error => {
                 this.notificationProvider.presentTopToast("Parece que ha habido algún problema")

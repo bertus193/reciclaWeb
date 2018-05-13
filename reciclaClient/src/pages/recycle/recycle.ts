@@ -165,6 +165,9 @@ export class RecyclePage {
                 }
 
             }
+            else if (error.code == 1) { // Permission denied
+                this.notificationProvider.presentTopToast("Error, se require activar el servicio de ubicación")
+            }
             else {
                 this.notificationProvider.presentTopToast("Error obteniendo la ubicación")
             }
