@@ -67,8 +67,11 @@ public class RecycleItemController {
 
             recycleItem_userList.userList = new ArrayList();
             for (int i = 0; i < recycleItems.getContent().size(); i++) {
-                User user = recycleItems.getContent().get(i).getRecycleUser();
-                user.setPassword(null);
+                User user = new User();
+                user.setId(recycleItems.getContent().get(i).getRecycleUser().getId());
+                user.setFullName(recycleItems.getContent().get(i).getRecycleUser().getFullName());
+                user.setProfilePicture(recycleItems.getContent().get(i).getRecycleUser().getProfilePicture());
+
                 if (!recycleItem_userList.userList.contains(user)) {
                     recycleItem_userList.userList.add(user);
                 }

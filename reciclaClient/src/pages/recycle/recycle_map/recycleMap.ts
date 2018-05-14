@@ -206,11 +206,11 @@ export class MapPage {
                         var savedItem: RecycleItem = resSaveItem.json()
                         savedItem.recycleUser = new User()
                         savedItem.recycleUser.fullName = user.fullName
+                        savedItem.recycleUser.id = user.id
 
 
                         this.events.publish('new-item', savedItem)
                         this.events.publish('change-tab', "profile", "history")
-                        this.events.publish('update-user', user)
                     }, error => {
                         this.loading.dismiss()
                         this.notificationProvider.presentTopToast(this.config.defaultTimeoutMsg)

@@ -32,7 +32,7 @@ export class UserProvider {
         }
         return this.http.put(this.config.apiEndpoint + "/private/users/" + user.id + parameters, JSON.stringify(user), this.requestJsonOptions).timeout(this.config.defaultTimeoutTime).map(res => {
             this.sessionProvider.updateSession(res.json())
-            return Observable.of(res)
+            return Observable.of(res.json())
         }, error => {
             return Observable.of(error)
         })

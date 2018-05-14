@@ -85,7 +85,7 @@ public class AdminUserController {
             user.setType(EnumUser.Normal);
         }
 
-        if(user.getType() != EnumUser.Normal){
+        if((user.getType() == EnumUser.Facebook) || (user.getType() == EnumUser.Instagram)){
             user.setPassword("");
         }
 

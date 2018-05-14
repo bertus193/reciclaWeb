@@ -13,6 +13,7 @@ const choices = [
     { id: 'Normal', name: 'Normal' },
     { id: 'Facebook', name: 'Facebook' },
     { id: 'Instagram', name: 'Instagram' },
+    { id: 'Admin', name: 'Admin' }
 ];
 
 export const UserList = (props) => (

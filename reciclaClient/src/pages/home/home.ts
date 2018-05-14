@@ -55,9 +55,37 @@ export class HomePage {
         this.events.subscribe('new-item', (recycleItem) => {
             if (recycleItem.name != null) {
                 this.recycleItems.unshift(recycleItem)
+                var index = this.users.findIndex(u => u.id == recycleItem.recycleUser.id)
+                this.move(index, 0)
             }
         });
 
+        this.events.subscribe('update-user-info', (user) => {
+            if (user.id != null) {
+                var index = this.users.findIndex(u => u.id == user.id)
+                if (index != -1) { //not found
+                    this.users[index].profilePicture = user.profilePicture
+                    this.users[index].fullName = user.fullName
+                }
+            }
+        });
+
+    }
+
+    private move(old_index, new_index) {
+        while (old_index < 0) {
+            old_index += this.users.length;
+        }
+        while (new_index < 0) {
+            new_index += this.users.length;
+        }
+        if (new_index >= this.users.length) {
+            var k = new_index - this.users.length;
+            while ((k--) + 1) {
+                this.users.push(undefined);
+            }
+        }
+        this.users.splice(new_index, 0, this.users.splice(old_index, 1)[0]);
     }
 
     private getLatestRecycleItems(refreshType: string) {

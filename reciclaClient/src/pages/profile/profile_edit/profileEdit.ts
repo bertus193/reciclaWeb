@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { FormGroup, FormBuilder, AbstractControl } from '@angular/forms';
-import { ActionSheetController, Loading, LoadingController, NavParams, NavController } from 'ionic-angular';
+import { ActionSheetController, Loading, LoadingController, NavParams, NavController, Events } from 'ionic-angular';
 import { Camera } from '@ionic-native/camera';
 import { NotificationProvider } from '../../../providers/notifications';
 import { User } from '../../../models/user';
@@ -30,7 +30,8 @@ export class ProfileEditPage {
         private navParams: NavParams,
         private userProvider: UserProvider,
         private navCtrl: NavController,
-        private fileProvider: FileProvider
+        private fileProvider: FileProvider,
+        private events: Events
     ) {
         this.user = this.navParams.get('user')
         this.image = this.user.profilePicture
@@ -66,6 +67,7 @@ export class ProfileEditPage {
                             this.image = res
                             this.user.profilePicture = res
                             this.userProvider.saveUser(this.user, this.user.accessToken).subscribe(res => {
+                                this.events.publish('update-user-info', this.user)
                                 this.notificationProvider.presentTopToast("El usuario se ha guardado correctamente!")
                                 this.loading.dismiss()
                                 this.navCtrl.pop()
@@ -77,6 +79,7 @@ export class ProfileEditPage {
                     }
                     else {
                         this.userProvider.saveUser(this.user, this.user.accessToken).subscribe(res => {
+                            this.events.publish('update-user-info', this.user)
                             this.notificationProvider.presentTopToast("El usuario se ha guardado correctamente!")
                             this.loading.dismiss()
                             this.navCtrl.pop()
