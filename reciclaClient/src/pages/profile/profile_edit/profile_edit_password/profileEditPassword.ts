@@ -55,8 +55,8 @@ export class ProfileEditPasswordPage {
             this.changePassword()
         }
         else {
-            this.userProvider.login(this.user).subscribe(res => {
-                this.user.accessToken = res.json().accessToken //Get token from login
+            this.userProvider.login(this.user).subscribe((res: any) => {
+                this.user.accessToken = res.value.accessToken //Get token from login
                 this.changePassword(prev_password)
             }, error => {
                 if (error.status == 403) {
@@ -77,7 +77,6 @@ export class ProfileEditPasswordPage {
         var password: string = this.profileEditPasswordForm.get("password").value
         this.user.password = this.encryptProvider.encryptPassword(password)
         return this.userProvider.saveUser(this.user, this.user.accessToken, prev_password).subscribe((res: any) => {
-            console.log(res.value)
             this.user.password = res.value.password // save password
             this.notificationProvider.presentTopToast("La contraseña ha sido modificada correctamente!")
             this.navCtrl.pop()

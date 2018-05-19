@@ -1,4 +1,4 @@
-package reciclaServer.models;
+package reciclaServer.models.auxiliar;
 
 public class MyMail {
     private String from;

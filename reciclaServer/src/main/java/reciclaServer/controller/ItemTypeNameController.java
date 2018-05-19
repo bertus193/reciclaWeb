@@ -6,8 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reciclaServer.models.AppLog;
 import reciclaServer.models.ItemTypeName;
-import reciclaServer.models.LabelAnnotations;
-import reciclaServer.models.LabelAnnotationsWithImage;
+import reciclaServer.models.auxiliar.LabelAnnotations;
+import reciclaServer.models.auxiliar.LabelAnnotationsWithImage;
 import reciclaServer.services.AppLogService;
 import reciclaServer.services.ItemTypeNameService;
 

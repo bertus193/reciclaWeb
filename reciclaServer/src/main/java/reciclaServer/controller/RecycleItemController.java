@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reciclaServer.models.RecycleItem;
-import reciclaServer.models.RecycleItems_Users;
+import reciclaServer.models.auxiliar.RecycleItems_Users;
 import reciclaServer.models.User;
 import reciclaServer.models.exceptions.ItemTypeNotFoundException;
 import reciclaServer.models.exceptions.StorageNotFoundException;

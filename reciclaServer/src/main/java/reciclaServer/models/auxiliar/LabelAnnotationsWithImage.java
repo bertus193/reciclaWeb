@@ -1,4 +1,4 @@
-package reciclaServer.models;
+package reciclaServer.models.auxiliar;
 
 import java.util.List;
 

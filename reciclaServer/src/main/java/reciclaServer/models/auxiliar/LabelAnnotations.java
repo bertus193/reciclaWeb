@@ -1,4 +1,4 @@
-package reciclaServer.models;
+package reciclaServer.models.auxiliar;
 
 public class LabelAnnotations {
 

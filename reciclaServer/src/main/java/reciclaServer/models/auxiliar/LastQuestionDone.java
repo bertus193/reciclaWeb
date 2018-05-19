@@ -1,4 +1,7 @@
-package reciclaServer.models;
+package reciclaServer.models.auxiliar;
+
+import reciclaServer.models.Question;
+import reciclaServer.models.Reply;
 
 public class LastQuestionDone {
 

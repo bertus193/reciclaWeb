@@ -3,7 +3,6 @@ import { NavParams, LoadingController, Loading, App, NavController } from 'ionic
 import { UserProvider } from '../../../providers/api/userProvider';
 import { User } from '../../../models/user';
 import { FormBuilder, FormGroup, AbstractControl } from '@angular/forms';
-import { SessionProvider } from '../../../providers/session';
 import { TabsPage } from '../../tabs/tabs';
 import { NotificationProvider } from '../../../providers/notifications';
 import { EncryptProvider } from '../../../providers/encryptProvider';
@@ -31,7 +30,6 @@ export class NormalLoginPage {
         private formBuilder: FormBuilder,
         private userProvider: UserProvider,
         private loadingCtrl: LoadingController,
-        private sessionProvider: SessionProvider,
         private notificationProvider: NotificationProvider,
         private encryptProvider: EncryptProvider,
         private navCtrl: NavController
@@ -71,13 +69,9 @@ export class NormalLoginPage {
         user.password = password
         user.type = TypeUser.Normal
 
-        this.userProvider.login(user).subscribe(res => {
+        this.userProvider.login(user).subscribe((res: any) => {
             this.loading.dismiss()
-            if (res.status == 200) {
-                user = res.json()
-                this.sessionProvider.updateSession(user)
-                this.app.getRootNavs()[0].setRoot(TabsPage)
-            }
+            this.app.getRootNavs()[0].setRoot(TabsPage)
         }, error => {
             this.loading.dismiss()
             emailForm.setValue('')

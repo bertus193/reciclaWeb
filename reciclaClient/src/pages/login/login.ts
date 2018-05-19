@@ -170,9 +170,8 @@ export class LoginPage {
                     this.app.getRootNavs()[0].setRoot(TabsPage)
                 }
             }, (rejectUser: User) => {
-                this.userProvider.login(rejectUser).subscribe(res => {
+                this.userProvider.login(rejectUser).subscribe((res: any) => {
                     this.loading.dismiss()
-                    this.sessionProvider.updateSession(res.json())
                     this.app.getRootNavs()[0].setRoot(TabsPage)
                 }, error => {
                     this.loading.dismiss()

@@ -54,7 +54,12 @@ export class UserProvider {
     }
 
     public login(user: User) {
-        return this.http.post(this.config.apiEndpoint + "/users/login", JSON.stringify(user), this.requestJsonOptions).timeout(this.config.defaultTimeoutTime)
+        return this.http.post(this.config.apiEndpoint + "/users/login", JSON.stringify(user), this.requestJsonOptions).timeout(this.config.defaultTimeoutTime).map(res => {
+            this.sessionProvider.updateSession(res.json())
+            return Observable.of(res.json())
+        }, error => {
+            return Observable.of(error)
+        })
     }
 
     public getTopRankedUsers() {
