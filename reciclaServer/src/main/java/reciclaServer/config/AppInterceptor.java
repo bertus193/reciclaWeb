@@ -47,16 +47,20 @@ public class AppInterceptor extends HandlerInterceptorAdapter {
             if (userType != null && (userType.equals("Facebook") || userType.equals("Instagram"))) {
                 request.setAttribute("token", token);
 
+                try{
+                    if (userType.equals("Facebook")) {
+                        JSONObject fbUser = JsonReader.readJsonFromUrl("https://graph.facebook.com/me/?access_token=" + token);
+                        username = fbUser.getString("id");
 
-                if (userType.equals("Facebook")) {
-                    JSONObject fbUser = JsonReader.readJsonFromUrl("https://graph.facebook.com/me/?access_token=" + token);
-                    username = fbUser.getString("id");
-
-                    user = this.userService.findByUsername(username);
-                } else if (userType.equals("Instagram")) {
-                    JSONObject instagramUser = JsonReader.readJsonFromUrl("https://api.instagram.com/v1/users/self/?access_token=" + token);
-                    username = instagramUser.getJSONObject("data").getString("id");
-                    user = this.userService.findByUsername(username);
+                        user = this.userService.findByUsername(username);
+                    } else if (userType.equals("Instagram")) {
+                        JSONObject instagramUser = JsonReader.readJsonFromUrl("https://api.instagram.com/v1/users/self/?access_token=" + token);
+                        username = instagramUser.getJSONObject("data").getString("id");
+                        user = this.userService.findByUsername(username);
+                    }
+                }catch (IOException ex){
+                    // Server returned HTTP response code: 400
+                    // user = null (Social user using normal login)
                 }
 
                 if (user != null && user.isEnabled()) {
@@ -68,7 +72,7 @@ public class AppInterceptor extends HandlerInterceptorAdapter {
             }
 
             // Rest private petitions
-            else {
+            if(user == null) {
                 user = userService.findByAccessToken(token);
             }
 
