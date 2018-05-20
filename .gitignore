@@ -40,3 +40,5 @@ reciclaClient/www
 /reciclaServer/src/main/resources/application.properties
 
 /reciclaClient-heroku/www/*
+
+*.dump
