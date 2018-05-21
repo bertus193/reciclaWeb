@@ -112,6 +112,7 @@ export class LoginPage {
 
                 this.findOrCreateUser(user).then((res: User) => {
                     this.sessionProvider.updateSession(res)
+                    this.loading.dismiss()
                     this.app.getRootNavs()[0].setRoot(TabsPage)
                 }, error => {
                     this.loading.dismiss()

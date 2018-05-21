@@ -28,13 +28,13 @@ APP_CONFIG.uploadFilesUrl = 'https://reciclaweb.000webhostapp.com'
 APP_CONFIG.DEBUG_MODE = true
 APP_CONFIG.defaultTimeoutTime = 10000
 APP_CONFIG.defaultTimeoutMsg = 'Parece que ha habido algún problema, prueba en unos minutos.'
-APP_CONFIG.googleCloudVisionAPIKey = 'AIzaSyCVl9Ien_9KOFEN197dPqklyIJ7ad1z44k'
+APP_CONFIG.googleCloudVisionAPIKey = 'GOOGLECLOUD_API_KEY'
 APP_CONFIG.itemsPerPage = 10
 APP_CONFIG.debugUserEmail = 'debug@debug.com'
 APP_CONFIG.debugUserPassword = 'debug'
 APP_CONFIG.instagramAPIKey = '7bec1422cf9f4eaf952b4c1f3dbfa4ab'
-APP_CONFIG.emailFrom = 'recicla.ua.noreply@gmail.com'
+APP_CONFIG.emailFrom = 'email'
 APP_CONFIG.emailFromName = 'ReciclaUA (no contestar)'
-APP_CONFIG.emailFromPassword = 'w2L-gDk-cSq-nuK'
+APP_CONFIG.emailFromPassword = 'email_password'
 
 export const APP_CONFIG_TOKEN = new InjectionToken<ApplicationConfig>('config');

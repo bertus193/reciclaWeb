@@ -56,7 +56,13 @@ export class HomePage {
             if (recycleItem.name != null) {
                 this.recycleItems.unshift(recycleItem)
                 var index = this.users.findIndex(u => u.id == recycleItem.recycleUser.id)
-                this.move(index, 0)
+                if (index == -1) {
+                    this.users.unshift(recycleItem.recycleUser)
+                }
+                else {
+                    this.move(index, 0)
+                }
+
             }
         });
 
