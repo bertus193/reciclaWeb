@@ -206,6 +206,7 @@ export class MapPage {
                         var savedItem: RecycleItem = resSaveItem.json()
                         savedItem.recycleUser = new User()
                         savedItem.recycleUser.fullName = user.fullName
+                        savedItem.recycleUser.profilePicture = user.profilePicture
                         savedItem.recycleUser.id = user.id
 
 
