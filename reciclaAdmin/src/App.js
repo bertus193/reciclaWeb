@@ -28,7 +28,7 @@ const httpClient = (url, options = {}) => {
     if (!options.headers) {
         options.headers = new Headers({ Accept: 'application/json' });
     }
-    options.headers.set('x-auth-token', 'd458b311-71f3-4b62-93af-beff72e644e6');
+    options.headers.set('x-auth-token', localStorage.getItem('token'));
     options.headers.set('x-admin-token', 'c772e65a-4afe-4d70-a61b-eeaabe93cc53')
     return fetchUtils.fetchJson(url, options);
 }

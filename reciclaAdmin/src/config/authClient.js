@@ -20,6 +20,7 @@ export default (type, params) => {
 
         return axios.post(AppConfig.apiEndPoint + '/users/login', data, headers).then(function (response) {
             if (response.data.type === "Admin") {
+                localStorage.setItem('token', response.data.accessToken)
                 localStorage.setItem('username', username);
                 return Promise.resolve();
             }
