@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import reciclaServer.models.AppLog;
+import reciclaServer.models.EnumUser;
 import reciclaServer.models.User;
 import reciclaServer.services.AppLogService;
 import reciclaServer.services.UserService;
@@ -31,16 +32,6 @@ public class AppInterceptor extends HandlerInterceptorAdapter {
         String username = null;
 
         if (token != null && !token.isEmpty()) {
-
-            // Admin login
-            if (token.equals("d458b311-71f3-4b62-93af-beff72e644e6")) {
-                String adminToken = request.getHeader("x-admin-token");
-                if (token != null && !token.isEmpty()) {
-                    if (adminToken.equals("c772e65a-4afe-4d70-a61b-eeaabe93cc53")) {
-                        return true;
-                    }
-                }
-            }
 
             // Social login  - UserType -> findByUsername
             String userType = request.getHeader("user-type");
@@ -77,8 +68,17 @@ public class AppInterceptor extends HandlerInterceptorAdapter {
             }
 
             if (user != null && user.isEnabled()) {
-                request.setAttribute("userId", user.getId());
-                return true;
+                if(user.getType() == EnumUser.Admin){
+                    String adminToken = request.getHeader("x-admin-token");
+                    if (adminToken != null && adminToken.equals("c772e65a-4afe-4d70-a61b-eeaabe93cc53")) {
+                        return true;
+                    }
+                }
+                else{
+                    request.setAttribute("userId", user.getId());
+                    return true;
+                }
+
             }
         }
         // Unauthorized
