@@ -110,10 +110,6 @@ public class AdminUserController {
         if(userFound != null){
             user.setUsername(userFound.getUsername());
 
-            if(user.getType() != EnumUser.Normal){
-                user.setPassword("");
-            }
-
             if(userFound.getType() == EnumUser.Admin){
                 user.setType(EnumUser.Admin);
             }

@@ -46,7 +46,6 @@ export const Base64ImageField = ({ elStyle = {}, record, source, src, title }) =
     }
 
     const titleValue = get(record, title) || title;
-    console.log(sourceValue)
     if (sourceValue != null) {
         sourceValue = 'data:image/png;base64,' + sourceValue
         return (
