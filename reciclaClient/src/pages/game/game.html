@@ -14,7 +14,10 @@
                 <ion-col>
                     <div *ngIf="question != null;else questionNotFound">
                         <div class="questionTitle currentQuestion" align="center">
-                            {{question.name}}
+                            <div>
+                                {{question.name}}
+                            </div>
+
                         </div>
                         <div style="margin-top: 50px;">
 

@@ -9,8 +9,14 @@ page-game {
     }
 
     .currentQuestion{
-        line-height: 100px;
+        display:table;
         height: 100px;
+    }
+
+    .currentQuestion div{
+        display: table-cell;
+        vertical-align: middle;
+        text-align: center;
     }
 
     .lastQuestionBox{
