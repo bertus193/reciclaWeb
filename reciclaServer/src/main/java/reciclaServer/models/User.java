@@ -89,19 +89,24 @@ public class User {
 
     @JsonIgnore
     public long getHoursDifferenceToPlay() {
-        LocalDateTime ldt = LocalDateTime.now();
-        ZonedDateTime zdt = ZonedDateTime.of(ldt, ZoneId.systemDefault());
-        ZonedDateTime gmt = zdt.withZoneSameInstant(ZoneId.of("GMT"));
-        Timestamp timeNow = Timestamp.valueOf(gmt.toLocalDateTime());
+        long diff = 24;
+        if(this.getLastGameDate() != null){
+            LocalDateTime ldt = LocalDateTime.now();
+            ZonedDateTime zdt = ZonedDateTime.of(ldt, ZoneId.systemDefault());
+            ZonedDateTime gmt = zdt.withZoneSameInstant(ZoneId.of("GMT"));
+            Timestamp timeNow = Timestamp.valueOf(gmt.toLocalDateTime());
 
-        ldt = this.getLastGameDate().toLocalDateTime();
-        zdt = ZonedDateTime.of(ldt, ZoneId.systemDefault());
-        gmt = zdt.withZoneSameInstant(ZoneId.of("GMT"));
-        Timestamp timeUser = Timestamp.valueOf(gmt.toLocalDateTime());
+            ldt = this.getLastGameDate().toLocalDateTime();
+            zdt = ZonedDateTime.of(ldt, ZoneId.systemDefault());
+            gmt = zdt.withZoneSameInstant(ZoneId.of("GMT"));
+            Timestamp timeUser = Timestamp.valueOf(gmt.toLocalDateTime());
 
 
-        long diff = timeNow.getTime() - timeUser.getTime();
-        return TimeUnit.HOURS.convert(diff, TimeUnit.MILLISECONDS);
+            diff = timeNow.getTime() - timeUser.getTime();
+            diff = TimeUnit.HOURS.convert(diff, TimeUnit.MILLISECONDS);
+        }
+
+        return diff;
     }
 
     @JsonIgnore
