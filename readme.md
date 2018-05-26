@@ -3,9 +3,9 @@ ReciclaWeb
 
 Proyecto de fin de grado de ingeniería de la informática.
 
-Desarrollo de una aplicación web Mobile-First (principalmente para Android e iOS), la cuál, tiene como objetivo concienciar y fomentar el reciclaje en la Universidad de Alicante (UA).
+Desarrollo de una aplicación híbrida (principalmente para Android e iOS), la cuál, tiene como objetivo concienciar y fomentar el reciclaje en la Universidad de Alicante (UA).
 
-Para ello se utilizarán una metodología cliente-servidor basada en:
+Principales tecnologías:
 
 - BackEnd:  Spring-Boot.
 - FrontEnd: Ionic.
