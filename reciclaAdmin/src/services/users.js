@@ -29,7 +29,7 @@ export const UserList = (props) => (
             medium={
                 <Datagrid bodyOptions={{ stripedRows: true, showRowHover: true }}>
                     <UrlField style={{ textAlign: 'center' }} urlDirection="users" source="id" />
-                    <TextImageField source="email" source2="profilePicture" />
+                    <TextImageField source="email" source2="profilePicture" source3="username" />
                     <TextField label="Full name" source="fullName" />
                     <MyReferenceField label="Position" source="lastPosition" reference="positions">
                         <TextField source="id" />

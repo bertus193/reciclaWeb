@@ -1,11 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import get from 'lodash.get';
 
-const TextImageField = ({ source, source2, record = {} }) =>
-    <span>
+const TextImageField = ({ source, source2, source3, record = {} }) => {
+    var name = null
+    if (source != null) {
+        name = get(record, source)
+    }
+    if ((name === null || name === '') && source3 != null) {
+
+        name = get(record, source3)
+    }
+    return <span>
         <img className="avatarImage" alt="" src={record[source2]} onError={(e) => e.target.src = ""}></img>
-        <span>{record[source]}</span>
-    </span>;
+        <span>{name}</span>
+    </span>
+};
 
 TextImageField.propTypes = {
     addLabel: PropTypes.bool,

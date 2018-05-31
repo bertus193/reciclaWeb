@@ -1,33 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import get from 'lodash.get';
-import pure from 'recompose/pure';
 
-const TextField = ({ source, source2, record = {}, elStyle }) => {
+const MyTextField = ({ source, source2, record = {}, elStyle }) => {
     var output = null
     if (source != null) {
-        output = source
+        output = get(record, source)
     }
-    else if (source2 != null) {
-        output = source2
+    if ((output === null || output === '') && source2 != null) {
+        output = get(record, source2)
     }
     return <span style={elStyle}>{
-        get(record, output)
+        output
     }</span>;
 };
 
-TextField.propTypes = {
-    addLabel: PropTypes.bool,
-    elStyle: PropTypes.object,
-    label: PropTypes.string,
+MyTextField.propTypes = {
     record: PropTypes.object,
     source: PropTypes.string.isRequired,
 };
 
-const PureTextField = pure(TextField);
-
-PureTextField.defaultProps = {
-    addLabel: true,
-};
-
-export default PureTextField;
+export default MyTextField;

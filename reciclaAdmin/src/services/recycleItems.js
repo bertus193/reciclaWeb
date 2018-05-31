@@ -41,6 +41,7 @@ const RecycleItemTitle = ({ record }) => {
     return <span>Recycle Item {record ? `"${record.id}"` : ''}</span>;
 };
 
+const optionRenderer = choice => `${choice.email} ${choice.username}`;
 
 export const RecycleItemEdit = (props) => (
     <Edit title={<RecycleItemTitle />} {...props}>
@@ -50,7 +51,7 @@ export const RecycleItemEdit = (props) => (
             <TextInput label="URL Image" source="image" />
             <TextInput source="name" />
             <ReferenceInput label="Recycle user" source="recycleUser" reference="users">
-                <SelectInput optionText="email" />
+                <SelectInput optionText={optionRenderer} />
             </ReferenceInput>
             <ReferenceInput label="Item type" source="itemType.id" reference="itemTypes">
                 <SelectInput optionText="type" />
@@ -69,7 +70,7 @@ export const RecycleItemCreate = (props) => (
             <TextInput source="name" />
             <TextInput label="URL image" source="image" />
             <ReferenceInput label="Recycled by" source="recycleUser" reference="users">
-                <SelectInput optionText="email" />
+                <SelectInput optionText={optionRenderer} />
             </ReferenceInput>
             <ReferenceInput label="Item type" source="itemType.id" reference="itemTypes">
                 <SelectInput optionText="type" />

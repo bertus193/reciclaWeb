@@ -3,6 +3,7 @@ import { DateField, ReferenceInput, SelectInput, Responsive, SimpleList, List, E
 import MyReferenceField from '../fieldsAndInputs/MyReferenceField'
 import DateTimeInput from 'aor-datetime-input';
 import UrlField from '../fieldsAndInputs/MyUrlField';
+import MyTextField from '../fieldsAndInputs/MyTextField'
 
 export const UserQuestionList = (props) => (
     <List {...props} title="User Question List">
@@ -17,7 +18,7 @@ export const UserQuestionList = (props) => (
                 <Datagrid bodyOptions={{ stripedRows: true, showRowHover: true }}>
                     <UrlField urlDirection="userQuestions" source="id" />
                     <MyReferenceField label="User" source="user" reference="users">
-                        <TextField source="username" />
+                        <MyTextField source="email" source2="username" />
                     </MyReferenceField>
                     <MyReferenceField label="Question" source="question" reference="questions">
                         <TextField source="name" />
@@ -37,13 +38,14 @@ const UserQuestionTitle = ({ record }) => {
     return <span>User Question {record ? `"${record.id}"` : ''}</span>;
 };
 
+const optionRenderer = choice => `${choice.email} ${choice.username}`;
 
 export const UserQuestionEdit = (props) => (
     <Edit title={<UserQuestionTitle />} {...props}>
         <SimpleForm>
             <DisabledInput source="id" />
             <ReferenceInput label="User" source="user" reference="users">
-                <SelectInput optionText="username" />
+                <SelectInput optionText={optionRenderer} />
             </ReferenceInput>
             <ReferenceInput label="Question" source="question" reference="questions">
                 <SelectInput optionText="name" />
@@ -60,7 +62,7 @@ export const UserQuestionCreate = (props) => (
     <Create {...props}>
         <SimpleForm>
             <ReferenceInput label="User" source="user" reference="users">
-                <SelectInput optionText="name" />
+                <SelectInput optionText={optionRenderer} />
             </ReferenceInput>
             <ReferenceInput label="Question" source="question" reference="questions">
                 <SelectInput optionText="name" />
