@@ -76,6 +76,7 @@ export const UserCreate = (props) => (
     <Create title={"Añadir usuario"} {...props}>
         <SimpleForm>
             <TextInput source="email" />
+            <TextInput source="username" />
             <TextInput source="password" type="password" />
             <TextInput label="Full name" source="fullName" />
             <TextInput label="URL profile picture" source="profilePicture" />

@@ -70,9 +70,15 @@ public class AdminUserController {
     @RequestMapping(value = "/admin/users", method = RequestMethod.POST)
     public ResponseEntity<?> createUser(@RequestBody User user) throws NoSuchAlgorithmException {
 
-        if(user.getType() == EnumUser.Normal){
+        if(user.getType() != EnumUser.Facebook || user.getType() != EnumUser.Instagram){
             if (userService.isUserExistByEmail(user.getEmail())) {
                 return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+            }
+
+            if(!user.getUsername().isEmpty() || user.getUsername() != null){
+                if (userService.isUserExistByUsername(user.getUsername())) {
+                    return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+                }
             }
         }
         else{
@@ -81,13 +87,11 @@ public class AdminUserController {
             }
         }
 
+
         if(user.getType() == null){
             user.setType(EnumUser.Normal);
         }
 
-        if((user.getType() == EnumUser.Facebook) || (user.getType() == EnumUser.Instagram)){
-            user.setPassword("");
-        }
 
         if(user.getPassword() != null && !user.getPassword().isEmpty()){
             user.setPassword(this.checkPassword(user.getPassword()));
