@@ -51,7 +51,7 @@ export const QuestionCreate = (props) => (
         <SimpleForm>
             <TextInput source="name" />
             <NumberInput abel="Question value" source="questionValue" />
-            <ReferenceInput label="Correct reply" source="correctReply.id" reference="replies" validate={required}>
+            <ReferenceInput label="Correct reply" source="correctReply.id" reference="replies">
                 <SelectInput optionText="name" />
             </ReferenceInput>
         </SimpleForm>
