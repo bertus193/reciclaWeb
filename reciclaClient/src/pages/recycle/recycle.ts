@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { NavController, LoadingController, ActionSheetController, Loading, AlertController } from 'ionic-angular';
+import { NavController, LoadingController, ActionSheetController, Loading, AlertController, Events } from 'ionic-angular';
 
 import { Camera } from '@ionic-native/camera';
 import { Geolocation } from '@ionic-native/geolocation';
@@ -61,7 +61,8 @@ export class RecyclePage {
         private userProvider: UserProvider,
         private itemTypeProvider: ItemTypeProvider,
         private tipProvider: TipProvider,
-        private fileProvider: FileProvider
+        private fileProvider: FileProvider,
+        private events: Events
     ) {
 
         this.getAllItems().then(res => {
@@ -147,7 +148,8 @@ export class RecyclePage {
                 myPosition.id = this.user.lastPosition.id
             }
             this.user.lastPosition = myPosition
-            this.userProvider.saveUser(this.user, this.user.accessToken).subscribe(res => {
+            this.userProvider.saveUser(this.user, this.user.accessToken).subscribe((res: any) => {
+                this.events.publish('update-user', res.value)
                 this.goToMapPage(myPosition)
             }, error => { //saveUserPosition
                 this.loading.dismiss()

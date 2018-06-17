@@ -79,6 +79,7 @@ export class MapPage {
                             this.showLeaveAlertMessage = false
                             this.navCtrl.pop()
                         });
+                        return false;
                     }
                 },
                 {

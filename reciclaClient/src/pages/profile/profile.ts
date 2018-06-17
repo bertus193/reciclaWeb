@@ -28,7 +28,14 @@ export class ProfilePage {
         this.profileSegment = this.navParams.get("profileSegment")
 
         this.events.subscribe('change-tab', (tabName, profileSegment) => {
-            this.profileSegment = profileSegment;
+            if (this.profileSegment != 'history') {
+                this.profileSegment = profileSegment;
+            }
+            else {
+                if (this.navCtrl.getActive().name == 'recycleItemInfoPage') {
+                    this.navCtrl.pop()
+                }
+            }
         });
 
         this.events.subscribe('update-user', (user) => {
