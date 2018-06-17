@@ -77,6 +77,7 @@ export class ProfileEditPasswordPage {
         var password: string = this.profileEditPasswordForm.get("password").value
         this.user.password = this.encryptProvider.encryptPassword(password)
         return this.userProvider.saveUser(this.user, this.user.accessToken, prev_password).subscribe((res: any) => {
+            this.user.accessToken = res.value.accessToken
             this.user.password = res.value.password // save password
             this.notificationProvider.presentTopToast("La contraseña ha sido modificada correctamente!")
             this.navCtrl.pop()

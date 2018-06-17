@@ -66,7 +66,8 @@ export class ProfileEditPage {
                         this.uploadImage(this.image).then((res: string) => {
                             this.image = res
                             this.user.profilePicture = res
-                            this.userProvider.saveUser(this.user, this.user.accessToken).subscribe(res => {
+                            this.userProvider.saveUser(this.user, this.user.accessToken).subscribe((res: any) => {
+                                this.user.accessToken = res.value.accessToken
                                 this.events.publish('update-user-info', this.user)
                                 this.notificationProvider.presentTopToast("El usuario se ha guardado correctamente!")
                                 this.loading.dismiss()
@@ -78,7 +79,8 @@ export class ProfileEditPage {
                         })
                     }
                     else {
-                        this.userProvider.saveUser(this.user, this.user.accessToken).subscribe(res => {
+                        this.userProvider.saveUser(this.user, this.user.accessToken).subscribe((res: any) => {
+                            this.user.accessToken = res.value.accessToken
                             this.events.publish('update-user-info', this.user)
                             this.notificationProvider.presentTopToast("El usuario se ha guardado correctamente!")
                             this.loading.dismiss()

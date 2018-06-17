@@ -80,7 +80,8 @@ export class ProfileEditOthersPage {
             }
         }
 
-        this.userProvider.saveUser(this.user, this.user.accessToken).subscribe(res => {
+        this.userProvider.saveUser(this.user, this.user.accessToken).subscribe((res: any) => {
+            this.user.accessToken = res.value.accessToken
             this.notificationProvider.presentTopToast("El usuario ha sido modificado correctamente!")
             this.navCtrl.pop()
             this.loading.dismiss()
