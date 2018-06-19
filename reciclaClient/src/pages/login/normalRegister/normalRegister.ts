@@ -2,7 +2,7 @@ import { Component, Output, EventEmitter, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, AbstractControl } from '@angular/forms';
 import { UserProvider } from '../../../providers/api/userProvider';
 import { NotificationProvider } from '../../../providers/notifications';
-import { LoadingController, Loading, App } from 'ionic-angular';
+import { LoadingController, Loading, App, NavController } from 'ionic-angular';
 import { User } from '../../../models/user';
 import { UUID } from 'angular2-uuid';
 import { APP_CONFIG_TOKEN, ApplicationConfig } from '../../../app/app-config';
@@ -26,7 +26,7 @@ export class NormalRegisterPage {
     @Output() onRegisterFinishEvent: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(
-        private app: App,
+        private navCtrl: NavController,
         private formBuilder: FormBuilder,
         private userProvider: UserProvider,
         private notificationProvider: NotificationProvider,
@@ -74,7 +74,7 @@ export class NormalRegisterPage {
                 this.notificationProvider.presentAlertOk("¡El usuario ha sido creado correctamente!")
                 user = res.json()
                 this.sessionProvider.updateSession(user)
-                this.app.getRootNavs()[0].setRoot(TabsPage)
+                this.navCtrl.push(TabsPage)
             }
             else {
                 this.notificationProvider.presentAlertError('El usuario no ha podido ser creado.')

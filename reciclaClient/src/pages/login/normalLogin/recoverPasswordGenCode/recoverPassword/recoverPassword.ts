@@ -8,6 +8,7 @@ import { SessionProvider } from '../../../../../providers/session';
 import { EncryptProvider } from '../../../../../providers/encryptProvider';
 import { User } from '../../../../../models/user';
 import { TabsPage } from '../../../../tabs/tabs';
+import { NavController } from 'ionic-angular/navigation/nav-controller';
 
 @Component({
     selector: 'page-recoverPassword',
@@ -24,7 +25,7 @@ export class RecoverPasswordPage {
     @Output() onRegisterFinishEvent: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(
-        private app: App,
+        private navCtrl: NavController,
         private formBuilder: FormBuilder,
         private userProvider: UserProvider,
         private notificationProvider: NotificationProvider,
@@ -70,7 +71,7 @@ export class RecoverPasswordPage {
             this.notificationProvider.presentAlertOk("Los datos son correctos!")
             user = res.json()
             this.sessionProvider.updateSession(user)
-            this.app.getRootNavs()[0].setRoot(TabsPage)
+            this.navCtrl.push(TabsPage)
 
         }, error => {
             this.loading.dismiss()

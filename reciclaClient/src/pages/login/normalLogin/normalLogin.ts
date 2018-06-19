@@ -71,7 +71,7 @@ export class NormalLoginPage {
 
         this.userProvider.login(user).subscribe((res: any) => {
             this.loading.dismiss()
-            this.app.getRootNavs()[0].setRoot(TabsPage)
+            this.navCtrl.push(TabsPage)
         }, error => {
             this.loading.dismiss()
             emailForm.setValue('')

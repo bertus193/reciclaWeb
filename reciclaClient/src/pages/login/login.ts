@@ -54,7 +54,7 @@ export class LoginPage {
         this.loginFb().then().then((user: User) => {
             this.loading.dismiss()
             this.sessionProvider.updateSession(user)
-            this.app.getRootNavs()[0].setRoot(TabsPage)
+            this.navCtrl.push(TabsPage)
         }, error => {
             this.loading.dismiss()
             this.notificationProvider.presentTopToast(this.config.defaultTimeoutMsg);
@@ -113,7 +113,7 @@ export class LoginPage {
                 this.findOrCreateUser(user).then((res: User) => {
                     this.sessionProvider.updateSession(res)
                     this.loading.dismiss()
-                    this.app.getRootNavs()[0].setRoot(TabsPage)
+                    this.navCtrl.push(TabsPage)
                 }, error => {
                     this.loading.dismiss()
                     this.notificationProvider.presentTopToast("Error iniciando sesión.")
@@ -168,12 +168,12 @@ export class LoginPage {
                 this.loading.dismiss()
                 if (user != null) {
                     this.sessionProvider.updateSession(user)
-                    this.app.getRootNavs()[0].setRoot(TabsPage)
+                    this.navCtrl.push(TabsPage)
                 }
             }, (rejectUser: User) => {
                 this.userProvider.login(rejectUser).subscribe((res: any) => {
                     this.loading.dismiss()
-                    this.app.getRootNavs()[0].setRoot(TabsPage)
+                    this.navCtrl.push(TabsPage)
                 }, error => {
                     this.loading.dismiss()
                     this.notificationProvider.presentTopToast(this.config.defaultTimeoutMsg);

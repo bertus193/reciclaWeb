@@ -29,7 +29,6 @@ export class TabsPage {
             if (profileSegment != '') {
                 this.tabProfileRootParams.profileSegment = profileSegment;
             }
-
             var tab = 0
             switch (tabName) {
                 case "home":
@@ -48,7 +47,6 @@ export class TabsPage {
                     tab = 4
                     break
             }
-
             this.tabs.select(tab);
         });
     }
