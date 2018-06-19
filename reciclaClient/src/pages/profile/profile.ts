@@ -28,7 +28,10 @@ export class ProfilePage {
         this.profileSegment = this.navParams.get("profileSegment")
 
         this.events.subscribe('change-tab', (tabName, profileSegment) => {
-            if (this.profileSegment != 'history') {
+            if (this.profileSegment == null) {
+                this.profileSegment = profileSegment;
+            }
+            else if (this.profileSegment != 'history') {
                 this.profileSegment = profileSegment;
             }
             else {

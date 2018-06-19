@@ -250,7 +250,7 @@ export class MapPage {
                     }
                 },
                 {
-                    text: 'Save',
+                    text: 'Guardar',
                     handler: data => {
                         if (data.name.length > 0) {
                             this.recycleItem.name = data.name
