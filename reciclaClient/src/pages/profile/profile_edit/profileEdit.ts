@@ -106,7 +106,7 @@ export class ProfileEditPage {
 
     public editProfilePicture() {
         let actionSheet = this.actionSheetCtrl.create({
-            title: 'Sube una foto de lo que desees reciclar',
+            title: 'Selecciona una foto',
             buttons: [
                 {
                     text: 'Cargar foto de la galería',

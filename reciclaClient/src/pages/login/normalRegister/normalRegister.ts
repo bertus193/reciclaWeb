@@ -2,7 +2,7 @@ import { Component, Output, EventEmitter, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, AbstractControl } from '@angular/forms';
 import { UserProvider } from '../../../providers/api/userProvider';
 import { NotificationProvider } from '../../../providers/notifications';
-import { LoadingController, Loading, App, NavController } from 'ionic-angular';
+import { LoadingController, Loading, NavController } from 'ionic-angular';
 import { User } from '../../../models/user';
 import { UUID } from 'angular2-uuid';
 import { APP_CONFIG_TOKEN, ApplicationConfig } from '../../../app/app-config';

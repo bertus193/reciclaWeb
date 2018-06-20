@@ -2,7 +2,6 @@ import { Component, Inject } from '@angular/core'
 import { SessionProvider } from '../../providers/session'
 import { NotificationProvider } from '../../providers/notifications';
 import { TabsPage } from '../tabs/tabs'
-import { App } from 'ionic-angular/components/app/app'
 
 import { User } from '../../models/user'
 import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
@@ -28,7 +27,6 @@ export class LoginPage {
     constructor(
         @Inject(APP_CONFIG_TOKEN) private config: ApplicationConfig,
         private sessionProvider: SessionProvider,
-        private app: App,
         private fb: Facebook,
         private loadingCtrl: LoadingController,
         private notificationProvider: NotificationProvider,

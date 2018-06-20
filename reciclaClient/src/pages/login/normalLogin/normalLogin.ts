@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavParams, LoadingController, Loading, App, NavController } from 'ionic-angular';
+import { NavParams, LoadingController, Loading, NavController } from 'ionic-angular';
 import { UserProvider } from '../../../providers/api/userProvider';
 import { User } from '../../../models/user';
 import { FormBuilder, FormGroup, AbstractControl } from '@angular/forms';
@@ -25,7 +25,6 @@ export class NormalLoginPage {
     loading: Loading
 
     constructor(
-        private app: App,
         private navParams: NavParams,
         private formBuilder: FormBuilder,
         private userProvider: UserProvider,

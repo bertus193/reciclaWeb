@@ -1,6 +1,6 @@
 import { Component, Output, EventEmitter, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, AbstractControl } from '@angular/forms';
-import { LoadingController, Loading, App } from 'ionic-angular';
+import { LoadingController, Loading } from 'ionic-angular';
 import { UserProvider } from '../../../../../providers/api/userProvider';
 import { NotificationProvider } from '../../../../../providers/notifications';
 import { ApplicationConfig, APP_CONFIG_TOKEN } from '../../../../../app/app-config';
