@@ -30,5 +30,5 @@ Demo:
 
 ## Diagrama de componentes
 <p align="center">
-<img height="400" src="https://user-images.githubusercontent.com/22213393/40573898-049a9d1e-60c9-11e8-9521-e9cc8434e632.png"/> 
+<img height="400" src="https://user-images.githubusercontent.com/22213393/41726896-64b1bf70-7573-11e8-83bf-d5c3f733a5de.png"/> 
 </p>
